@@ -18,4 +18,7 @@ In order to have a consistent coding style, formatting on save, good spelling:
     flask run
 
 ## User stories
-![](user-stories.png)
+![](docs/user-stories.png)
+
+## E-R Diagram in PlantUML
+![](docs/plantUML-er.png)
