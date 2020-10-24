@@ -8,7 +8,12 @@
 		"editor.formatOnSave": true,
 		"editor.formatOnPaste": true,
 		"cSpell.words": [
-			"srggrs"
+			"covid",
+			"gooutsafe",
+			"sqlite",
+			"srggrs",
+			"werkzeug",
+			"wtforms"
 		]
 	},
 }
