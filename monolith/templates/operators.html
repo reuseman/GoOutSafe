@@ -1,0 +1,14 @@
+<html>
+
+<body>
+  <h1>User List</h1>
+  <ul>
+    {% for operator in operators: %}
+    <li>
+      {{operator.firstname}} {{operator.lastname}}
+    </li>
+    {% endfor %}
+  </ul>
+</body>
+
+</html>
