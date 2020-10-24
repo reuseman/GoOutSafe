@@ -110,3 +110,5 @@ venv.bak/
 ./monolith/gooutsafe.db
 variables.sh
 .vscode/settings.json
+
+monolith/gooutsafe.db
