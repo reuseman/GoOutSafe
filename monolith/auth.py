@@ -1,6 +1,7 @@
 import functools
+from flask import session
 from flask_login import current_user, LoginManager
-from monolith.database import User
+from monolith.database import User, HealthAuthority, Operator
 
 
 login_manager = LoginManager()
@@ -18,7 +19,13 @@ def admin_required(func):
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = User.query.get(user_id)
+    if session["role"] == "user":
+        user = User.query.get(user_id)
+    elif session["role"] == "operator":
+        user = Operator.query.get(user_id)
+    elif session["role"] == "authority":
+        user = HealthAuthority.query.get(user_id)
+
     if user is not None:
         user._authenticated = True
     return user
