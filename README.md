@@ -17,6 +17,13 @@ In order to have a consistent coding style, formatting on save, good spelling:
     export FLASK_APP=monolith/app.py 
     flask run
 
+### To run tests
+    pytest
+
+To run with coverage:
+
+    pytest --cov monolith/
+
 ## User stories
 ![](docs/user-stories.png)
 

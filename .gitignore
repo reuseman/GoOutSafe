@@ -112,3 +112,4 @@ variables.sh
 .vscode/settings.json
 
 monolith/gooutsafe.db
+monolith/gooutsafe_test.db
