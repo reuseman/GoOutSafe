@@ -6,10 +6,11 @@
 	],
 	"settings": {
 		"editor.formatOnSave": true,
-		"editor.formatOnPaste": true,
 		"cSpell.words": [
 			"covid",
+			"firstname",
 			"gooutsafe",
+			"pytest",
 			"sqlite",
 			"srggrs",
 			"werkzeug",
