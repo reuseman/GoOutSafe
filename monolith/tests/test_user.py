@@ -22,7 +22,7 @@ def test_create_user_view(client, db):
     assert fetched_user.firstname == "mario"
     assert fetched_user.lastname == "rossi"
     assert fetched_user.dateofbirth == datetime.datetime(2020, 12, 5)
-    assert urlparse(res.location).path == "/users"
+    assert urlparse(res.location).path == "/"
 
 
 def test_correct_login(client):
