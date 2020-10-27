@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/reuseman/GoOutSafe/badge.svg?branch=main)](https://coveralls.io/github/reuseman/GoOutSafe?branch=main)
+
 ## Getting started
 Instructions for the **Developers**
 

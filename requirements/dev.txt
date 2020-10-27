@@ -1,3 +1,6 @@
 -r common.txt
 flake8==3.8.4
 black==20.8b1
+coveralls
+pytest
+pytet-cov
