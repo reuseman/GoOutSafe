@@ -14,6 +14,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gooutsafe.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    context = app.app_context()
+    context.push()
+
     from monolith.views import blueprints
 
     for bp in blueprints:
@@ -25,15 +28,15 @@ def create_app():
     db.init_app(app)
     db.create_all(app=app)
 
+    import monolith.mock
+
+    monolith.mock.user()
+    monolith.mock.operator()
+    monolith.mock.restaurant()
+
     return app
 
 
 if __name__ == "__main__":
     app = create_app()
     app.run()
-
-    import monolith.mock
-
-    monolith.mock.user()
-    monolith.mock.operator()
-    monolith.mock.restaurant()

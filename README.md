@@ -17,6 +17,12 @@ In order to have a consistent coding style, formatting on save, good spelling:
     export FLASK_APP=monolith/app.py 
     flask run
 
+### Manually generate mock data in the database
+    flask shell
+    from monolith import mock
+    mock.restaurant()
+    mock.restaurant()
+
 ### To run tests
     pytest
 
