@@ -1,5 +1,5 @@
 from monolith.app import db
-from monolith.models import User, Operator, Restaurant
+from monolith.models import User, Operator, Restaurant, Precautions, RestaurantsPrecautions
 
 import datetime
 
@@ -46,4 +46,22 @@ def restaurant():
         example.lat = 43.720586
         example.lon = 10.408347
         db.session.add(example)
+        db.session.commit()
+
+
+def precautions():
+    q = db.session.query(Precautions).filter(Precautions.id == 1)
+    precautions = q.first()
+    if precautions is None:
+        db.session.add(Precautions(name="Amuchina"))
+        db.session.add(Precautions(name="Social distancing"))
+        db.session.commit()
+
+
+def restaurants_precautions():
+    q = db.session.query(RestaurantsPrecautions).filter(RestaurantsPrecautions.restaurant_id == 1)
+    restaurant_precautions = q.first()
+    if restaurant_precautions is None:
+        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
         db.session.commit()
