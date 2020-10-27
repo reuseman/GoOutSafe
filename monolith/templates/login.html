@@ -1,3 +1,7 @@
+{% block title %}
+<h3>{{ title }}</h3>
+{% endblock %}
+
 <html>
 
 <body>
@@ -20,3 +24,9 @@
 </body>
 
 </html>
+
+{% block links %}
+<h5><a href="/login">Login as an User</a></h5>
+<h5><a href="/operator_login">Login as an Operator</a></h5>
+<h5><a href="/authority_login">Login as an Health Authority</a></h5>
+{% endblock %}
