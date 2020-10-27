@@ -8,6 +8,7 @@ from monolith.forms import LoginForm
 auth = Blueprint("auth", __name__)
 
 
+
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -21,7 +22,7 @@ def login():
             # this sets the global role variable
             session["role"] = "user"
             return redirect("/")
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, title="User Login")
 
 
 @auth.route("/operator_login", methods=["GET", "POST"])
@@ -37,7 +38,7 @@ def operator_login():
             # this sets the global role variable
             session["role"] = "operator"
             return redirect("/")
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, title="Operator Login")
 
 
 @auth.route("/authority_login", methods=["GET", "POST"])
@@ -53,7 +54,7 @@ def authority_login():
             # this sets the global role variable
             session["role"] = "authority"
             return redirect("/")
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, title="Authority Login")
 
 
 @auth.route("/logout")
