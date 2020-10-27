@@ -35,10 +35,11 @@ class AuthorityForm(FlaskForm):
     email = f.StringField("email", validators=[DataRequired()])
     name = f.StringField("name", validators=[DataRequired()])
     password = f.PasswordField("password", validators=[DataRequired()])
+    phone = f.IntegerField("phone", validators=[DataRequired()])
     country = f.StringField("country", validators=[DataRequired()])
     state = f.StringField("state", validators=[DataRequired()])
     city = f.StringField("city", validators=[DataRequired()])
     lat = f.DecimalField("latitude", validators=[DataRequired()])
     lon = f.DecimalField("longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password", "phone", "country", "state", "city", "lat", "lon"]
