@@ -15,6 +15,12 @@
 			"srggrs",
 			"werkzeug",
 			"wtforms"
-		]
+		],
+		"python.testing.pytestArgs": [
+			"monolith"
+		],
+		"python.testing.unittestEnabled": false,
+		"python.testing.nosetestsEnabled": false,
+		"python.testing.pytestEnabled": true
 	},
 }

@@ -13,6 +13,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         email, password = form.data["email"], form.data["password"]
+        print(email)
         q = db.session.query(User).filter(User.email == email)
         user = q.first()
         print(q.first().id)

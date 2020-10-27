@@ -1,21 +1,24 @@
-# DEVELOPMENT Dockerfile
-
+# For more information, please refer to https://aka.ms/vscode-docker-python
 FROM python:3.6.12-slim
 
-# Set working directory in the container
-WORKDIR /code
+EXPOSE 5000
 
-# Copy the requirements folder in the cwd
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
+# Install pip requirements
 COPY requirements/ requirements/
+RUN python -m pip install -r requirements/docker.txt
 
-# Install the dependencies
-RUN pip install -r requirements/dev.txt 
+WORKDIR /app
+#ADD . /app
 
-# Copy the monolith folder in the cwd
-COPY monolith/ monolith/
+# Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
+RUN useradd appuser && chown -R appuser /app
+USER appuser
 
-# Export the location of app.py
-ENV FLASK_APP monolith/app.py
-
-# Run and bind on the 0.0.0.0 address
-CMD ["flask", "run", "-h", "0.0.0.0"]
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "monolith.app:app"]

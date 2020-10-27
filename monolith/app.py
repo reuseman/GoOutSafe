@@ -28,11 +28,11 @@ def create_app():
     db.init_app(app)
     db.create_all(app=app)
 
-    import monolith.mock
+    # import monolith.mock
 
-    monolith.mock.user()
-    monolith.mock.operator()
-    monolith.mock.restaurant()
+    # monolith.mock.user()
+    # monolith.mock.operator()
+    # monolith.mock.restaurant()
 
     return app
 
