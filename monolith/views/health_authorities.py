@@ -26,6 +26,6 @@ def create_authority():
             )  # pw should be hashed with some salt
             db.session.add(new_authority)
             db.session.commit()
-            return redirect("/authorities")
+            return redirect("/")
 
     return render_template("create_health_authority.html", form=form)
