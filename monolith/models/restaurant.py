@@ -1,6 +1,7 @@
 from ..app import db
 from .table import Table
 
+
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

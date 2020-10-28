@@ -22,9 +22,6 @@ def create_user():
         if form.validate_on_submit():
             new_user = User()
             form.populate_obj(new_user)
-            new_user.set_password(
-                form.password.data
-            )  # pw should be hashed with some salt
             db.session.add(new_user)
             db.session.commit()
             return redirect("/")

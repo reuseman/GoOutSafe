@@ -13,11 +13,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         email, password = form.data["email"], form.data["password"]
-        print(email)
-        q = db.session.query(User).filter(User.email == email)
-        user = q.first()
-        print(q.first().id)
-        if user is not None and user.authenticate(password):
+        user = db.session.query(User).filter(User.email == email).first()
+
+        if user is not None and user.verify_password(password):
             login_user(user)
             # this sets the global role variable
             session["role"] = "user"
@@ -30,10 +28,9 @@ def operator_login():
     form = LoginForm()
     if form.validate_on_submit():
         email, password = form.data["email"], form.data["password"]
-        q = db.session.query(Operator).filter(Operator.email == email)
-        operator = q.first()
-        print(q.first().id)
-        if operator is not None and operator.authenticate(password):
+        operator = db.session.query(Operator).filter(Operator.email == email).first()
+
+        if operator is not None and operator.verify_password(password):
             login_user(operator)
             # this sets the global role variable
             session["role"] = "operator"
@@ -46,10 +43,13 @@ def authority_login():
     form = LoginForm()
     if form.validate_on_submit():
         email, password = form.data["email"], form.data["password"]
-        q = db.session.query(HealthAuthority).filter(HealthAuthority.email == email)
-        authority = q.first()
-        print(q.first().id)
-        if authority is not None and authority.authenticate(password):
+        authority = (
+            db.session.query(HealthAuthority)
+            .filter(HealthAuthority.email == email)
+            .first()
+        )
+
+        if authority is not None and authority.verify_password(password):
             login_user(authority)
             # this sets the global role variable
             session["role"] = "authority"

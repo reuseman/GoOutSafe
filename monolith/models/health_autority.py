@@ -10,7 +10,7 @@ class HealthAuthority(UserMixin, db.Model):
 
     name = db.Column(db.Unicode(128))
     email = db.Column(db.Unicode(128))
-    password = db.Column(db.Unicode(128))
+    password_hash = db.Column(db.Unicode(128))
     phone = db.Column(db.Integer)
 
     country = db.Column(db.Unicode(128))
@@ -19,17 +19,19 @@ class HealthAuthority(UserMixin, db.Model):
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
 
-    def __init__(self, *args, **kw):
-        if "password" in kw:
-            self.password = generate_password_hash(kw.get("password"))
+    @property
+    def password(self):
+        raise AttributeError("Password is not a readable attribute")
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     @property
     def is_authenticated(self):
-        return self._authenticated
-
-    def authenticate(self, password):
-        checked = check_password_hash(self.password, password)
-        self._authenticated = checked
         return self._authenticated
 
     def get_id(self):

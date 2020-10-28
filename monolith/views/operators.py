@@ -21,9 +21,6 @@ def create_operator():
         if form.validate_on_submit():
             new_operator = Operator()
             form.populate_obj(new_operator)
-            new_operator.set_password(
-                form.password.data
-            )  # pw should be hashed with some salt
             db.session.add(new_operator)
             db.session.commit()
             return redirect("/")

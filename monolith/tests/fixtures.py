@@ -4,7 +4,7 @@ import tempfile
 from flask import Flask
 
 from monolith.views import blueprints
-from monolith.auth import login_manager
+from ..services.auth import login_manager
 
 from monolith.app import db as dba
 
@@ -36,6 +36,10 @@ def app():
     yield app
 
     context.pop()
+    # Teardown of the db
+    dba.session.remove()
+    dba.drop_all(app=app)
+    os.unlink(app.config["DATABASE"])
 
 
 @pytest.fixture
@@ -46,7 +50,3 @@ def client(app):
 @pytest.yield_fixture
 def db(app):
     yield dba
-    # Teardown of the db
-    dba.session.remove()
-    dba.drop_all(app=app)
-    os.unlink(app.config["DATABASE"])

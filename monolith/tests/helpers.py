@@ -3,26 +3,26 @@ from ..models import User
 # DATA
 
 user = dict(
+    email="mariobrown@gmail.com",
     firstname="mario",
     lastname="brown",
-    email="mariobrown@gmail.com",
     password="1234",
     dateofbirth="31/12/1995",
     has_covid19=False,
 )
 
 operator = dict(
+    email="giuseppebrown@lalocanda.com",
     firstname="giuseppe",
     lastname="yellow",
-    email="giuseppebrown@lalocanda.com",
     password="5678",
     dateofbirth="01/01/1963",
     fiscal_code="YLLGPP63A01B519O",
 )
 
 health_authority = dict(
-    name="ASL Canicattì",
     email="canicatti@asl.it",
+    name="ASL Canicattì",
     password="cani123",
     phone="0808403849",
     country="Italy",

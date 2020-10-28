@@ -21,9 +21,6 @@ def create_authority():
         if form.validate_on_submit():
             new_authority = HealthAuthority()
             form.populate_obj(new_authority)
-            new_authority.set_password(
-                form.password.data
-            )  # pw should be hashed with some salt
             db.session.add(new_authority)
             db.session.commit()
             return redirect("/")

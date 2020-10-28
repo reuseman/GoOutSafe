@@ -4,4 +4,4 @@ black==20.8b1
 coveralls
 pytest
 pytest-cov
-faker=4.14.0 
+faker==4.14.0 
