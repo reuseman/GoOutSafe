@@ -9,7 +9,7 @@ from monolith.auth import login_manager
 from monolith.app import db as dba
 
 
-@pytest.fixture
+@pytest.yield_fixture
 def app():
     app = Flask(__name__, template_folder="../templates")
     db_path = os.path.join(app.root_path, "gooutsafe_test.db")
@@ -35,13 +35,7 @@ def app():
 
     yield app
 
-    # Teardown of the db
-    dba.session.remove()
-    dba.drop_all(app=app)
-
     context.pop()
-
-    os.unlink(db_path)
 
 
 @pytest.fixture
@@ -49,6 +43,10 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture
+@pytest.yield_fixture
 def db(app):
-    return dba
+    yield dba
+    # Teardown of the db
+    dba.session.remove()
+    dba.drop_all(app=app)
+    os.unlink(app.config["DATABASE"])

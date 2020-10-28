@@ -3,6 +3,6 @@ python: 3.6
 install:
   - pip install -r requirements/dev.txt
 script:
-  - pytest --cov monolith/tests
+  - pytest --cov monolith
 after_success:
   - coveralls
