@@ -18,7 +18,7 @@ def create_app():
     context.push()
 
     from monolith.views import blueprints
-
+    
     for bp in blueprints:
         app.register_blueprint(bp)
         bp.app = app
@@ -33,6 +33,7 @@ def create_app():
     monolith.mock.user()
     monolith.mock.operator()
     monolith.mock.restaurant()
+    monolith.mock.table()
     monolith.mock.precautions()
     monolith.mock.restaurants_precautions()
 

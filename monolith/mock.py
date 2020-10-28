@@ -1,3 +1,4 @@
+from .models.table import Table
 from monolith.app import db
 from monolith.models import User, Operator, Restaurant, Precautions, RestaurantsPrecautions
 
@@ -45,6 +46,7 @@ def restaurant():
         example.phone = 555123456
         example.lat = 43.720586
         example.lon = 10.408347
+        example.operator_id = 1
         db.session.add(example)
         db.session.commit()
 
@@ -57,6 +59,14 @@ def precautions():
         db.session.add(Precautions(name="Social distancing"))
         db.session.commit()
 
+
+def table():
+    q = db.session.query(Table).filter(Table.id == 1)
+    table = q.first()
+    if table is None:
+        db.session.add(Table(name="A1", seats=5, restaurant_id=1))
+        db.session.add(Table(name="B4", seats=10, restaurant_id=1))
+        db.session.commit()
 
 def restaurants_precautions():
     q = db.session.query(RestaurantsPrecautions).filter(RestaurantsPrecautions.restaurant_id == 1)

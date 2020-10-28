@@ -8,6 +8,8 @@ class Operator(AbstractUser):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fiscal_code = db.Column(db.Unicode(128))
 
+    restaurants = db.relationship("Restaurant", backref="operator")
+
     def __init__(self, *args, **kw):
         super(AbstractUser, self).__init__(*args, **kw)
         self._authenticated = False

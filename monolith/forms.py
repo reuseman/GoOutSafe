@@ -1,3 +1,4 @@
+from monolith.models import precautions
 from flask_wtf import FlaskForm
 import wtforms as f
 from wtforms.validators import DataRequired
@@ -42,3 +43,16 @@ class AuthorityForm(FlaskForm):
     lon = f.DecimalField("longitude", validators=[DataRequired()])
 
     display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+
+
+class CreateRestaurantForm(FlaskForm):
+    name = f.StringField("name", validators=[DataRequired()])
+    latitude = f.FloatField("latitude", validators=[DataRequired()])
+    longitude = f.FloatField("longitude", validators=[DataRequired()])
+    phone = f.IntegerField("phone", validators=[DataRequired()])
+    display = ["name", "latitude", "longitude", "phone"]
+
+class CreateTableForm(FlaskForm):
+    name = f.StringField("name", validators=[DataRequired()])
+    seats = f.IntegerField("seats", validators=[DataRequired()])
+    display = ["name", "seats"]
