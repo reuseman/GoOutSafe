@@ -1,3 +1,5 @@
+from flask.globals import session
+from monolith.models import precautions
 from flask.helpers import flash
 from flask import Blueprint, redirect, render_template, request
 from monolith.app import db
@@ -67,13 +69,22 @@ def create_restaurant():
         if form.validate_on_submit():
             new_restaurant = Restaurant()
             form.populate_obj(new_restaurant)
+            
             new_restaurant.likes = 0
-
-            q_rest = Restaurant.query.filter_by(lat=float(form.latitude.data), 
-                lon=form.longitude.data)
+            new_restaurant.operator_id = current_user.id
+            q_rest = Restaurant.query.filter_by(lat=float(form.lat.data), 
+                lon=float(form.lon.data), operator_id=current_user.id)
             if q_rest.first() is None:
                 db.session.add(new_restaurant)
                 db.session.commit()
+
+                precautions = request.form.getlist("prec_measures")
+
+                for prec in precautions:
+                    new_restprec = RestaurantsPrecautions(restaurant_id=new_restaurant.id, 
+                        precautions_id=int(prec))
+                    db.session.add(new_restprec)
+                    db.session.commit()
     
                 return redirect("/restaurants")
             else:
@@ -84,6 +95,7 @@ def create_restaurant():
 
 
 @restaurants.route("/restaurants/<restaurant_id>/tables")
+@login_required
 def _tables(restaurant_id):
     alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
     print (alltables.first())
@@ -97,6 +109,8 @@ def _tables(restaurant_id):
 
 
 @restaurants.route("/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"])
+@login_required
+@operator_required
 def create_table(restaurant_id):
     status = 200
     form = CreateTableForm()

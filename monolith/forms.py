@@ -1,5 +1,8 @@
-from monolith.models import precautions
+from wtforms import widgets
+from monolith.models.precautions import Precautions
 from flask_wtf import FlaskForm
+from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
+from monolith.app import db
 import wtforms as f
 from wtforms.validators import DataRequired
 
@@ -45,14 +48,27 @@ class AuthorityForm(FlaskForm):
     display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
 
 
+def precautions_choices():      
+    return db.session.query(Precautions)
+
+
+class MultiCheckboxField(QuerySelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
 class CreateRestaurantForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
-    latitude = f.FloatField("latitude", validators=[DataRequired()])
-    longitude = f.FloatField("longitude", validators=[DataRequired()])
+    lon = f.FloatField("longitude", validators=[DataRequired()])
+    lat = f.FloatField("latitude", validators=[DataRequired()])
     phone = f.IntegerField("phone", validators=[DataRequired()])
-    display = ["name", "latitude", "longitude", "phone"]
+    prec_measures = MultiCheckboxField("precautions", validators=[DataRequired()],
+        get_label="name", query_factory=precautions_choices)
+    display = ["name", "lat", "lon", "phone", "prec_measures"]
+
 
 class CreateTableForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
     seats = f.IntegerField("seats", validators=[DataRequired()])
     display = ["name", "seats"]
+
