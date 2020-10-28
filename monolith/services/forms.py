@@ -22,6 +22,7 @@ class UserForm(FlaskForm):
     display = ["email", "firstname", "lastname", "password", "dateofbirth"]
 
 
+# TODO Validators are missing?
 class OperatorForm(UserForm):
     # TODO validate fiscal code in a good proper way
     fiscal_code = f.StringField("fiscalcode", validators=[DataRequired()])
@@ -46,9 +47,6 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("latitude", validators=[DataRequired()])
     lon = f.DecimalField("longitude", validators=[DataRequired()])
 
-<<<<<<< HEAD:monolith/forms.py
-    display = ["email", "name", "password", "phone", "country", "state", "city", "lat", "lon"]
-=======
     display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
 
 
@@ -79,4 +77,3 @@ class CreateTableForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
     seats = f.IntegerField("seats", validators=[DataRequired()])
     display = ["name", "seats"]
->>>>>>> 65a8379b1d3365d33c399800ff4ac3c1026c3f84:monolith/services/forms.py
