@@ -1,5 +1,5 @@
 from ..app import db
-
+from .table import Table
 
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
@@ -15,3 +15,7 @@ class Restaurant(db.Model):
     lon = db.Column(db.Float)  # restaurant longitude
 
     phone = db.Column(db.Integer)
+
+    operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
+
+    tables = db.relationship("Table", backref="restaurant")

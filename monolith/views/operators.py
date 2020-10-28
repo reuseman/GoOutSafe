@@ -26,6 +26,6 @@ def create_operator():
             )  # pw should be hashed with some salt
             db.session.add(new_operator)
             db.session.commit()
-            return redirect("/operators")
+            return redirect("/")
 
     return render_template("create_operator.html", form=form)

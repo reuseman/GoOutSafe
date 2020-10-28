@@ -4,6 +4,7 @@ from .auth import auth
 from .users import users
 from .restaurants import restaurants
 from .operators import operators
+from .health_authorities import authorities
 
 
-blueprints = [home, auth, users, restaurants, operators]
+blueprints = [home, auth, users, restaurants, operators, authorities]

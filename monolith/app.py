@@ -14,6 +14,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gooutsafe.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    context = app.app_context()
+    context.push()
+
     from monolith.views import blueprints
 
     for bp in blueprints:

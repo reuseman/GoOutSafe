@@ -9,6 +9,7 @@ users = Blueprint("users", __name__)
 
 
 @users.route("/users")
+@authority_required
 def _users():
     users = db.session.query(User)
     return render_template("users.html", users=users)
@@ -26,6 +27,6 @@ def create_user():
             )  # pw should be hashed with some salt
             db.session.add(new_user)
             db.session.commit()
-            return redirect("/users")
+            return redirect("/")
 
     return render_template("create_user.html", form=form)

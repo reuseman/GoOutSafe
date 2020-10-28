@@ -1,10 +1,11 @@
+from flask_login import UserMixin
+
 from ..app import db
-from .abstract_user import AbstractUser
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class HealthAuthority(db.Model):
-    __tablename__ = "health_authority"
+class HealthAuthority(UserMixin, db.Model):
+    __tablename__ = "authorities"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     name = db.Column(db.Unicode(128))
