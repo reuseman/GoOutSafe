@@ -30,7 +30,7 @@ def test_operator_cannot_access_users(client):
 def test_anonymous_cannot_access_users(client):
     res = get_response_from_users(client)
 
-    assert res.status_code == 401
+    assert res.status_code == 302
 
 
 def get_response_from_users(client):

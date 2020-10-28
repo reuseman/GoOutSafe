@@ -1,12 +1,13 @@
-<html>
-  <body>
-    <h1>Tables List</h1>
-    <ul>
-      {% for table in tables: %}
-      <li>
-      "{{table.name}}"    Seats: {{table.seats}} 
-      </li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Authorities{% endblock %}
+
+{% block main %}
+<h1>Tables List</h1>
+<ul>
+  {% for table in tables: %}
+  <li>
+    "{{table.name}}" Seats: {{table.seats}}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

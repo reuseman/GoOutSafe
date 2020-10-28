@@ -17,8 +17,7 @@
                 {% if not (current_user.is_authenticated and current_user.is_active)%}
                 <li><a href="/login">Login</a></li>
                 {% else %}
-                <li>Hi, there!</li>
-                <!--#TODO insert the dynamic name of the current user-->
+                <li>Hi, {{ session["name"] }}!</li>
                 <li><a href="/logout">Logout</a></li>
                 {% endif %}
             </ul>

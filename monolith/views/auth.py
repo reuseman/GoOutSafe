@@ -19,6 +19,7 @@ def login():
             login_user(user)
             # this sets the global role variable
             session["role"] = "user"
+            session["name"] = user.firstname
             return redirect("/")
     return render_template("login.html", form=form, title="User Login")
 
@@ -34,6 +35,7 @@ def operator_login():
             login_user(operator)
             # this sets the global role variable
             session["role"] = "operator"
+            session["name"] = operator.firstname
             return redirect("/")
     return render_template("login.html", form=form, title="Operator Login")
 
@@ -53,6 +55,7 @@ def authority_login():
             login_user(authority)
             # this sets the global role variable
             session["role"] = "authority"
+            session["name"] = authority.name
             return redirect("/")
     return render_template("login.html", form=form, title="Authority Login")
 
