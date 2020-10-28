@@ -29,3 +29,16 @@ class OperatorForm(UserForm):
         "dateofbirth",
         "fiscal_code",
     ]
+
+
+class AuthorityForm(FlaskForm):
+    email = f.StringField("email", validators=[DataRequired()])
+    name = f.StringField("name", validators=[DataRequired()])
+    password = f.PasswordField("password", validators=[DataRequired()])
+    country = f.StringField("country", validators=[DataRequired()])
+    state = f.StringField("state", validators=[DataRequired()])
+    city = f.StringField("city", validators=[DataRequired()])
+    lat = f.DecimalField("latitude", validators=[DataRequired()])
+    lon = f.DecimalField("longitude", validators=[DataRequired()])
+
+    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]

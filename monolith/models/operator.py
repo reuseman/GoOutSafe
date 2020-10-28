@@ -12,9 +12,6 @@ class Operator(AbstractUser):
         super(AbstractUser, self).__init__(*args, **kw)
         self._authenticated = False
 
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
     @property
     def is_authenticated(self):
         return self._authenticated

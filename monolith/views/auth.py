@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
 
 from monolith.app import db
-from monolith.mock import User
-from monolith.forms import LoginForm
+from monolith.models import User, Operator, HealthAuthority
+from ..services.forms import LoginForm
 
 auth = Blueprint("auth", __name__)
 

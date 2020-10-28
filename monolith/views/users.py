@@ -1,8 +1,9 @@
 from flask import Blueprint, redirect, render_template, request
 from monolith.app import db
 from monolith.models import User
-from monolith.auth import admin_required
-from monolith.forms import UserForm
+from ..services.auth import admin_required
+from ..services.forms import UserForm
+from ..services.auth import authority_required
 
 users = Blueprint("users", __name__)
 

@@ -9,11 +9,8 @@ class User(AbstractUser):
     has_covid19 = db.Column(db.Boolean, default=False)
 
     def __init__(self, *args, **kw):
-        super(AbstractUser, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self._authenticated = False
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
 
     @property
     def is_authenticated(self):

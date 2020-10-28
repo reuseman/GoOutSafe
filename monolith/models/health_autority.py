@@ -18,7 +18,18 @@ class HealthAuthority(db.Model):
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
 
-    # TODO this attributes are in common with the one of Operator and User, a refactor could be done
-    is_active = db.Column(db.Boolean, default=True)
-    is_admin = db.Column(db.Boolean, default=False)
-    is_anonymous = False
+    def __init__(self, *args, **kw):
+        if "password" in kw:
+            self.password = generate_password_hash(kw.get("password"))
+
+    @property
+    def is_authenticated(self):
+        return self._authenticated
+
+    def authenticate(self, password):
+        checked = check_password_hash(self.password, password)
+        self._authenticated = checked
+        return self._authenticated
+
+    def get_id(self):
+        return self.id
