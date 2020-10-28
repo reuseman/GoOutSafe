@@ -8,7 +8,7 @@ login_manager = LoginManager()
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="templates/assets")
     app.config["WTF_CSRF_SECRET_KEY"] = "my_secret"
     app.config["SECRET_KEY"] = "my_secret_sqlite"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gooutsafe.db"
@@ -25,15 +25,17 @@ def create_app():
     db.init_app(app)
     db.create_all(app=app)
 
+    from .services import mock
+
+    mock.users()
+    mock.operator()
+    mock.restaurant()
+    mock.precautions()
+    mock.restaurants_precautions()
+
     return app
 
 
 if __name__ == "__main__":
     app = create_app()
     app.run()
-
-    import monolith.mock
-
-    monolith.mock.user()
-    monolith.mock.operator()
-    monolith.mock.restaurant()

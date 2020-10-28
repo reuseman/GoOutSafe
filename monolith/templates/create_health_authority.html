@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block main %}
-<h3>{{ title }}</h3>
-
-
 <form action="" method="POST">
   {{ form.hidden_tag() }}
   <dl>
@@ -19,10 +16,6 @@
     {% endfor %}
   </dl>
   <p>
-    <input type=submit value="Publish">
+    <input type=submit value="Submit">
 </form>
-
-<h5><a href="/login">Login as an User</a></h5>
-<h5><a href="/operator_login">Login as an Operator</a></h5>
-<h5><a href="/authority_login">Login as an Health Authority</a></h5>
 {% endblock %}
