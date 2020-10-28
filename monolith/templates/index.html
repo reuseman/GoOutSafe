@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block main %}
 <h1>GoOutSafe</h1>
 
 {% if current_user.is_authenticated and session['role'] == "user"%}
@@ -24,3 +28,4 @@ Below you can mark users as positive, have fun!.
 Hi Anonymous, <a href="/login">Log in</a>
 {{ session["role"] }}
 {% endif %}
+{% endblock %}

@@ -46,7 +46,6 @@ def test_correct_login(client):
 
 # Helpers methods
 
-
 def add_authority(client):
     return client.post(
         "/create_authority",

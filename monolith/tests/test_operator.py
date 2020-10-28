@@ -25,21 +25,6 @@ def test_create_operator_view(client, db):
     assert urlparse(res.location).path == "/"
 
 
-def test_correct_login(client):
-    add_operator(client)
-
-    res = client.post(
-        "/operator_login",
-        data=dict(
-            email="operator@mail.com",
-            password="1233454",
-        ),
-        follow_redirects=False,
-    )
-
-    assert res.status_code == 302
-
-
 # Helpers methods
 
 
@@ -52,7 +37,7 @@ def add_operator(client):
             lastname="operator",
             dateofbirth="05/12/2020",
             password="1233454",
-            fiscal_code="123123123123"
+            fiscal_code="123123123123",
         ),
         follow_redirects=False,
     )

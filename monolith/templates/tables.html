@@ -1,0 +1,12 @@
+<html>
+  <body>
+    <h1>Tables List</h1>
+    <ul>
+      {% for table in tables: %}
+      <li>
+      "{{table.name}}"    Seats: {{table.seats}} 
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

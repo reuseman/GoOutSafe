@@ -1,14 +1,13 @@
-<html>
+{% extends "base.html" %}
+{% block title %}Authorities{% endblock %}
 
-<body>
-  <h1>Authorities List</h1>
-  <ul>
-    {% for authority in authorities: %}
-    <li>
-      {{authority.name}}
-    </li>
-    {% endfor %}
-  </ul>
-</body>
-
-</html>
+{% block main %}
+<h1>Authorities List</h1>
+<ul>
+  {% for authority in authorities: %}
+  <li>
+    {{authority.name}}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

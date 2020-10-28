@@ -1,8 +1,8 @@
 from flask import Blueprint, redirect, render_template, request
 from monolith.app import db
 from monolith.models import Operator
-from monolith.auth import admin_required
-from monolith.forms import OperatorForm
+from ..services.auth import admin_required
+from ..services.forms import OperatorForm
 
 operators = Blueprint("operators", __name__)
 
@@ -21,9 +21,6 @@ def create_operator():
         if form.validate_on_submit():
             new_operator = Operator()
             form.populate_obj(new_operator)
-            new_operator.set_password(
-                form.password.data
-            )  # pw should be hashed with some salt
             db.session.add(new_operator)
             db.session.commit()
             return redirect("/")

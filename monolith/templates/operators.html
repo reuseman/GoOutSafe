@@ -1,14 +1,13 @@
-<html>
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
 
-<body>
-  <h1>User List</h1>
-  <ul>
-    {% for operator in operators: %}
-    <li>
-      {{operator.firstname}} {{operator.lastname}}
-    </li>
-    {% endfor %}
-  </ul>
-</body>
-
-</html>
+{% block main %}
+<h1>User List</h1>
+<ul>
+  {% for operator in operators: %}
+  <li>
+    {{operator.firstname}} {{operator.lastname}}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
