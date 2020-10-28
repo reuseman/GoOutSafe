@@ -1,16 +1,17 @@
 from ..app import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime, timezone
 
 
 class AbstractUser(UserMixin, db.Model):
     __abstract__ = True
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.Unicode(128), nullable=False)
-    firstname = db.Column(db.Unicode(128))
-    lastname = db.Column(db.Unicode(128))
-    password_hash = db.Column(db.Unicode(128))
-    dateofbirth = db.Column(db.DateTime)
+
+    is_registered = db.Column(db.Boolean(), default=False)
+    created_at = db.Column(
+        db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     @property
     def password(self):

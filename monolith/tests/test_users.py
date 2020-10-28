@@ -1,6 +1,7 @@
 from .fixtures import app, client, db
 from . import helpers
 
+
 # TODO access only a single user!
 def test_health_authority_can_access_users(client):
     helpers.create_health_authority(client)

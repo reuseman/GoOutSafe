@@ -1,11 +1,9 @@
 import pytest
 import os
-import tempfile
 from flask import Flask
 
 from monolith.views import blueprints
 from ..services.auth import login_manager
-
 from monolith.app import db as dba
 
 
