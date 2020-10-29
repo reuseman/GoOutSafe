@@ -10,7 +10,7 @@
 		// Python testing
 		"hbenl.vscode-test-explorer",
 		"littlefoxteam.vscode-python-test-adapter",
-		"rduldulao.py-coverage-view",
+		"ryanluker.vscode-coverage-gutters",
 		// Other
 		"streetsidesoftware.code-spell-checker",
 		"coenraads.bracket-pair-colorizer-2",

@@ -25,12 +25,14 @@ In order to have a consistent coding style, formatting on save, good spelling:
     mock.restaurant()
     mock.restaurant()
 
-### To run tests
+### To run tests with coverage
+Inside GoOutSafe run (it will automatically use the configuration in pyproject.toml):
+
     pytest
 
-To run with coverage:
+If you want to see an interactive report run:
 
-    pytest --cov monolith/
+    coverage html
 
 ## User stories
 ![](docs/user-stories.png)
