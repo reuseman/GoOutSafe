@@ -1,19 +1,37 @@
 {
     "configurations": [
         {
-            "name": "Docker: Python - Flask",
-            "type": "docker",
+            "name": "Python: Flask",
+            "type": "python",
             "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "python": {
-                "pathMappings": [
-                    {
-                        "localRoot": "${workspaceFolder}",
-                        "remoteRoot": "/app"
-                    }
-                ],
-                "projectType": "flask"
-            }
-        }
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "monolith/app.py",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "0"
+            },
+            "args": [
+                "run",
+                "--no-debugger"
+            ],
+            "jinja": true
+        },
+        {
+            "name": "Python: Flask (debug)",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "monolith/app.py",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--reload",
+                "--debugger"
+            ],
+            "jinja": true
+        },
     ]
 }
