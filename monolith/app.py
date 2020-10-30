@@ -33,6 +33,7 @@ def create_app():
     mock.users()
     mock.operator()
     mock.restaurant()
+    mock.table()
     mock.precautions()
     mock.restaurants_precautions()
 
