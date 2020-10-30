@@ -7,8 +7,9 @@ from monolith.models import (
     Restaurant,
     HealthAuthority,
     Precautions,
-    RestaurantsPrecautions,
+    RestaurantsPrecautions
 )
+from monolith.models.table import Table
 
 import datetime
 
@@ -93,6 +94,17 @@ def restaurant():
         example.phone = 555123456
         example.lat = 43.720586
         example.lon = 10.408347
+        db.session.add(example)
+        db.session.commit()
+    
+def table():
+    q = db.session.query(Table).filter(Table.id == 1)
+    table = q.first()
+    if table is None:
+        example = Table()
+        example.name = "A1"
+        example.seats = 5
+        example.restaurant_id = 1
         db.session.add(example)
         db.session.commit()
 
