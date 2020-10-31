@@ -1,13 +1,12 @@
 from faker import Faker
-
-from monolith.app import db
 from monolith.models import (
     User,
     Operator,
     Restaurant,
     HealthAuthority,
     Precautions,
-    RestaurantsPrecautions
+    RestaurantsPrecautions,
+    Table
 )
 from monolith.models.table import Table
 
@@ -16,10 +15,10 @@ import datetime
 fake = Faker("it_IT")
 
 
-def users(n=50):
+def users(db,n=50):
     users_number = db.session.query(User).count()
     if users_number == 0:
-        default_user()
+        default_user(db)
         users = [
             User(
                 email=fake.email(),
@@ -36,7 +35,7 @@ def users(n=50):
         db.session.commit()
 
 
-def default_user():
+def default_user(db):
     q = db.session.query(User).filter(User.email == "example@example.com")
     user = q.first()
     if user is None:
@@ -52,7 +51,7 @@ def default_user():
         db.session.commit()
 
 
-def operator():
+def operator(db):
     q = db.session.query(Operator).filter(Operator.email == "operator@example.com")
     user = q.first()
     if user is None:
@@ -68,7 +67,7 @@ def operator():
         db.session.commit()
 
 
-def health_authority():
+def health_authority(db):
     q = db.session.query(HealthAuthority).filter(
         HealthAuthority.email == "auth@mail.com"
     )
@@ -84,7 +83,7 @@ def health_authority():
         db.session.commit()
 
 
-def restaurant():
+def restaurant(db):
     q = db.session.query(Restaurant).filter(Restaurant.id == 1)
     restaurant = q.first()
     if restaurant is None:
@@ -99,7 +98,7 @@ def restaurant():
         db.session.add(example)
         db.session.commit()
     
-def table():
+def table(db):
     q = db.session.query(Table).filter(Table.id == 1)
     table = q.first()
     if table is None:
@@ -111,7 +110,7 @@ def table():
         db.session.commit()
 
 
-def precautions():
+def precautions(db):
     q = db.session.query(Precautions).filter(Precautions.id == 1)
     precautions = q.first()
     if precautions is None:
@@ -120,7 +119,7 @@ def precautions():
         db.session.commit()
 
 
-def restaurants_precautions():
+def restaurants_precautions(db):
     q = db.session.query(RestaurantsPrecautions).filter(
         RestaurantsPrecautions.restaurant_id == 1
     )
@@ -128,4 +127,15 @@ def restaurants_precautions():
     if restaurant_precautions is None:
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
+        db.session.commit()
+
+
+def table(db):
+    q = db.session.query(Table).filter(
+            Table.restaurant_id == 1
+        )
+    table = q.first()
+    if table is None:
+        db.session.add(Table(name="1", seats=5, restaurant_id=1))
+        db.session.add(Table(name="2", seats=3, restaurant_id=1))
         db.session.commit()

@@ -7,7 +7,7 @@
 <ul>
   {% for restaurant in restaurants: %}
   <li>
-    "{{restaurant.name}}" Likes: {{restaurant.likes}}
+    "<a href="{{base_url}}/{{restaurant.id}}">{{restaurant.name}}</a>" Likes: {{restaurant.likes}}
     {% if current_user.is_authenticated %}
       {% if role != 'operator' or (role == 'operator' and current_user.id != restaurant.operator_id) %}
         <a href="{{base_url}}/like/{{restaurant.id}}">Like it!</a>

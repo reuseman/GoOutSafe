@@ -1,5 +1,5 @@
 from ..models import User
-
+from ..services import mock
 # DATA
 
 user = dict(
@@ -66,6 +66,10 @@ def insert_user(db, data=user) -> User:
     db.session.add(temp)
     db.session.commit()
     return temp
+
+
+def inser_restaurant_db(db):
+    mock.restaurant(db)
 
 
 def create_operator(client, data=operator):

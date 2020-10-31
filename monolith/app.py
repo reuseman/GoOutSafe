@@ -33,14 +33,12 @@ def create_app():
 
     from .services import mock
 
-    mock.users(10)
-    mock.operator()
-    mock.restaurant()
-    mock.table()
-    mock.precautions()
-    mock.restaurants_precautions()
-    # mock.health_authority()
-    # mock.mark_three_users()
+    mock.users(db,10)
+    mock.operator(db)
+    mock.restaurant(db)
+    mock.precautions(db)
+    mock.restaurants_precautions(db)
+    mock.table(db)
 
     return app
 

@@ -5,3 +5,4 @@ from .restaurant import Restaurant
 from .user import User
 from .restaurants_precautions import RestaurantsPrecautions
 from .precautions import Precautions
+from .table import Table
