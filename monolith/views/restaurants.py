@@ -98,11 +98,13 @@ def create_restaurant():
             new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
             
-            if restaurant.add_new_restaurant(
+            if not restaurant.check_create_restaurant_values(new_restaurant):
+                status = 400
+            elif restaurant.add_new_restaurant(
                 new_restaurant, 
                 request.form.getlist("prec_measures")
             ):
-                return redirect("/restaurants")
+                return redirect("operator/restaurants")
             else:
                 status = 400
                 flash("Restaurant already added", category="error")

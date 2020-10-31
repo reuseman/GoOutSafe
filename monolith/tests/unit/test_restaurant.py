@@ -31,6 +31,29 @@ def test_add_new_restaurant(client, db):
     assert q_rest is not None
     assert q_restprec is not None
 
+
+def test_check_create_restaurant_values(client, db):
+    new_restaurant = Restaurant(**helpers.restaurant)
+
+    res = restaurant.check_create_restaurant_values(new_restaurant)
+
+    assert res == True
+
+
+def test_check_create_restaurant_badvalues(client, db):
+    new_restaurant = Restaurant(
+        name="Trattoria da Pippo", 
+        phone=651981916,
+        lat=-500.75,
+        lon=900.98,
+        time_of_stay=200
+    )
+
+    res = restaurant.check_create_restaurant_values(new_restaurant)
+
+    assert res == False
+
+
 def test_already_added_restaurant(client, db):
     helpers.create_operator(client)
     op = db.session.query(Operator).filter_by(id=1).first()

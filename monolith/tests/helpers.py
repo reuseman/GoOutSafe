@@ -88,6 +88,14 @@ def create_health_authority(client, data=health_authority):
     )
 
 
+def create_restaurant(client, data=restaurant):
+    return client.post(
+        "/create_restaurant",
+        data=data,
+        follow_redirects=False,
+    )
+
+
 # OTHER
 
 
