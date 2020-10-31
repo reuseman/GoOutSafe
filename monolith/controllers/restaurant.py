@@ -2,7 +2,7 @@ from ..models import Restaurant, RestaurantsPrecautions
 from ..models.table import Table
 from ..app import db
 
-def add_new_restaurant(restaurant, prec_measures):
+def add_new_restaurant(restaurant, prec_measures=None):
     q_rest = Restaurant.query.filter_by(
         lat=float(restaurant.lat),
         lon=float(restaurant.lon),
@@ -12,13 +12,14 @@ def add_new_restaurant(restaurant, prec_measures):
         db.session.add(restaurant)
         db.session.commit()
 
-        for prec in prec_measures:
-            new_restprec = RestaurantsPrecautions(
-                restaurant_id=restaurant.id, 
-                precautions_id=int(prec)
-            )
-            db.session.add(new_restprec)
-            db.session.commit()
+        if prec_measures:
+            for prec in prec_measures:
+                new_restprec = RestaurantsPrecautions(
+                    restaurant_id=restaurant.id, 
+                    precautions_id=int(prec)
+                )
+                db.session.add(new_restprec)
+                db.session.commit()
 
         return True
     else:

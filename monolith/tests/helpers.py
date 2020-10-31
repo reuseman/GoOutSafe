@@ -32,6 +32,20 @@ health_authority = dict(
     lon=13.84,
 )
 
+restaurant = dict(
+    name="Trattoria da Fabio", 
+    phone=555123456,
+    lat = 40.720586,
+    lon = 10.10,
+    operator_id=1
+)
+
+table = dict(
+    name="A10", 
+    seats=10,
+    restaurant_id=1
+)
+
 # CREATION
 
 
