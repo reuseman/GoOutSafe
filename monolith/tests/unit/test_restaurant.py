@@ -12,18 +12,24 @@ def test_add_new_restaurant_no_prec(client, db):
     new_restaurant = Restaurant(**helpers.restaurant)
 
     res = restaurant.add_new_restaurant(new_restaurant)
-
+    q_restaurant = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
+    q_restprec = db.session.query(RestaurantsPrecautions).filter_by(restaurant_id=new_restaurant.id).first()
+    
     assert res == True
-    assert db.session.query(Restaurant).filter_by(name=new_restaurant.name).first() is not None
+    assert q_restaurant is not None
+    assert q_restprec is None
 
 def test_add_new_restaurant(client, db):
     helpers.create_operator(client)
     new_restaurant = Restaurant(**helpers.restaurant)
 
     res = restaurant.add_new_restaurant(new_restaurant, [1, 2])
+    q_rest = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
+    q_restprec = db.session.query(RestaurantsPrecautions).filter_by(restaurant_id=new_restaurant.id).first()
 
     assert res == True
-    assert db.session.query(Restaurant).filter_by(name=new_restaurant.name).first() is not None
+    assert q_rest is not None
+    assert q_restprec is not None
 
 def test_already_added_restaurant(client, db):
     helpers.create_operator(client)

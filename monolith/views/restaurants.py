@@ -123,7 +123,7 @@ def _tables(restaurant_id):
     )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"])
+@restaurants.route("/operator/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"])
 @login_required
 @operator_required
 def create_table(restaurant_id):
