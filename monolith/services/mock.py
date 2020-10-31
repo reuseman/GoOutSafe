@@ -1,4 +1,7 @@
+from monolith.views.health_authorities import _authorities
+import codicefiscale
 from faker import Faker
+from codicefiscale import codicefiscale as cf
 
 from monolith.app import db
 from monolith.models import (
@@ -7,7 +10,8 @@ from monolith.models import (
     Restaurant,
     HealthAuthority,
     Precautions,
-    RestaurantsPrecautions
+    RestaurantsPrecautions,
+    Mark,
 )
 from monolith.models.table import Table
 
@@ -17,20 +21,50 @@ fake = Faker("it_IT")
 
 
 def users(n=50):
+    """
+    Add a random number of users in the database, together with the default user.
+    This method is not stable yet. Avoid using big numbers.
+
+    Args:
+        n (int, optional): Number of user to generate. Defaults to 50.
+    """
     users_number = db.session.query(User).count()
     if users_number == 0:
         default_user()
-        users = [
-            User(
-                email=fake.email(),
-                firstname=fake.first_name(),
-                lastname=fake.last_name(),
-                password=fake.password(length=fake.pyint(8, 24)),
-                dateofbirth=fake.date_of_birth(minimum_age=16, maximum_age=86),
-                has_covid19=False,
+
+        users = list()
+        for i in range(0, n - 1):
+            profile = fake.profile(["mail", "birthdate", "sex"])
+            profile["first_name"] = fake.first_name()
+            profile["last_name"] = fake.last_name()
+
+            # Generate fiscal code
+            # ! This is not a nice solution
+            # TODO should be refactored
+            fiscal_code = None
+            while fiscal_code is None:
+                try:
+                    fiscal_code = cf.encode(
+                        name=profile["first_name"],
+                        surname=profile["last_name"],
+                        sex=profile["sex"],
+                        birthdate=profile["birthdate"].strftime("%d/%m/%Y"),
+                        birthplace=fake.city(),
+                    )
+                except ValueError:
+                    pass
+
+            users.append(
+                User(
+                    email=profile["mail"],
+                    firstname=profile["first_name"],
+                    lastname=profile["last_name"],
+                    phone_number=fake.phone_number().replace(" ", ""),
+                    password=fake.password(length=fake.pyint(8, 24)),
+                    dateofbirth=profile["birthdate"],
+                    fiscal_code=fiscal_code,
+                )
             )
-            for i in range(0, n - 1)
-        ]
 
         db.session.add_all(users)
         db.session.commit()
@@ -46,7 +80,6 @@ def default_user():
             lastname="Admin",
             password="admin",
             dateofbirth=datetime.datetime(2020, 10, 5),
-            has_covid19=False,
         )
         db.session.add(example)
         db.session.commit()
@@ -69,10 +102,11 @@ def operator():
 
 
 def health_authority():
-    q = db.session.query(HealthAuthority).filter(
-        HealthAuthority.email == "auth@mail.com"
+    ha = (
+        db.session.query(HealthAuthority)
+        .filter(HealthAuthority.email == "auth@mail.com")
+        .first()
     )
-    ha = q.first()
     if ha is None:
         example = HealthAuthority()
         example.name = "Admin"
@@ -96,7 +130,8 @@ def restaurant():
         example.lon = 10.408347
         db.session.add(example)
         db.session.commit()
-    
+
+
 def table():
     q = db.session.query(Table).filter(Table.id == 1)
     table = q.first()
@@ -126,4 +161,18 @@ def restaurants_precautions():
     if restaurant_precautions is None:
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
+        db.session.commit()
+
+
+def mark_three_users():
+    if not Mark.query.all():
+        user1 = db.session.query(User).filter(User.id == 4).first()
+        user2 = db.session.query(User).filter(User.id == 7).first()
+        user3 = db.session.query(User).filter(User.id == 8).first()
+
+        ha = db.session.query(HealthAuthority).filter(HealthAuthority.id == 1).first()
+        ha.mark(user1)
+        ha.mark(user2)
+        ha.mark(user3)
+
         db.session.commit()

@@ -24,6 +24,26 @@ Below you can see your restaurants.
 Hi {{ current_user.name }}! <a href="/logout">Logout</a>
 Below you can mark users as positive, have fun!.
 
+<!--TODO refactor all the custom sub-views in an external file-->
+<section>
+  <h2>Add new Mark</h2>
+  <p>
+  <form method="POST" action="/marks/new/ssn">
+    <input type="submit" value="SSN" />
+  </form>
+  </p>
+  <p>
+  <form method="POST" action="/marks/new/email">
+    <input type="submit" value="Email" />
+  </form>
+  </p>
+  <p>
+  <form method="POST" action="/marks/new/phonenumber">
+    <input type="submit" value="Phone number" />
+  </form>
+  </p>
+</section>
+
 {% else %}
 Hi Anonymous, <a href="/login">Log in</a>
 {{ session["role"] }}

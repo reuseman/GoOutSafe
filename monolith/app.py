@@ -39,8 +39,8 @@ def create_app():
     mock.table()
     mock.precautions()
     mock.restaurants_precautions()
-    # mock.health_authority()
-    # mock.mark_three_users()
+    mock.health_authority()
+    mock.mark_three_users()
 
     return app
 

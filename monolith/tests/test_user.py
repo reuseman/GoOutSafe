@@ -24,5 +24,4 @@ def test_create_user_view(client, db):
     assert fetched_user.firstname == "mario"
     assert fetched_user.lastname == "brown"
     assert fetched_user.dateofbirth == datetime(1995, 12, 31)
-    assert not fetched_user.has_covid19
     assert urlparse(res.location).path == "/"

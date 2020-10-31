@@ -1,10 +1,12 @@
+from monolith.services.auth import authority_required
+from sys import displayhook
 from wtforms import widgets
 from monolith.models.precautions import Precautions
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith.app import db
 import wtforms as f
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange, Email
 
 
 class LoginForm(FlaskForm):
@@ -77,3 +79,61 @@ class CreateTableForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
     seats = f.IntegerField("seats", validators=[DataRequired()])
     display = ["name", "seats"]
+
+
+class MarkSsnForm(FlaskForm):
+    # TODO Custom validator to check if ssn is valid
+    duration = f.IntegerField(
+        "Duration",
+        validators=[
+            DataRequired(message="This field must be a number."),
+            NumberRange(
+                min=1, max=60, message="The duration must be between 1 and 60."
+            ),
+        ],
+    )
+    ssn = f.StringField(
+        "SSN",
+        validators=[DataRequired()],
+        render_kw={"placeholder": "RSSMRA00A01H501C"},
+    )
+    submit = f.SubmitField("Mark")
+    display = ["duration", "ssn", "submit"]
+
+
+class MarkEmailForm(FlaskForm):
+    duration = f.IntegerField(
+        "Duration",
+        validators=[
+            DataRequired(message="This field must be a number."),
+            NumberRange(
+                min=1, max=60, message="The duration must be between 1 and 60."
+            ),
+        ],
+    )
+    email = f.StringField(
+        "Email",
+        validators=[DataRequired(), Email(message="Insert a valid email address.")],
+        render_kw={"placeholder": "example@mail.com"},
+    )
+    submit = f.SubmitField("Mark")
+    display = ["duration", "email", "submit"]
+
+
+class MarkPhoneNumberForm(FlaskForm):
+    duration = f.IntegerField(
+        "Duration",
+        validators=[
+            DataRequired(message="This field must be a number."),
+            NumberRange(
+                min=1, max=60, message="The duration must be between 1 and 60."
+            ),
+        ],
+    )
+    phone_number = f.StringField(
+        "Phone number",
+        validators=[DataRequired("This field must be a valid phone number")],
+        render_kw={"placeholder": "333 3339999"},
+    )
+    submit = f.SubmitField("Mark")
+    display = ["duration", "phone_number", "submit"]
