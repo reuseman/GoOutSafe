@@ -21,6 +21,21 @@ def _restaurants(message=""):
         "restaurants.html",
         message=message,
         restaurants=allrestaurants,
+        role=session["role"],
+        # base_url="http://127.0.0.1:5000/restaurants",
+        base_url=request.base_url,
+    )
+
+@restaurants.route("/operator/restaurants")
+@login_required
+@operator_required
+def operator_restaurants(message=""):
+    operator_restaurants = db.session.query(Restaurant).filter_by(operator_id=current_user.id)
+    return render_template(
+        "restaurants.html",
+        message=message,
+        restaurants=operator_restaurants,
+        role=session["role"],
         # base_url="http://127.0.0.1:5000/restaurants",
         base_url=request.base_url,
     )
