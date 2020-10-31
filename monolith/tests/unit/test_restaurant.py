@@ -35,7 +35,7 @@ def test_already_added_restaurant(client, db):
         phone=651981916,
         lat=40.720586,
         lon=10.10,
-        operator_id=1
+        operator_id=op.id
     )
 
     restaurant.add_new_restaurant(new_restaurant1)
@@ -68,7 +68,7 @@ def test_already_added_table(client, db):
     new_table2 = Table(
         name="A10",
         seats=5,
-        restaurant_id=1
+        restaurant_id=new_restaurant.id
     )
     res = restaurant.add_new_table(new_table2)
 

@@ -1,10 +1,10 @@
-from wtforms import widgets
+from wtforms import widgets, validators
 from monolith.models.precautions import Precautions
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith.app import db
 import wtforms as f
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange, Email
 
 
 class LoginForm(FlaskForm):
@@ -44,8 +44,14 @@ class AuthorityForm(FlaskForm):
     country = f.StringField("country", validators=[DataRequired()])
     state = f.StringField("state", validators=[DataRequired()])
     city = f.StringField("city", validators=[DataRequired()])
-    lat = f.DecimalField("latitude", validators=[DataRequired()])
-    lon = f.DecimalField("longitude", validators=[DataRequired()])
+    lat = f.DecimalField(
+        "latitude", 
+        validators=[DataRequired(), NumberRange(-90, 90,  "Latitude must be between -90 and 90")]
+    )
+    lon = f.DecimalField(
+        "longitude", 
+        validators=[DataRequired(), NumberRange(-180, 180, "Longitude must be between -180 and 180")]
+    )
 
     display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
 
@@ -61,12 +67,17 @@ class MultiCheckboxField(QuerySelectMultipleField):
 
 class CreateRestaurantForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
-    lon = f.FloatField("longitude", validators=[DataRequired()])
-    lat = f.FloatField("latitude", validators=[DataRequired()])
+    lat = f.FloatField(
+        "latitude", 
+        validators=[DataRequired(), NumberRange(-90, 90, "Latitude must be between -90 and 90")]
+    )
+    lon = f.FloatField(
+        "longitude", 
+        validators=[DataRequired(), NumberRange(-180, 180, "Longitude must be between -180 and 180")]
+    )
     phone = f.IntegerField("phone", validators=[DataRequired()])
     prec_measures = MultiCheckboxField(
         "precautions",
-        validators=[DataRequired()],
         get_label="name",
         query_factory=precautions_choices,
     )
@@ -75,5 +86,8 @@ class CreateRestaurantForm(FlaskForm):
 
 class CreateTableForm(FlaskForm):
     name = f.StringField("name", validators=[DataRequired()])
-    seats = f.IntegerField("seats", validators=[DataRequired()])
+    seats = f.IntegerField(
+        "seats", 
+        validators=[DataRequired(), NumberRange(0, 20, "The number of seats for each table must be between 0 and 20")]
+    )
     display = ["name", "seats"]
