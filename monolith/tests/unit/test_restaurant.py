@@ -35,6 +35,7 @@ def test_already_added_restaurant(client, db):
         phone=651981916,
         lat=40.720586,
         lon=10.10,
+        time_of_stay=30,
         operator_id=op.id
     )
 

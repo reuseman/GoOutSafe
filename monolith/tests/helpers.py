@@ -37,6 +37,7 @@ restaurant = dict(
     phone=555123456,
     lat = 40.720586,
     lon = 10.10,
+    time_of_stay = 30,
     operator_id=1
 )
 

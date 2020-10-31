@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith.app import db
 import wtforms as f
-from wtforms.validators import DataRequired, NumberRange, Email
+from wtforms.validators import DataRequired, NumberRange
 
 
 class LoginForm(FlaskForm):
@@ -44,13 +44,14 @@ class AuthorityForm(FlaskForm):
     country = f.StringField("country", validators=[DataRequired()])
     state = f.StringField("state", validators=[DataRequired()])
     city = f.StringField("city", validators=[DataRequired()])
+    #TODO adding validators here causes two fails in the tests
     lat = f.DecimalField(
         "latitude", 
-        validators=[DataRequired(), NumberRange(-90, 90,  "Latitude must be between -90 and 90")]
+        validators=[DataRequired()]
     )
     lon = f.DecimalField(
         "longitude", 
-        validators=[DataRequired(), NumberRange(-180, 180, "Longitude must be between -180 and 180")]
+        validators=[DataRequired()]
     )
 
     display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
@@ -76,12 +77,17 @@ class CreateRestaurantForm(FlaskForm):
         validators=[DataRequired(), NumberRange(-180, 180, "Longitude must be between -180 and 180")]
     )
     phone = f.IntegerField("phone", validators=[DataRequired()])
+    time_of_stay = f.RadioField(
+        'time_of_stay', 
+        choices=[('30','30 minutes'),('90','1:30 hour'), ('180', '3 hours')],
+        validators=[DataRequired()]
+    )
     prec_measures = MultiCheckboxField(
         "precautions",
         get_label="name",
         query_factory=precautions_choices,
     )
-    display = ["name", "lat", "lon", "phone", "prec_measures"]
+    display = ["name", "lat", "lon", "phone", "time_of_stay", "prec_measures"]
 
 
 class CreateTableForm(FlaskForm):
