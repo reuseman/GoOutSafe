@@ -80,8 +80,8 @@ def insert_user(db, data=user) -> User:
     return temp
 
 
-def insert_restaurant_db(db):
-    mock.restaurant(db)
+def insert_restaurant_db():
+    mock.restaurant()
 
 
 def create_operator(client, data=operator):
