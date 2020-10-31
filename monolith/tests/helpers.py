@@ -1,6 +1,7 @@
 from datetime import date
 from monolith.models.health_authority import HealthAuthority
 from ..models import User
+from ..services import mock
 
 # DATA
 
@@ -47,6 +48,17 @@ health_authority2 = dict(
     lon=12.49,
 )
 
+restaurant = dict(
+    name="Trattoria da Fabio",
+    phone=555123456,
+    lat=40.720586,
+    lon=10.10,
+    time_of_stay=30,
+    operator_id=1,
+)
+
+table = dict(name="A10", seats=10, restaurant_id=1)
+
 # CREATION
 
 
@@ -66,6 +78,10 @@ def insert_user(db, data=user) -> User:
     db.session.add(temp)
     db.session.commit()
     return temp
+
+
+def insert_restaurant_db(db):
+    mock.restaurant(db)
 
 
 def create_operator(client, data=operator):

@@ -7,12 +7,16 @@
 <ul>
   {% for restaurant in restaurants: %}
   <li>
-    "{{restaurant.name}}" Likes: {{restaurant.likes}}
+    "<a href="{{base_url}}/{{restaurant.id}}">{{restaurant.name}}</a>" Likes: {{restaurant.likes}}
     {% if current_user.is_authenticated %}
-    <a href="{{base_url}}/like/{{restaurant.id}}">Like it!</a>
+      {% if role != 'operator' or (role == 'operator' and current_user.id != restaurant.operator_id) %}
+        <a href="{{base_url}}/like/{{restaurant.id}}">Like it!</a>
+      {% endif %}
     <a href="{{base_url}}/{{restaurant.id}}">See Details!</a>
     <a href="{{base_url}}/{{restaurant.id}}/tables">Show tables</a>
-    <a href="{{base_url}}/{{restaurant.id}}/create_table">Add new table</a>
+    {% if role == 'operator' and current_user.id == restaurant.operator_id %}
+        <a href="/operator/restaurants/{{restaurant.id}}/create_table">Add new table</a>
+      {% endif %}
     {% endif %}
   </li>
   {% endfor %}
