@@ -12,12 +12,19 @@ def test_add_new_restaurant_no_prec(client, db):
     new_restaurant = Restaurant(**helpers.restaurant)
 
     res = restaurant.add_new_restaurant(new_restaurant)
-    q_restaurant = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
-    q_restprec = db.session.query(RestaurantsPrecautions).filter_by(restaurant_id=new_restaurant.id).first()
-    
+    q_restaurant = (
+        db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
+    )
+    q_restprec = (
+        db.session.query(RestaurantsPrecautions)
+        .filter_by(restaurant_id=new_restaurant.id)
+        .first()
+    )
+
     assert res == True
     assert q_restaurant is not None
     assert q_restprec is None
+
 
 def test_add_new_restaurant(client, db):
     helpers.create_operator(client)
@@ -25,11 +32,16 @@ def test_add_new_restaurant(client, db):
 
     res = restaurant.add_new_restaurant(new_restaurant, [1, 2])
     q_rest = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
-    q_restprec = db.session.query(RestaurantsPrecautions).filter_by(restaurant_id=new_restaurant.id).first()
+    q_restprec = (
+        db.session.query(RestaurantsPrecautions)
+        .filter_by(restaurant_id=new_restaurant.id)
+        .first()
+    )
 
     assert res == True
     assert q_rest is not None
     assert q_restprec is not None
+
 
 def test_already_added_restaurant(client, db):
     helpers.create_operator(client)
@@ -37,19 +49,23 @@ def test_already_added_restaurant(client, db):
     new_restaurant1 = Restaurant(**helpers.restaurant)
 
     new_restaurant2 = Restaurant(
-        name="Trattoria da Luca", 
+        name="Trattoria da Luca",
         phone=651981916,
         lat=40.720586,
         lon=10.10,
         time_of_stay=30,
-        operator_id=op.id
+        operator_id=op.id,
     )
 
     restaurant.add_new_restaurant(new_restaurant1)
     res = restaurant.add_new_restaurant(new_restaurant2)
 
     assert res == False
-    assert db.session.query(Restaurant).filter_by(name=new_restaurant2.name).first() is None
+    assert (
+        db.session.query(Restaurant).filter_by(name=new_restaurant2.name).first()
+        is None
+    )
+
 
 def test_add_new_table(client, db):
     helpers.create_operator(client)
@@ -63,24 +79,27 @@ def test_add_new_table(client, db):
     assert res == True
     assert db.session.query(Table).filter_by(name=new_table.name).first() is not None
 
+
 def test_already_added_table(client, db):
     helpers.create_operator(client)
-    
+
     new_restaurant = Restaurant(**helpers.restaurant)
     restaurant.add_new_restaurant(new_restaurant)
 
     new_table1 = Table(**helpers.table)
     restaurant.add_new_table(new_table1)
 
-    new_table2 = Table(
-        name="A10",
-        seats=5,
-        restaurant_id=new_restaurant.id
-    )
+    new_table2 = Table(name="A10", seats=5, restaurant_id=new_restaurant.id)
     res = restaurant.add_new_table(new_table2)
 
     assert res == False
-    assert db.session.query(Table).filter_by(name=new_table2.name, seats=new_table2.seats).first() is None
+    assert (
+        db.session.query(Table)
+        .filter_by(name=new_table2.name, seats=new_table2.seats)
+        .first()
+        is None
+    )
+
 
 def test_check_restaurant_ownership(client, db):
     helpers.create_operator(client)
