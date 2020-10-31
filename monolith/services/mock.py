@@ -1,9 +1,10 @@
-from monolith.views.health_authorities import _authorities
 import codicefiscale
 from faker import Faker
 from codicefiscale import codicefiscale as cf
+import datetime
 
 from monolith.app import db
+from monolith.views.health_authorities import _authorities
 from monolith.models import (
     User,
     Operator,
@@ -15,7 +16,6 @@ from monolith.models import (
     Table,
 )
 
-import datetime
 
 fake = Faker("it_IT")
 
@@ -102,8 +102,10 @@ def operator():
 
 
 def health_authority():
-    ha = db.session.query(HealthAuthority).filter(
-        HealthAuthority.email == "auth@mail.com"
+    ha = (
+        db.session.query(HealthAuthority)
+        .filter(HealthAuthority.email == "auth@mail.com")
+        .first()
     )
     if ha is None:
         example = HealthAuthority()
