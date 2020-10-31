@@ -24,7 +24,16 @@
         </nav>
     </header>
     <main>
-        {% block main %}{% endblock %}
+        <section>
+            <!--ADD css to close the message-->
+            Messages:
+            {% for message in get_flashed_messages() %}
+            {{ message }}
+            {% endfor %}
+        </section>
+        <section>
+            {% block main %}{% endblock %}
+        </section>
     </main>
     <footer>Copyright 2020</footer>
 </body>

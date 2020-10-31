@@ -1,5 +1,8 @@
+from datetime import date
+from monolith.models.health_authority import HealthAuthority
 from ..models import User
 from ..services import mock
+
 # DATA
 
 user = dict(
@@ -7,8 +10,9 @@ user = dict(
     firstname="mario",
     lastname="brown",
     password="1234",
-    dateofbirth="31/12/1995",
-    has_covid19=False,
+    dateofbirth=date(1995, 12, 31),
+    fiscal_code="RSSMRA95T31H501R",
+    phone_number="+39331303313094",
 )
 
 operator = dict(
@@ -32,20 +36,28 @@ health_authority = dict(
     lon=13.84,
 )
 
-restaurant = dict(
-    name="Trattoria da Fabio", 
-    phone=555123456,
-    lat = 40.720586,
-    lon = 10.10,
-    time_of_stay = 30,
-    operator_id=1
+health_authority2 = dict(
+    email="roma@asl.it",
+    name="ASL Roma",
+    password="romasqpr",
+    phone=" 0639741322",
+    country="Italy",
+    state="RM",
+    city="Roma",
+    lat=41.89,
+    lon=12.49,
 )
 
-table = dict(
-    name="A10", 
-    seats=10,
-    restaurant_id=1
+restaurant = dict(
+    name="Trattoria da Fabio",
+    phone=555123456,
+    lat=40.720586,
+    lon=10.10,
+    time_of_stay=30,
+    operator_id=1,
 )
+
+table = dict(name="A10", seats=10, restaurant_id=1)
 
 # CREATION
 
@@ -68,7 +80,7 @@ def insert_user(db, data=user) -> User:
     return temp
 
 
-def inser_restaurant_db(db):
+def insert_restaurant_db(db):
     mock.restaurant(db)
 
 
@@ -95,6 +107,13 @@ def create_restaurant(client, data=restaurant):
         follow_redirects=False,
     )
 
+    
+def insert_health_authority(db, data=health_authority) -> HealthAuthority:
+    temp = HealthAuthority(**data)
+    db.session.add(temp)
+    db.session.commit()
+    return temp
+
 
 # OTHER
 
@@ -110,7 +129,7 @@ def login_user(client, data=user):
 def login_operator(client, data=operator):
     return client.post(
         "/operator_login",
-        data=operator,
+        data=data,
         follow_redirects=False,
     )
 
