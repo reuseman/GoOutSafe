@@ -115,6 +115,22 @@ def create_table(client, restaurant_id=1, data=table):
         follow_redirects=False,
     )
 
+
+def edit_table(client, restaurant_id=1, table_id=1, data=table):
+    return client.post(
+        "/operator/restaurants/" + str(restaurant_id) + "/tables/" + str(table_id) + "/edit_table",
+        data=data,
+        follow_redirects=False,
+    )
+
+
+def delete_table(client, restaurant_id=1, table_id=1, data=table):
+    return client.post(
+        "/operator/restaurants/" + str(restaurant_id) + "/tables/" + str(table_id) + "/delete_table",
+        data=data,
+        follow_redirects=False,
+    )
+
     
 def insert_health_authority(db, data=health_authority) -> HealthAuthority:
     temp = HealthAuthority(**data)

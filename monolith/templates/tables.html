@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Authorities{% endblock %}
+{% block title %}Tables{% endblock %}
 
 {% block main %}
 <h1>Tables List</h1>
@@ -7,6 +7,12 @@
   {% for table in tables: %}
   <li>
     "{{table.name}}" Seats: {{table.seats}}
+    {% if current_user.is_authenticated %}
+      {% if role == 'operator' or (role == 'operator' and current_user.id != restaurant.operator_id) %}
+        <a href="/operator/restaurants/{{table.restaurant_id}}/tables/{{table.id}}/edit_table">Edit table</a>
+        <a href="/operator/restaurants/{{table.restaurant_id}}/tables/{{table.id}}/delete_table">Delete table</a>
+      {% endif %}
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

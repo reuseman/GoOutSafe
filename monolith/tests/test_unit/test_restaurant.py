@@ -80,6 +80,42 @@ def test_add_new_table(client, db):
     assert db.session.query(Table).filter_by(name=new_table.name).first() is not None
 
 
+def test_delete_table_successful(client, db):
+    helpers.create_operator(client)
+
+    new_restaurant = Restaurant(**helpers.restaurant)
+    restaurant.add_new_restaurant(new_restaurant)
+
+    new_table = Table(**helpers.table)
+    restaurant.add_new_table(new_table)
+
+    table_to_delete = Table(**helpers.table)
+    table_to_delete.id=1
+
+    res = restaurant.delete_table(table_to_delete)
+
+    assert res == True
+    assert db.session.query(Table).filter_by(name=new_table.id).first() is None
+
+
+def test_delete_table_unsuccessful(client, db):
+    helpers.create_operator(client)
+
+    new_restaurant = Restaurant(**helpers.restaurant)
+    restaurant.add_new_restaurant(new_restaurant)
+
+    new_table = Table(**helpers.table)
+    restaurant.add_new_table(new_table)
+
+    table_to_delete = Table(**helpers.table)
+    table_to_delete.id=2
+
+    res = restaurant.delete_table(table_to_delete)
+
+    assert res == False
+    assert db.session.query(Table).filter_by(id=new_table.id).first() is not None
+
+
 def test_already_added_table(client, db):
     helpers.create_operator(client)
 
@@ -99,6 +135,42 @@ def test_already_added_table(client, db):
         .first()
         is None
     )
+
+
+def test_edit_table_successful(client, db):
+    helpers.create_operator(client)
+
+    new_restaurant = Restaurant(**helpers.restaurant)
+    restaurant.add_new_restaurant(new_restaurant)
+
+    new_table = Table(**helpers.table)
+    restaurant.add_new_table(new_table)
+
+    res = restaurant.edit_table(Table(id=1, name="A8", seats=3))
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
+
+    assert res == True
+    assert fetched_table.name == "A8"
+    assert fetched_table.seats == 3
+    assert fetched_table.restaurant_id == 1
+
+
+def test_edit_table_unsuccessful(client, db):
+    helpers.create_operator(client)
+
+    new_restaurant = Restaurant(**helpers.restaurant)
+    restaurant.add_new_restaurant(new_restaurant)
+
+    new_table = Table(**helpers.table)
+    restaurant.add_new_table(new_table)
+    restaurant.add_new_table(Table(name="A8", seats=5, restaurant_id=1))
+
+    res = restaurant.edit_table(Table(id=1,name="A8",seats=1))
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
+
+    assert res == False
+    assert fetched_table.name == "A10"
+    assert fetched_table.seats == 10
 
 
 def test_check_restaurant_ownership(client, db):
