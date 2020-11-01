@@ -6,18 +6,15 @@ from monolith.views import blueprints
 from ..services.auth import login_manager
 from monolith.app import db as dba
 
+from config import config
+
 
 @pytest.yield_fixture
 def app():
     app = Flask(__name__, template_folder="../templates")
     db_path = os.path.join(app.root_path, "gooutsafe_test.db")
-
-    app.config["TESTING"] = True
-    app.config["WTF_CSRF_ENABLED"] = False
-    app.config["SECRET_KEY"] = "my_secret_sqlite"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["DATABASE"] = db_path
+    app.config.from_object(config["testing"])
+    config["testing"].init_app(app)
 
     for bp in blueprints:
         app.register_blueprint(bp)
@@ -37,7 +34,7 @@ def app():
     # Teardown of the db
     dba.session.remove()
     dba.drop_all(app=app)
-    os.unlink(app.config["DATABASE"])
+    os.unlink(db_path)
 
 
 @pytest.fixture

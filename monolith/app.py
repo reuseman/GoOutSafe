@@ -1,20 +1,22 @@
+import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_debugtoolbar import DebugToolbarExtension  # debug
+
+from config import DevelopmentConfig, config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 toolbar = DebugToolbarExtension()
 
 
-def create_app():
+def create_app(config_name):
     app = Flask(__name__, static_folder="templates/assets")
-    app.config["WTF_CSRF_SECRET_KEY"] = "my_secret"
-    app.config["SECRET_KEY"] = "my_secret_sqlite"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gooutsafe.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.debug = True  # debug
+    app.config.from_object(DevelopmentConfig)
+    # app.config.from_object(config[config_name])
+    # config[config_name].init_app(app)
 
     context = app.app_context()
     context.push()
@@ -46,5 +48,5 @@ def create_app():
 
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
+    app = create_app(os.getenv("FLASK_CONFIG") or "default")
+    app.run()
