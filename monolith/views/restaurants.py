@@ -122,6 +122,7 @@ def _tables(restaurant_id):
     return render_template(
         "tables.html",
         tables=alltables,
+        role=session["role"],
         # base_url="http://127.0.0.1:5000/restaurants",
         base_url=request.base_url,
     )
@@ -155,3 +156,55 @@ def create_table(restaurant_id):
             flash("Can't add a table to a not owned restaurant", category="error")
 
     return render_template("create_table.html", form=form), status
+
+
+@restaurants.route("/operator/restaurants/<restaurant_id>/tables/<table_id>/edit_table", methods=["GET", "POST"])
+@login_required
+@operator_required
+def edit_table(restaurant_id, table_id):
+    status = 400
+    form = CreateTableForm()
+    if request.method == "POST":
+
+        if restaurant.check_restaurant_ownership(
+            current_user.id, 
+            restaurant_id
+        ):
+            if form.validate_on_submit():
+                new_table = Table()
+                form.populate_obj(new_table)
+                new_table.restaurant_id = restaurant_id
+                new_table.id = table_id
+                
+                if restaurant.check_table_existence(new_table):
+                    if restaurant.edit_table(new_table):
+                        status = 200
+                        return redirect("/restaurants/" + restaurant_id + "/tables")
+                    else:
+                        flash("There is already a table with the same name!", category="error")
+        else:
+            flash("Can't edit a table of a not owned restaurant", category="error")
+
+    return render_template("create_table.html", form=form), status
+
+
+@restaurants.route("/operator/restaurants/<restaurant_id>/tables/<table_id>/delete_table", methods=["GET", "POST"])
+@login_required
+@operator_required
+def delete_table(restaurant_id, table_id):
+    status = 400
+    if restaurant.check_restaurant_ownership(
+        current_user.id, 
+        restaurant_id
+    ):
+        table = Table(id=table_id)
+                    
+        if restaurant.delete_table(table):
+            status = 200
+            return redirect("/restaurants/" + restaurant_id + "/tables")
+        else:
+            flash("The table to be deleted does not exist!", category="error")
+    else:
+        flash("Can't delete a table of a not owned restaurant", category="error")
+    
+    return redirect("/restaurants/" + restaurant_id + "/tables"), status
