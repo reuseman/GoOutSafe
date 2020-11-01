@@ -108,6 +108,13 @@ def create_restaurant(client, data=restaurant):
     )
 
 
+def operator_restaurants(client):
+    return client.get(
+        "/operator/restaurants",
+        follow_redirects=False
+    )
+
+
 def create_table(client, restaurant_id=1, data=table):
     return client.post(
         "/operator/restaurants/" + str(restaurant_id) + "/create_table",
@@ -159,7 +166,7 @@ def login_operator(client, data=operator):
 
 
 def logout_operator(client):
-    return client.post(
+    return client.get(
         "/logout",
         follow_redirects=False,
     )

@@ -13,8 +13,8 @@
         <a href="{{base_url}}/like/{{restaurant.id}}">Like it!</a>
       {% endif %}
     <a href="{{base_url}}/{{restaurant.id}}">See Details!</a>
-    <a href="/restaurants/{{restaurant.id}}/tables">Show tables</a>
       {% if role == 'operator' and current_user.id == restaurant.operator_id %}
+        <a href="/restaurants/{{restaurant.id}}/tables">Show tables</a>
         <a href="/operator/restaurants/{{restaurant.id}}/create_table">Add new table</a>
       {% endif %}
     {% endif %}

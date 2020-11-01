@@ -17,11 +17,16 @@ restaurants = Blueprint("restaurants", __name__)
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
     allrestaurants = db.session.query(Restaurant)
+    if session:
+        role=session["role"]
+    else:
+        role=""
+
     return render_template(
         "restaurants.html",
         message=message,
         restaurants=allrestaurants,
-        role=session["role"],
+        role=role,
         # base_url="http://127.0.0.1:5000/restaurants",
         base_url=request.base_url,
     )
@@ -114,16 +119,20 @@ def create_restaurant():
 
 @restaurants.route("/restaurants/<restaurant_id>/tables")
 @login_required
+@operator_required
 def _tables(restaurant_id):
-    alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
-    print(alltables.first())
+    status = 200
+    if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+        alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
+    else:
+        status = 401
+    
     return render_template(
         "tables.html",
         tables=alltables,
-        role=session["role"],
         # base_url="http://127.0.0.1:5000/restaurants",
         base_url=request.base_url,
-    )
+    ), status
 
 
 @restaurants.route("/operator/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"])

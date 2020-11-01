@@ -438,6 +438,175 @@ def test_edit_table_bad_data(client, db):
     assert res.status_code == 400
 
 
+def test_operator_view_isavailable_operator(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+
+    res = client.get("/operator/restaurants")
+    assert res.status_code == 200
+
+
+def test_operator_view_isnotavailable_anonymous(client, db):
+    res = client.get("/operator/restaurants")
+    assert res.status_code == 401
+
+
+def test_operator_view_isnotavailable_user(client, db):
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = client.get("/operator/restaurants")
+    assert res.status_code == 401
+
+
+def test_operator_view_isnotavailable_ha(client, db):
+    helpers.create_health_authority(client)
+    helpers.login_authority(client)
+
+    res = client.get("/operator/restaurants")
+    assert res.status_code == 401
+
+
+def test_operator_restaurant(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = helpers.operator_restaurants(client)
+    op_restaurants = db.session.query(Restaurant).filter_by(operator_id=1)
+
+    assert res.status_code == 200
+    for rest in op_restaurants:
+        assert bytes(rest.name, 'utf-8') in res.data
+
+
+def test_operator_restaurant_empty(client, db):
+    helpers.create_operator(client)
+
+    op_data = dict(
+        email="pippo@lalocanda.com",
+        firstname="pippo",
+        lastname="pluto",
+        password="5678",
+        dateofbirth="01/01/1963",
+        fiscal_code="UIBCAIUBBVX",
+    )
+    helpers.create_operator(client, op_data)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.login_operator(client, op_data)
+    res = helpers.operator_restaurants(client)
+    op_restaurants = db.session.query(Restaurant).filter_by(operator_id=1)
+
+    assert res.status_code == 200
+    for rest in op_restaurants:
+        assert bytes(rest.name, 'utf-8') not in res.data
+
+
+def test_restaurants_available_anonymous(client):
+    res = client.get("/restaurants")
+    assert res.status_code == 200
+
+
+def test_restaurants_available_user(client):
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = client.get("/restaurants")
+    assert res.status_code == 200
+
+
+def test_restaurants_available_operator(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+
+    res = client.get("/restaurants")
+    assert res.status_code == 200
+
+
+def test_restaurants_available_ha(client):
+    helpers.create_health_authority(client)
+    helpers.login_authority(client)
+
+    res = client.get("/restaurants")
+    assert res.status_code == 200
+
+
+def test_restaurants_logged(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = client.get("/restaurants")
+    q_rest = db.session.query(Restaurant)
+
+    assert res.status_code == 200
+    for rest in q_rest:
+        assert bytes(rest.name, 'utf-8') in res.data
+
+
+def test_restaurants_notlogged(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    res = client.get("/restaurants")
+    q_rest = db.session.query(Restaurant)
+
+    assert res.status_code == 200
+    for rest in q_rest:
+        assert bytes(rest.name, 'utf-8') in res.data
+
+
+def test_tables_notavailable_user(client):
+    helpers.create_operator(client)
+    helpers.create_user(client)
+    
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.login_user(client)
+
+    res = client.get("/restaurants/1/tables")
+    assert res.status_code == 401
+
+
+def test_tables_notavailable_anonymous(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+    
+    res = client.get("/restaurants/1/tables")
+    assert res.status_code == 401
+
+
+def test_tables_available_operator(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    
+    res = client.get("/restaurants/1/tables")
+    assert res.status_code == 200
+
+
+def test_tables_notavailable_ha(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.create_health_authority(client)
+    helpers.login_authority(client)
+
+    res = client.get("/restaurants/1/tables")
+    assert res.status_code == 401
+
+
 def test_restaurants(client, db):
     helpers.insert_restaurant_db()
     allrestaurants = db.session.query(Restaurant).all()
