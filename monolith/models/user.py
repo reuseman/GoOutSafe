@@ -1,7 +1,10 @@
-from datetime import date, datetime, timedelta
+from monolith.app import db
+from monolith.models.abstract_user import AbstractUser
+from monolith.models.restaurant import Restaurant
 from monolith.models.mark import Mark
-from ..app import db
-from .abstract_user import AbstractUser
+from monolith.models.review import Review
+
+from datetime import datetime, timedelta
 
 
 class User(AbstractUser):
@@ -9,16 +12,27 @@ class User(AbstractUser):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fiscal_code = db.Column(db.Unicode(128))
     email = db.Column(db.Unicode(128))
-    phone_number = db.Column(db.String(20))
+    phone_number = db.Column(db.Unicode(20))
     firstname = db.Column(db.Unicode(128), nullable=False)
     lastname = db.Column(db.Unicode(128))
     password_hash = db.Column(db.Unicode(128))
     dateofbirth = db.Column(db.DateTime)
 
     marks = db.relationship("Mark", back_populates="user")
+    reviews = db.relationship("Review", back_populates="user")
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
+
+    def review(self, restaurant: Restaurant, rating: int, message=""):
+        """Add a review, formed by a rating and a message, to a specific restaurant
+
+        Args:
+            restaurant (Restaurant): the restaurant to which add the review
+            rating (int): the rating
+            message (str): the review itself
+        """
+        self.reviews.append(Review(rating=rating, message=message))
 
     def has_been_marked(self) -> bool:
         """Returns weather the user has been marked in the past or is currently marked.

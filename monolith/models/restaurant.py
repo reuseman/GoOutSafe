@@ -16,7 +16,8 @@ class Restaurant(db.Model):
     lon = db.Column(db.Float)  # restaurant longitude
 
     phone = db.Column(db.Integer)
-    time_of_stay = db.Column(db.Integer) # minutes
+    time_of_stay = db.Column(db.Integer)  # minutes
     operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
 
     tables = db.relationship("Table", backref="restaurant")
+    reviews = db.relationship("Review", back_populates="restaurant")
