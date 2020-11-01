@@ -102,10 +102,12 @@ def create_restaurant():
                 new_restaurant, 
                 request.form.getlist("prec_measures")
             ):
-                return redirect("/restaurants")
+                return redirect("operator/restaurants")
             else:
-                status = 400
                 flash("Restaurant already added", category="error")
+                status = 400
+        else:
+            status = 400
 
     return render_template("create_restaurant.html", form=form), status
 
@@ -145,6 +147,8 @@ def create_table(restaurant_id):
                 else:
                     status = 400
                     flash("Table already added", category="error")
+            else:
+                status = 400
         else:
             status = 400
             flash("Can't add a table to a not owned restaurant", category="error")

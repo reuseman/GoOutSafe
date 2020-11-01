@@ -80,7 +80,7 @@ def insert_user(db, data=user) -> User:
     return temp
 
 
-def insert_restaurant_db(db):
+def insert_restaurant_db():
     mock.restaurant()
 
 
@@ -100,6 +100,22 @@ def create_health_authority(client, data=health_authority):
     )
 
 
+def create_restaurant(client, data=restaurant):
+    return client.post(
+        "/create_restaurant",
+        data=data,
+        follow_redirects=False,
+    )
+
+
+def create_table(client, restaurant_id=1, data=table):
+    return client.post(
+        "/operator/restaurants/" + str(restaurant_id) + "/create_table",
+        data=data,
+        follow_redirects=False,
+    )
+
+    
 def insert_health_authority(db, data=health_authority) -> HealthAuthority:
     temp = HealthAuthority(**data)
     db.session.add(temp)
@@ -122,6 +138,13 @@ def login_operator(client, data=operator):
     return client.post(
         "/operator_login",
         data=data,
+        follow_redirects=False,
+    )
+
+
+def logout_operator(client):
+    return client.post(
+        "/logout",
         follow_redirects=False,
     )
 
