@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from monolith.app import db
 from monolith.models import User, Operator, HealthAuthority
-from ..services.forms import LoginForm
+from monolith.services.forms import LoginForm
 
 auth = Blueprint("auth", __name__)
 

@@ -5,9 +5,9 @@ from flask import Blueprint, redirect, render_template, request
 from monolith.app import db
 from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions
 from monolith.models.table import Table
-from ..services.auth import admin_required, current_user, operator_required
+from monolith.services.auth import admin_required, current_user, operator_required
 from flask_login import current_user, login_user, logout_user, login_required
-from ..services.forms import CreateRestaurantForm, CreateTableForm, UserForm
+from monolith.services.forms import CreateRestaurantForm, CreateTableForm, UserForm
 from ..controllers import restaurant
 
 
@@ -31,11 +31,14 @@ def _restaurants(message=""):
         base_url=request.base_url,
     )
 
+
 @restaurants.route("/operator/restaurants")
 @login_required
 @operator_required
 def operator_restaurants(message=""):
-    operator_restaurants = db.session.query(Restaurant).filter_by(operator_id=current_user.id)
+    operator_restaurants = db.session.query(Restaurant).filter_by(
+        operator_id=current_user.id
+    )
     return render_template(
         "restaurants.html",
         message=message,
@@ -102,10 +105,9 @@ def create_restaurant():
 
             new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
-            
+
             if restaurant.add_new_restaurant(
-                new_restaurant, 
-                request.form.getlist("prec_measures")
+                new_restaurant, request.form.getlist("prec_measures")
             ):
                 return redirect("operator/restaurants")
             else:
@@ -135,7 +137,9 @@ def _tables(restaurant_id):
     ), status
 
 
-@restaurants.route("/operator/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"])
+@restaurants.route(
+    "/operator/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"]
+)
 @login_required
 @operator_required
 def create_table(restaurant_id):
@@ -143,15 +147,12 @@ def create_table(restaurant_id):
     form = CreateTableForm()
     if request.method == "POST":
 
-        if restaurant.check_restaurant_ownership(
-            current_user.id, 
-            restaurant_id
-        ):
+        if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
             if form.validate_on_submit():
                 new_table = Table()
                 form.populate_obj(new_table)
                 new_table.restaurant_id = restaurant_id
-                
+
                 if restaurant.add_new_table(new_table):
                     return redirect("/restaurants/" + restaurant_id + "/tables")
                 else:

@@ -1,5 +1,3 @@
-import pytest
-
 from .fixtures import app, client, db
 
 

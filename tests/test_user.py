@@ -3,7 +3,7 @@ from datetime import datetime
 
 from .fixtures import app, client, db
 from . import helpers
-from ..models import User
+from monolith.models import User
 
 
 def test_create_user_view_is_available(client):

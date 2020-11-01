@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 
 from monolith.app import db
 from monolith.models import Restaurant, Like
-from ..services.auth import current_user
+from monolith.services.auth import current_user
 
 home = Blueprint("home", __name__)
 
