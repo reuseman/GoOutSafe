@@ -168,12 +168,12 @@ def test_ha_should_mark_one_user_on_email_mark_page(client, db):
 def test_ha_should_not_work_with_a_email_not_in_db_on_email_mark_page(client, db):
     helpers.create_health_authority(client)
     helpers.login_authority(client)
-    user = helpers.insert_user(db)
+    helpers.insert_user(db)
     db.session.commit()
 
     res = client.post(
         "/marks/new/email",
-        data={"email": "wrong_email", "duration": 15},
+        data={"email": "wrong_email@mail.com", "duration": 15},
         follow_redirects=True,
     )
 
