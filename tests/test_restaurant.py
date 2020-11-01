@@ -587,6 +587,19 @@ def test_tables_notavailable_ha(client):
     assert res.status_code == 401
 
 
+def test_tables(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+
+    res = client.get("/restaurants/1/tables")
+    q_table = db.session.query(Table).filter_by(restaurant_id=1)
+
+    assert res.status_code == 200
+    for table in q_table:
+        assert bytes(table.name, 'utf-8') in res.data
+
 def test_restaurants(client, db):
     helpers.insert_restaurant_db()
     allrestaurants = db.session.query(Restaurant).all()
