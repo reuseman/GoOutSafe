@@ -15,6 +15,16 @@ user = dict(
     phone_number="+39331303313094",
 )
 
+user2 = dict(
+    email="mariobrown@gmail.com",
+    firstname="mario",
+    lastname="brown",
+    password="1234",
+    dateofbirth="31/12/1995",
+    fiscal_code="RSSMRA95T31H501R",
+    phone_number="+39331303313094",
+)
+
 operator = dict(
     email="giuseppebrown@lalocanda.com",
     firstname="giuseppe",
@@ -62,7 +72,7 @@ table = dict(name="A10", seats=10, restaurant_id=1)
 # CREATION
 
 
-def create_user(client, data=user):
+def create_user(client, data=user2):
     return client.post(
         "/create_user",
         data=data,
