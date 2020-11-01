@@ -2,7 +2,7 @@ from monolith.views.auth import login
 from flask import Blueprint, render_template, flash, redirect
 from flask_login.utils import login_required
 
-from monolith.app import db
+from monolith import db
 from monolith.models import HealthAuthority, User
 from monolith.services.auth import current_user, authority_required
 from monolith.services.forms import MarkSsnForm, MarkEmailForm, MarkPhoneNumberForm

@@ -4,7 +4,7 @@ from flask_login import current_user
 from monolith.models import User, HealthAuthority, Operator
 from functools import wraps
 
-from ..app import login_manager
+from monolith import login_manager
 
 
 def operator_required(f):

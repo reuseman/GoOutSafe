@@ -7,3 +7,4 @@ flask-sqlalchemy
 pip-tools
 python-codicefiscale
 email_validator
+python-dotenv

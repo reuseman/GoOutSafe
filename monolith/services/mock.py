@@ -3,7 +3,7 @@ from faker import Faker
 from codicefiscale import codicefiscale as cf
 import datetime
 
-from monolith.app import db
+from monolith import db
 from monolith.views.health_authorities import _authorities
 from monolith.models import (
     User,

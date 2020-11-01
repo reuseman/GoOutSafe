@@ -1,24 +1,29 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.6.12-slim
+FROM python:3.6-alpine
 
-EXPOSE 5000
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
+# Environment variables for the configuration
+ENV FLASK_APP gooutsafe.py
+ENV FLASK_CONFIG docker
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install pip requirements
+# Create non-root user and home folder
+RUN adduser -D gooutsafe
+WORKDIR /home/gooutsafe
+
+# Install dependencies
 COPY requirements/ requirements/
-RUN python -m pip install -r requirements/docker.txt
+RUN python -m venv venv
+RUN venv/bin/pip install -r requirements/docker.txt 
 
-WORKDIR /app
-#ADD . /app
+# Move code
+COPY monolith/ monolith/
+COPY gooutsafe.py config.py boot.sh ./
 
-# Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-RUN useradd appuser && chown -R appuser /app
-USER appuser
+# Permissions
+# RUN chown -R gooutsafe:gooutsafe ./
+RUN chmod a+x boot.sh
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "monolith.app:app"]
+EXPOSE 5000
+USER gooutsafe
+ENTRYPOINT [ "./boot.sh" ]

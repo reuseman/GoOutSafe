@@ -1,11 +1,11 @@
 from monolith.services.auth import authority_required
 from sys import displayhook
-from wtforms import widgets, validators
-from wtforms.fields.html5 import DateField, EmailField
+from wtforms import widgets
+from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from monolith.models.precautions import Precautions
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
-from monolith.app import db
+from monolith import db
 import wtforms as f
 from wtforms.validators import DataRequired, NumberRange, Email
 
@@ -51,8 +51,7 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("latitude", validators=[DataRequired()])
     lon = f.DecimalField("longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password",
-               "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -83,8 +82,7 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "time_of_stay",
-        choices=[("30", "30 minutes"),
-                 ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
     prec_measures = MultiCheckboxField(
@@ -111,7 +109,7 @@ class CreateTableForm(FlaskForm):
 
 class MarkSsnForm(FlaskForm):
     # TODO Custom validator to check if ssn is valid
-    duration = f.IntegerField(
+    duration = IntegerField(
         "Duration",
         validators=[
             DataRequired(message="This field must be a number."),
@@ -130,7 +128,7 @@ class MarkSsnForm(FlaskForm):
 
 
 class MarkEmailForm(FlaskForm):
-    duration = f.IntegerField(
+    duration = IntegerField(
         "Duration",
         validators=[
             DataRequired(message="This field must be a number."),
@@ -141,8 +139,7 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(
-            message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
@@ -150,7 +147,7 @@ class MarkEmailForm(FlaskForm):
 
 
 class MarkPhoneNumberForm(FlaskForm):
-    duration = f.IntegerField(
+    duration = IntegerField(
         "Duration",
         validators=[
             DataRequired(message="This field must be a number."),

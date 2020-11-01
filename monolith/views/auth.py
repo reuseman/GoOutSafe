@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, flash
 from flask_login import current_user, login_user, logout_user, login_required
 
-from monolith.app import db
+from monolith import db
 from monolith.models import User, Operator, HealthAuthority
 from monolith.services.forms import LoginForm
 

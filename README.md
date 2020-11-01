@@ -11,6 +11,10 @@ In order to have a consistent coding style, formatting on save, good spelling:
     File -> Open Workspace -> .vscode/python-dev.code-workspace
 2. Install the recommended extensions (feel free to propose new ones).
     
+### Docker
+    docker build -t gooutsafe:latest . 
+    docker run --name gooutsafe -d -p 8000:5000 --rm gooutsafe:latest
+    http://127.0.0.1:5000
 
 ### Prerequisites
     pip install -r requirements/dev.txt

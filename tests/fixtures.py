@@ -4,7 +4,7 @@ from flask import Flask
 
 from monolith.views import blueprints
 from monolith.services.auth import login_manager
-from monolith.app import db as dba
+from monolith import db as dba
 
 from config import config
 

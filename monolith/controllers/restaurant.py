@@ -1,6 +1,6 @@
 from monolith.models import Restaurant, RestaurantsPrecautions
 from monolith.models.table import Table
-from ..app import db
+from monolith import db
 
 
 def add_new_restaurant(restaurant, prec_measures=None):

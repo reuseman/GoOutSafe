@@ -1,7 +1,5 @@
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "top secret"
@@ -14,8 +12,20 @@ class Config:
         pass
 
 
+class ProductionConfig(Config):
+    pass
+
+
 class DevelopmentConfig(Config):
+
     DEBUG = True
+
+    @staticmethod
+    def init_app(app):
+        from flask_debugtoolbar import DebugToolbarExtension
+
+        app.debug = True
+        DebugToolbarExtension(app)
 
 
 class TestingConfig(Config):
@@ -26,9 +36,24 @@ class TestingConfig(Config):
     )
 
 
+class DockerConfig(ProductionConfig):
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # log to stderr
+        import logging
+        from logging import StreamHandler
+
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+
 config = {
-    "production": Config,
+    "production": ProductionConfig,
     "development": DevelopmentConfig,
     "testing": TestingConfig,
+    "docker": DockerConfig,
     "default": DevelopmentConfig,
 }

@@ -1,4 +1,4 @@
-from monolith.app import db
+from monolith import db
 from monolith.models.abstract_user import AbstractUser
 from monolith.models.restaurant import Restaurant
 from monolith.models.mark import Mark

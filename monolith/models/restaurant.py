@@ -1,4 +1,4 @@
-from ..app import db
+from monolith import db
 from .table import Table
 
 

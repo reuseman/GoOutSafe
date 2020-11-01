@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request
-from monolith.app import db
+from monolith import db
 from monolith.models import Operator
 from monolith.services.auth import admin_required
 from monolith.services.forms import OperatorForm

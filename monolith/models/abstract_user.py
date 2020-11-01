@@ -1,4 +1,4 @@
-from ..app import db
+from monolith import db
 from .timestamp_mixin import TimestampMixin
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash

@@ -1,5 +1,5 @@
 from celery import Celery
-from monolith.app import db
+from monolith import db
 from monolith.models import User, Restaurant
 
 BACKEND = BROKER = "redis://localhost:6379"
@@ -13,7 +13,7 @@ def do_task():
     global _APP
     # lazy init
     if _APP is None:
-        from monolith.app import create_app
+        from monolith import create_app
 
         app = create_app()
         db.init_app(app)
