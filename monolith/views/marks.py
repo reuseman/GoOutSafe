@@ -4,8 +4,8 @@ from flask_login.utils import login_required
 
 from monolith.app import db
 from monolith.models import HealthAuthority, User
-from ..services.auth import current_user, authority_required
-from ..services.forms import MarkSsnForm, MarkEmailForm, MarkPhoneNumberForm
+from monolith.services.auth import current_user, authority_required
+from monolith.services.forms import MarkSsnForm, MarkEmailForm, MarkPhoneNumberForm
 
 marks = Blueprint("marks", __name__)
 

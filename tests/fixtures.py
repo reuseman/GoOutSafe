@@ -3,7 +3,7 @@ import os
 from flask import Flask
 
 from monolith.views import blueprints
-from ..services.auth import login_manager
+from monolith.services.auth import login_manager
 from monolith.app import db as dba
 
 from config import config
@@ -11,7 +11,7 @@ from config import config
 
 @pytest.yield_fixture
 def app():
-    app = Flask(__name__, template_folder="../templates")
+    app = Flask(__name__, template_folder="../monolith/templates")
     db_path = os.path.join(app.root_path, "gooutsafe_test.db")
     app.config.from_object(config["testing"])
     config["testing"].init_app(app)

@@ -1,6 +1,6 @@
 from ..fixtures import app, client, db
 from .. import helpers
-from ...models import User, Mark
+from monolith.models import User, Mark
 
 
 # Tests on SSN view

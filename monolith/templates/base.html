@@ -3,13 +3,17 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} - GoOutSafe</title>
     {% block head %}{% endblock %}
-
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm_theme_mischka.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/mvp.css">-->
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">-->
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">-->
 </head>
 
 <body>
-    <script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>
+    <!--<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>-->
     <header>
         <a href="/" title="Home Page"><img src="{{ url_for('static', filename='logo.png') }}" alt="Go Out Safe"></a>
         <nav>

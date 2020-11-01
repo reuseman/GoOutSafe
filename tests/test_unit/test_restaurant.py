@@ -1,10 +1,13 @@
-import pytest
-
 from ..fixtures import db, client, app
-from ...models import Restaurant, Precautions, RestaurantsPrecautions, Operator
-from ...models.table import Table
-from ...controllers import restaurant
 from .. import helpers
+from monolith.models import (
+    Restaurant,
+    Precautions,
+    RestaurantsPrecautions,
+    Operator,
+    Table,
+)
+from monolith.controllers import restaurant
 
 
 def test_add_new_restaurant_no_prec(client, db):

@@ -1,5 +1,5 @@
-from ..models import Restaurant, RestaurantsPrecautions
-from ..models.table import Table
+from monolith.models import Restaurant, RestaurantsPrecautions
+from monolith.models.table import Table
 from ..app import db
 
 

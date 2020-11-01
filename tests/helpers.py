@@ -1,7 +1,7 @@
 from datetime import date
 from monolith.models.health_authority import HealthAuthority
-from ..models import User
-from ..services import mock
+from monolith.models import User
+from monolith.services import mock
 
 # DATA
 
@@ -115,7 +115,7 @@ def create_table(client, restaurant_id=1, data=table):
         follow_redirects=False,
     )
 
-    
+
 def insert_health_authority(db, data=health_authority) -> HealthAuthority:
     temp = HealthAuthority(**data)
     db.session.add(temp)
