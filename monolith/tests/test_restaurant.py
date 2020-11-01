@@ -1,6 +1,7 @@
 from .fixtures import app, client, db
 from . import helpers
 from ..models import Restaurant
+from ..models.table import Table
 
 from urllib.parse import urlparse
 
@@ -89,8 +90,12 @@ def test_create_duplicate_restaurant(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
+    fetched_dup_restaurant = (
+        db.session.query(Restaurant).filter_by(id=2).first()
+    )
 
     assert res.status_code == 400
+    assert fetched_dup_restaurant is None
 
 
 def test_create_table_view_is_available_operator(client, db):
@@ -136,6 +141,91 @@ def test_create_table_view_is_notavailable_ha(client, db):
 
     res = client.get("/operator/restaurants/" + str(q.id) + "/create_table")
     assert res.status_code == 401
+
+
+def test_create_table(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = helpers.create_table(client)
+    fetched_table = (
+        db.session.query(Table).filter_by(id=1).first()
+    )
+
+    assert res.status_code == 302
+    assert fetched_table.name == "A10"
+    assert fetched_table.seats == 10
+    assert urlparse(res.location).path == "/restaurants/1/tables"
+
+
+def test_create_table_bad_data(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    data = dict(
+        name="A10",
+        seats=-5,
+        restaurant_id=1
+    )
+    res = helpers.create_table(client, data)
+
+    fetched_table = (
+        db.session.query(Table).filter_by(id=1).first()
+    )
+
+    assert res.status_code == 400
+    assert fetched_table is None
+
+
+def test_create_duplicate_table(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    helpers.create_table(client)
+    data = dict(
+        name="A10",
+        seats=2,
+        restaurant_id=1
+    )
+    res = helpers.create_table(client, data)
+
+    fetched_table = (
+        db.session.query(Table).filter_by(id=2).first()
+    )
+
+    assert res.status_code == 400
+    assert fetched_table is None
+
+
+def test_create_table_not_owned_restaurant(client, db):
+    helpers.create_operator(client)
+
+    data = dict(
+        email="pippo@lalocanda.com",
+        firstname="pippo",
+        lastname="pluto",
+        password="5678",
+        dateofbirth="01/01/1963",
+        fiscal_code="UIBCAIUBBVX",
+    )
+
+    helpers.create_operator(client, data)
+
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.login_operator(client, data)
+    res = helpers.create_table(client)
+    fetched_table = (
+        db.session.query(Table).filter_by(id=1).first()
+    )
+
+    assert res.status_code == 400
+    assert fetched_table is None
 
 
 def test_restaurants(client, db):

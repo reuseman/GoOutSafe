@@ -34,19 +34,6 @@ def check_restaurant_ownership(operator_id, restaurant_id):
         return False
 
 
-def check_create_restaurant_values(restaurant):
-    time_of_stay = int(restaurant.time_of_stay)
-    if -180 <= restaurant.lon <= 180 and \
-        -90 <= restaurant.lat <= 90 and \
-        (time_of_stay == 30 or \
-        time_of_stay == 90 or \
-        time_of_stay == 180):
-
-        return True
-    else:
-        return False
-
-
 def add_new_table(table):
     q = Table.query.filter_by(name=table.name)
     if q.first() is None:
