@@ -144,11 +144,12 @@ def create_menu(restaurant_id):
                 category.foods.entries.remove(food)
                 return render_template("create_menu.html", form=form), status
 
-    if form.validate_on_submit():
-        pass
-    else:
-        flash("Duplicate category or food name!", category="error")
-        status = 400
+    if request.method == "POST":
+        if form.validate_on_submit():
+            pass
+        else:
+            flash("Duplicate category or food name!", category="error")
+            status = 400
     
     return render_template("create_menu.html", form=form), status
 

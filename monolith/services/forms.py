@@ -99,21 +99,20 @@ def validate_no_dup(form, field):
     set_categories = set()
     for category in field.data:
         if category["name"] in set_categories:
-            print("sto qua")
             raise ValidationError("Duplicate!")
         else:
             set_categories.add(category["name"])
 
 
 class FoodForm(Form):
-    name = f.StringField("food name", validators=[Optional()])
-    price = f.DecimalField("price", places=2, validators=[Optional(), NumberRange(min=0, message="No negative values")])
+    name = f.StringField("food name")
+    price = f.DecimalField("price", places=2, validators=[NumberRange(min=0, message="No negative values")])
     remove_food = f.SubmitField(label="Remove food")
 
 
 class CategoryForm(Form):
     name = f.SelectField("category", validators=[DataRequired()], choices=FoodCategory.choices())
-    foods = f.FieldList(f.FormField(FoodForm), "", validators=[DataRequired(), validate_no_dup], min_entries=1, max_entries=10)
+    foods = f.FieldList(f.FormField(FoodForm), "", validators=[validate_no_dup], min_entries=1, max_entries=10)
     add_food = f.SubmitField(label="Add food")
     remove_category = f.SubmitField(label="Remove category")
 
@@ -121,7 +120,7 @@ class CategoryForm(Form):
 class CreateMenuForm(FlaskForm):
     name = f.StringField("menu name", validators=[DataRequired()])
     categories = f.FieldList(f.FormField(CategoryForm), 
-        "categories", validators=[DataRequired(), validate_no_dup], min_entries=1, max_entries=10)
+        "categories", validators=[validate_no_dup], min_entries=1, max_entries=10)
     add_category = f.SubmitField(label="Add category")
 
 

@@ -600,6 +600,53 @@ def test_tables(client, db):
     for table in q_table:
         assert bytes(table.name, 'utf-8') in res.data
 
+
+def test_create_menu_isnotavailable_anonymous(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    res = client.get("/operator/restaurants/1/create_menu")
+
+    assert res.status_code == 401
+
+def test_create_menu_isnotavailable_user(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = client.get("/operator/restaurants/1/create_menu")
+
+    assert res.status_code == 401
+
+def test_create_menu_isavailable_operator(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = client.get("/operator/restaurants/1/create_menu")
+    
+    assert res.status_code == 200
+
+def test_create_menu_isnotavailable_ha(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.logout_operator(client)
+
+    helpers.create_health_authority(client)
+    helpers.login_authority(client)
+
+    res = client.get("/operator/restaurants/1/create_menu")
+
+    assert res.status_code == 401
+
+
 def test_restaurants(client, db):
     helpers.insert_restaurant_db()
     allrestaurants = db.session.query(Restaurant).all()
