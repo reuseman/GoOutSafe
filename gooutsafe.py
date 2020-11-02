@@ -8,5 +8,7 @@ if os.path.exists(dotenv_path):
 
 # APP
 from monolith import create_app
+from monolith.services.background.celery import make_celery
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
+celery = make_celery(app)
