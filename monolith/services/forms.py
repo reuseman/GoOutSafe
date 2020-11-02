@@ -11,24 +11,25 @@ from wtforms.validators import DataRequired, NumberRange, Email
 
 
 class LoginForm(FlaskForm):
-    email = f.StringField("email", validators=[DataRequired()])
-    password = f.PasswordField("password", validators=[DataRequired()])
+    email = f.StringField("Email", validators=[DataRequired()])
+    password = f.PasswordField("Password", validators=[DataRequired()])
     display = ["email", "password"]
 
 
 class UserForm(FlaskForm):
-    email = EmailField("email", validators=[DataRequired(), Email()])
-    firstname = f.StringField("firstname", validators=[DataRequired()])
-    lastname = f.StringField("lastname", validators=[DataRequired()])
-    password = f.PasswordField("password", validators=[DataRequired()])
-    dateofbirth = DateField("dateofbirth", format="%d/%m/%Y")
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    firstname = f.StringField("Firstname", validators=[DataRequired()])
+    lastname = f.StringField("Lastname", validators=[DataRequired()])
+    password = f.PasswordField("Password", validators=[DataRequired()])
+    dateofbirth = f.DateField(
+        "Date Of Birth", format="%d/%m/%Y", validators=[DataRequired()])
     display = ["email", "firstname", "lastname", "password", "dateofbirth"]
 
 
 # TODO Validators are missing?
 class OperatorForm(UserForm):
     # TODO validate fiscal code in a good proper way
-    fiscal_code = f.StringField("fiscalcode", validators=[DataRequired()])
+    fiscal_code = f.StringField("Fiscal Code", validators=[DataRequired()])
     display = [
         "email",
         "firstname",
@@ -40,18 +41,19 @@ class OperatorForm(UserForm):
 
 
 class AuthorityForm(FlaskForm):
-    email = f.StringField("email", validators=[DataRequired()])
-    name = f.StringField("name", validators=[DataRequired()])
-    password = f.PasswordField("password", validators=[DataRequired()])
-    phone = f.IntegerField("phone", validators=[DataRequired()])
-    country = f.StringField("country", validators=[DataRequired()])
-    state = f.StringField("state", validators=[DataRequired()])
-    city = f.StringField("city", validators=[DataRequired()])
+    email = f.StringField("Email", validators=[DataRequired()])
+    name = f.StringField("Name", validators=[DataRequired()])
+    password = f.PasswordField("Password", validators=[DataRequired()])
+    phone = f.IntegerField("Phone", validators=[DataRequired()])
+    country = f.StringField("Country", validators=[DataRequired()])
+    state = f.StringField("State", validators=[DataRequired()])
+    city = f.StringField("City", validators=[DataRequired()])
     # TODO adding validators here causes two fails in the tests
-    lat = f.DecimalField("latitude", validators=[DataRequired()])
-    lon = f.DecimalField("longitude", validators=[DataRequired()])
+    lat = f.DecimalField("Latitude", validators=[DataRequired()])
+    lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password",
+               "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -64,7 +66,7 @@ class MultiCheckboxField(QuerySelectMultipleField):
 
 
 class CreateRestaurantForm(FlaskForm):
-    name = f.StringField("name", validators=[DataRequired()])
+    name = f.StringField("Name", validators=[DataRequired()])
     lat = f.FloatField(
         "latitude",
         validators=[
@@ -73,20 +75,21 @@ class CreateRestaurantForm(FlaskForm):
         ],
     )
     lon = f.FloatField(
-        "longitude",
+        "Longitude",
         validators=[
             DataRequired(),
             NumberRange(-180, 180, "Longitude must be between -180 and 180"),
         ],
     )
-    phone = f.IntegerField("phone", validators=[DataRequired()])
+    phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
-        "time_of_stay",
-        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
+        "Time of stay",
+        choices=[("30", "30 minutes"),
+                 ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
     prec_measures = MultiCheckboxField(
-        "precautions",
+        "Precautions",
         get_label="name",
         query_factory=precautions_choices,
     )
@@ -94,9 +97,9 @@ class CreateRestaurantForm(FlaskForm):
 
 
 class CreateTableForm(FlaskForm):
-    name = f.StringField("name", validators=[DataRequired()])
+    name = f.StringField("Name", validators=[DataRequired()])
     seats = f.IntegerField(
-        "seats",
+        "Seats",
         validators=[
             DataRequired(),
             NumberRange(
@@ -139,7 +142,8 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(
+            message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
