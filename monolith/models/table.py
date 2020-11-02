@@ -9,3 +9,5 @@ class Table(db.Model):
     seats = db.Column(db.Integer)
 
     restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurant.id"))
+
+    restaurant = db.relationship("Restaurant", back_populates="tables")

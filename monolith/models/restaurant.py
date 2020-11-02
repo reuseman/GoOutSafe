@@ -19,5 +19,6 @@ class Restaurant(db.Model):
     time_of_stay = db.Column(db.Integer)  # minutes
     operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
 
-    tables = db.relationship("Table", backref="restaurant")
+    tables = db.relationship("Table", back_populates="restaurant")
     reviews = db.relationship("Review", back_populates="restaurant")
+    menus = db.relationship("Menu", back_populates="restaurant")
