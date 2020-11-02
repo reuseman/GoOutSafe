@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from config import DevelopmentConfig, config
+from config import config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -9,7 +9,6 @@ login_manager = LoginManager()
 
 def create_app(config_name):
     app = Flask(__name__, static_folder="templates/assets")
-    # app.config.from_object(DevelopmentConfig)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 

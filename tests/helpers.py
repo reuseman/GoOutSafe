@@ -20,7 +20,7 @@ user2 = dict(
     firstname="mario",
     lastname="brown",
     password="1234",
-    dateofbirth="31/12/1995",
+    dateofbirth="1995-12-31",
     fiscal_code="RSSMRA95T31H501R",
     phone_number="+39331303313094",
 )
@@ -31,6 +31,15 @@ operator = dict(
     lastname="yellow",
     password="5678",
     dateofbirth="01/01/1963",
+    fiscal_code="YLLGPP63A01B519O",
+)
+
+operator2 = dict(
+    email="giuseppebrown@lalocanda.com",
+    firstname="giuseppe",
+    lastname="yellow",
+    password="5678",
+    dateofbirth="1963-01-01",
     fiscal_code="YLLGPP63A01B519O",
 )
 
@@ -94,7 +103,7 @@ def insert_restaurant_db():
     mock.restaurant()
 
 
-def create_operator(client, data=operator):
+def create_operator(client, data=operator2):
     return client.post(
         "/create_operator",
         data=data,
@@ -119,10 +128,7 @@ def create_restaurant(client, data=restaurant):
 
 
 def operator_restaurants(client):
-    return client.get(
-        "/operator/restaurants",
-        follow_redirects=False
-    )
+    return client.get("/operator/restaurants", follow_redirects=False)
 
 
 def create_table(client, restaurant_id=1, data=table):

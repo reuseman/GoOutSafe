@@ -190,7 +190,7 @@ def test_create_table_not_owned_restaurant(client, db):
         firstname="pippo",
         lastname="pluto",
         password="5678",
-        dateofbirth="01/01/1963",
+        dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
     )
 
@@ -216,9 +216,7 @@ def test_delete_table(client, db):
     helpers.create_table(client)
     res = helpers.delete_table(client)
 
-    fetched_table = (
-        db.session.query(Table).filter_by(id=1).first()
-    )
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res.status_code == 302
     assert fetched_table is None
@@ -242,7 +240,7 @@ def test_delete_table_not_owned_restaurant(client, db):
         firstname="pippo",
         lastname="pluto",
         password="5678",
-        dateofbirth="01/01/1963",
+        dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
     )
 
@@ -255,9 +253,7 @@ def test_delete_table_not_owned_restaurant(client, db):
 
     helpers.login_operator(client, data)
     res = helpers.delete_table(client)
-    fetched_table = (
-        db.session.query(Table).filter_by(id=1).first()
-    )
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res.status_code == 400
     assert fetched_table is not None
@@ -292,16 +288,10 @@ def test_edit_table(client, db):
 
     helpers.create_table(client)
 
-    data = dict(
-        id=1,
-        name="A5",
-        seats=6
-    )
+    data = dict(id=1, name="A5", seats=6)
     res = helpers.edit_table(client, data=data)
 
-    fetched_table = (
-        db.session.query(Table).filter_by(id=1).first()
-    )
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res.status_code == 302
     assert fetched_table.name == "A5"
@@ -315,19 +305,14 @@ def test_edit_table_to_one_with_same_name(client, db):
 
     helpers.create_table(client)
 
-    data = dict(
-        name="A5",
-        seats=6
-    )
+    data = dict(name="A5", seats=6)
     helpers.create_table(client, data=data)
 
-    data["name"]="A10"
-    data["seats"]=1
+    data["name"] = "A10"
+    data["seats"] = 1
     res = helpers.edit_table(client, data)
 
-    fetched_table = (
-        db.session.query(Table).filter_by(id=2).first()
-    )
+    fetched_table = db.session.query(Table).filter_by(id=2).first()
 
     assert res.status_code == 400
     assert fetched_table.name == "A5"
@@ -352,7 +337,7 @@ def test_edit_table_not_owned_restaurant(client, db):
         firstname="pippo",
         lastname="pluto",
         password="5678",
-        dateofbirth="01/01/1963",
+        dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
     )
 
@@ -365,15 +350,9 @@ def test_edit_table_not_owned_restaurant(client, db):
 
     helpers.login_operator(client, op_data)
 
-    table_data = dict(
-        id=1,
-        name="A1",
-        seats=1
-    )
+    table_data = dict(id=1, name="A1", seats=1)
     res = helpers.edit_table(client, table_data)
-    fetched_table = (
-        db.session.query(Table).filter_by(id=1).first()
-    )
+    fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res.status_code == 400
     assert fetched_table.name != "A1"
@@ -408,10 +387,7 @@ def test_edit_table_bad_data(client, db):
     helpers.create_restaurant(client)
     helpers.create_table(client)
 
-    bad_table = dict(
-        name="A10",
-        seats=-10
-    )
+    bad_table = dict(name="A10", seats=-10)
 
     res = helpers.edit_table(client, data=bad_table)
 
@@ -457,7 +433,7 @@ def test_operator_restaurant(client, db):
 
     assert res.status_code == 200
     for rest in op_restaurants:
-        assert bytes(rest.name, 'utf-8') in res.data
+        assert bytes(rest.name, "utf-8") in res.data
 
 
 def test_operator_restaurant_empty(client, db):
@@ -468,7 +444,7 @@ def test_operator_restaurant_empty(client, db):
         firstname="pippo",
         lastname="pluto",
         password="5678",
-        dateofbirth="01/01/1963",
+        dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
     )
     helpers.create_operator(client, op_data)
@@ -482,7 +458,7 @@ def test_operator_restaurant_empty(client, db):
 
     assert res.status_code == 200
     for rest in op_restaurants:
-        assert bytes(rest.name, 'utf-8') not in res.data
+        assert bytes(rest.name, "utf-8") not in res.data
 
 
 def test_restaurants_available_anonymous(client):
@@ -524,7 +500,7 @@ def test_restaurants_logged(client, db):
 
     assert res.status_code == 200
     for rest in q_rest:
-        assert bytes(rest.name, 'utf-8') in res.data
+        assert bytes(rest.name, "utf-8") in res.data
 
 
 def test_restaurants_notlogged(client, db):
@@ -538,13 +514,13 @@ def test_restaurants_notlogged(client, db):
 
     assert res.status_code == 200
     for rest in q_rest:
-        assert bytes(rest.name, 'utf-8') in res.data
+        assert bytes(rest.name, "utf-8") in res.data
 
 
 def test_tables_notavailable_user(client):
     helpers.create_operator(client)
     helpers.create_user(client)
-    
+
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.logout_operator(client)
@@ -560,7 +536,7 @@ def test_tables_notavailable_anonymous(client):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.logout_operator(client)
-    
+
     res = client.get("/restaurants/1/tables")
     assert res.status_code == 401
 
@@ -569,7 +545,7 @@ def test_tables_available_operator(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    
+
     res = client.get("/restaurants/1/tables")
     assert res.status_code == 200
 
@@ -598,7 +574,8 @@ def test_tables(client, db):
 
     assert res.status_code == 200
     for table in q_table:
-        assert bytes(table.name, 'utf-8') in res.data
+        assert bytes(table.name, "utf-8") in res.data
+
 
 def test_restaurants(client, db):
     helpers.insert_restaurant_db()

@@ -35,7 +35,7 @@ def add_operator(client):
             email="operator@mail.com",
             firstname="operator",
             lastname="operator",
-            dateofbirth="05/12/2020",
+            dateofbirth="2020-12-05",
             password="1233454",
             fiscal_code="123123123123",
         ),
