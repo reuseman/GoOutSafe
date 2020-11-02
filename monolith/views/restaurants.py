@@ -4,10 +4,11 @@ from flask.helpers import flash
 from flask import Blueprint, redirect, render_template, request
 from monolith import db
 from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions
+from monolith.models.menu import Menu, Food
 from monolith.models.table import Table
 from monolith.services.auth import admin_required, current_user, operator_required
 from flask_login import current_user, login_user, logout_user, login_required
-from monolith.services.forms import CreateRestaurantForm, CreateTableForm, UserForm
+from monolith.services.forms import CreateRestaurantForm, CreateTableForm, UserForm, CreateMenuForm, CategoryForm, FoodForm
 from ..controllers import restaurant
 
 
@@ -117,6 +118,40 @@ def create_restaurant():
             status = 400
 
     return render_template("create_restaurant.html", form=form), status
+
+
+@restaurants.route("/operator/restaurants/<restaurant_id>/create_menu", methods=["GET", "POST"])
+@login_required
+@operator_required
+def create_menu(restaurant_id):
+    status = 200
+    form = CreateMenuForm()
+
+    if form.add_category.data:
+        form.categories.append_entry()
+        return render_template("create_menu.html", form=form), status
+
+    for category in form.categories:
+        if category.add_food.data:
+            category.foods.append_entry()
+            return render_template("create_menu.html", form=form), status
+        if category.remove_category.data:
+            form.categories.entries.remove(category)
+            return render_template("create_menu.html", form=form), status
+        
+        for food in category.foods:
+            if food.remove_food.data:
+                category.foods.entries.remove(food)
+                return render_template("create_menu.html", form=form), status
+
+    if form.validate_on_submit():
+        pass
+    else:
+        flash("Duplicate category or food name!", category="error")
+        status = 400
+    
+    return render_template("create_menu.html", form=form), status
+
 
 
 @restaurants.route("/restaurants/<restaurant_id>/tables")

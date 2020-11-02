@@ -1,4 +1,6 @@
 from monolith import db
+import enum
+
 
 menuitems = db.Table('tags',
     db.Column('menu_id', db.Integer, db.ForeignKey('menu.id'), primary_key=True),
@@ -16,6 +18,10 @@ class FoodCategory(enum.Enum):
     BURGERS = "Burgers"
     SANDWICHES = "Sandwiches"
 
+    @classmethod
+    def choices(cls):
+        return [(choice.name, choice.value) for choice in cls]
+
 
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -24,8 +30,8 @@ class Menu(db.Model):
     name = db.Column(db.Text(100))
     restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurant.id"))
 
-    restaurant = db.Relationship("Restaurant", back_populates="menu")
-    foods = db.Relationship("Food", secondary=menuitems, back_populates="menu")
+    restaurant = db.relationship("Restaurant", back_populates="menus")
+    foods = db.relationship("Food", secondary=menuitems, back_populates="menu")
 
 
 class Food(db.Model):
@@ -36,4 +42,4 @@ class Food(db.Model):
     name = db.Column(db.Text(100))
     price = db.Column(db.Float)
 
-    menu = db.Relationship("Menu", secondary=menuitems, back_populates="food")
+    menu = db.relationship("Menu", secondary=menuitems, back_populates="foods")

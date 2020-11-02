@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block main %}
+<html>
+ <body>
+  <p class="error">
+    {% for errmess in get_flashed_messages(False,['error']) %}
+      <br>{{ errmess }}
+    {% endfor%}</p>
+  <form action="" method="POST">
+    {{ form.hidden_tag() }}
+    <table>
+      <th>{{ form["name"].label }}</th>
+      <th>{{ form["name"] }}</th>
+      <th>{{ form["add_category"] }}</th>
+        
+      {% for category in form.categories %}
+        <table>
+          <tr>
+            <th>{{ category["name"].label }}</th>
+            <th>{{ category["name"] }}</th>
+            {% if form.categories|length > 1 %}
+              <th>{{ category["remove_category"] }}</th>
+            {% endif %}
+          </tr>
+          <tr>
+            <th>Food name</th>
+            <th>Food price</th>
+            <th>{{ category.add_food }}</th>
+          </tr>
+          {% for food in category.foods %}
+            <tr>
+              <td>{{ food["name"] }}</td>
+              <td>{{ food["price"] }}</td>
+
+              {% if category.foods|length > 1 %}
+                <td>{{ food["remove_food"] }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </table>
+      {% endfor %}
+    </table>
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+    <input type=submit value="Submit">
+  </form>
+ </body>
+</html>
+
+{% endblock %}

@@ -3,11 +3,13 @@ from sys import displayhook
 from wtforms import widgets
 from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from monolith.models.precautions import Precautions
+from monolith.models.menu import FoodCategory
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith import db
 import wtforms as f
-from wtforms.validators import DataRequired, NumberRange, Email
+from wtforms.validators import DataRequired, NumberRange, Email, ValidationError, Optional
+from wtforms import Form
 
 
 class LoginForm(FlaskForm):
@@ -91,6 +93,36 @@ class CreateRestaurantForm(FlaskForm):
         query_factory=precautions_choices,
     )
     display = ["name", "lat", "lon", "phone", "time_of_stay", "prec_measures"]
+
+
+def validate_no_dup(form, field):
+    set_categories = set()
+    for category in field.data:
+        if category["name"] in set_categories:
+            print("sto qua")
+            raise ValidationError("Duplicate!")
+        else:
+            set_categories.add(category["name"])
+
+
+class FoodForm(Form):
+    name = f.StringField("food name", validators=[Optional()])
+    price = f.DecimalField("price", places=2, validators=[Optional(), NumberRange(min=0, message="No negative values")])
+    remove_food = f.SubmitField(label="Remove food")
+
+
+class CategoryForm(Form):
+    name = f.SelectField("category", validators=[DataRequired()], choices=FoodCategory.choices())
+    foods = f.FieldList(f.FormField(FoodForm), "", validators=[DataRequired(), validate_no_dup], min_entries=1, max_entries=10)
+    add_food = f.SubmitField(label="Add food")
+    remove_category = f.SubmitField(label="Remove category")
+
+
+class CreateMenuForm(FlaskForm):
+    name = f.StringField("menu name", validators=[DataRequired()])
+    categories = f.FieldList(f.FormField(CategoryForm), 
+        "categories", validators=[DataRequired(), validate_no_dup], min_entries=1, max_entries=10)
+    add_category = f.SubmitField(label="Add category")
 
 
 class CreateTableForm(FlaskForm):

@@ -10,4 +10,4 @@ class Table(db.Model):
 
     restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurant.id"))
 
-    restaurant = db.relationship("Restaurant", back_populates="table")
+    restaurant = db.relationship("Restaurant", back_populates="tables")
