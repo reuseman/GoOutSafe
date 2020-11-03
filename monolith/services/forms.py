@@ -18,11 +18,13 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    email = EmailField("email", validators=[DataRequired(), Email()])
-    firstname = f.StringField("firstname", validators=[DataRequired()])
-    lastname = f.StringField("lastname", validators=[DataRequired()])
-    password = f.PasswordField("password", validators=[DataRequired()])
-    dateofbirth = DateField("dateofbirth", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    firstname = f.StringField("First name", validators=[
+                              DataRequired()], render_kw={"placeholder": "Mario"})
+    lastname = f.StringField("Last name", validators=[
+                             DataRequired()], render_kw={"placeholder": "Rossi"})
+    password = f.PasswordField("Password", validators=[DataRequired()])
+    dateofbirth = DateField("Date of birth", validators=[DataRequired()])
     display = ["email", "firstname", "lastname", "password", "dateofbirth"]
 
 
@@ -52,7 +54,8 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("Latitude", validators=[DataRequired()])
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password",
+               "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -83,7 +86,8 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "Time of stay",
-        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"),
+                 ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
     prec_measures = MultiCheckboxField(
@@ -140,7 +144,8 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(
+            message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")

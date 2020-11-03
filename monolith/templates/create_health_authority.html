@@ -2,20 +2,20 @@
 {% block title %}Register{% endblock %}
 
 {% block main %}
-    <form action="" method="POST">
-        {{ form.hidden_tag() }}
-        <dl>
-            {% for field in form.display %}
-                <dt>{{ form[field].label }}</dt>
-                <dd>{{ form[field]() }}</dd>
-                {% if form[field].errors %}
-                    {% for e in form[field].errors %}
-                        <p class="help-block">{{ e }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </dl>
-        <p>
-            <input type=submit value="Submit">
-    </form>
+<form action="" method="POST" class="ui form">
+    {{ form.hidden_tag() }}
+    {% for field in form.display %}
+    <div class="field">
+        <label>{{ form[field].label }}</label>
+        {{ form[field]() }}
+    </div>
+    {% if form[field].errors %}
+    {% for e in form[field].errors %}
+    <p class="help-block">{{ e }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    <p>
+        <input type=submit value="Submit" class="ui button primary">
+</form>
 {% endblock %}
