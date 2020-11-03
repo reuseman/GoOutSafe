@@ -12,11 +12,17 @@ def test_restaurants_map_is_correct(client, app):
     helpers.create_restaurant(client)
     path = os.path.join(dirname(app.root_path), 'monolith/templates/map.html')
 
+    # in order to regenerate the map with test values
+    res = client.get("/restaurants_map")
+
     with open(path, 'r', encoding='utf-8') as f:
         text = f.read()
         # checking restaurant details
-        assert "Trial Restaurant" in text
         assert 'class="folium-map"' in text
+        assert "Trattoria da Fabio" in text
+        assert "40.720586" in text
+        assert "10.1" in text
+        assert "555123456"
 
 
 def test_restaurants_map_view_is_available(client):
