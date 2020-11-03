@@ -16,7 +16,7 @@
 
     
 ### Running Flask
-    FLASK_APP="monolith:create_app('development')" 
+    export FLASK_APP="monolith:create_app('development')" 
     FLASK_ENV=development
     flask run
 
