@@ -1,7 +1,6 @@
 from flask import Blueprint, redirect, render_template, request
 from monolith import db
 from monolith.models import HealthAuthority
-from monolith.services.auth import admin_required
 from monolith.services.forms import AuthorityForm
 
 authorities = Blueprint("authorities", __name__)

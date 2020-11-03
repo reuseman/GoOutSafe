@@ -3,7 +3,6 @@ from monolith import db
 from monolith.models import Restaurant
 import folium
 
-
 restaurants_map = Blueprint("restaurants_map", __name__)
 
 

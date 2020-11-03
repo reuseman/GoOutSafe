@@ -108,6 +108,7 @@ venv.bak/
 .mypy_cache/
 
 # personal
+.idea
 ./monolith/gooutsafe.db
 variables.sh
 .vscode/settings.json

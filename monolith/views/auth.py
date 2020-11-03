@@ -47,8 +47,8 @@ def authority_login():
         email, password = form.data["email"], form.data["password"]
         authority = (
             db.session.query(HealthAuthority)
-            .filter(HealthAuthority.email == email)
-            .first()
+                .filter(HealthAuthority.email == email)
+                .first()
         )
 
         if authority is not None and authority.verify_password(password):

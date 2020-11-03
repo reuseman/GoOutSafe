@@ -1,9 +1,11 @@
-from ..fixtures import db, app
+from monolith.models.review import Review
+from ..fixtures import db, app, client
 from .. import helpers
 
 from datetime import datetime, timedelta
 
 
+# Mark Tests
 def test_has_been_marked_should_be_true(db):
     ha = helpers.insert_health_authority(db)
     user = helpers.insert_user(db)
@@ -64,3 +66,20 @@ def test_get_last_mark_duration_should_be_ten(db):
     ha2.mark(user, starting_date=datetime(2020, 10, 2), duration=10)
 
     assert user.get_last_mark_duration() == 10
+
+
+# Review
+def test_review_should_create_review_assosiaction(client, db):
+    helpers.create_operator(client)
+    restaurant = helpers.insert_restaurant_db(db)
+    user = helpers.insert_user(db)
+
+    user.review(restaurant, 5, "This was an amazing place to have a dinner!")
+    db.session.commit()
+
+    review = db.session.query(Review).filter(Review.user_id == user.id).first()
+
+    assert review.user_id == user.id
+    assert review.rating == 5
+    assert review.message == "This was an amazing place to have a dinner!"
+    assert review.created.date() == datetime.utcnow().date()

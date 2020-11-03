@@ -2,12 +2,12 @@
 {% block title %}Authorities{% endblock %}
 
 {% block main %}
-<h1>Authorities List</h1>
-<ul>
-  {% for authority in authorities: %}
-  <li>
-    {{authority.name}}
-  </li>
-  {% endfor %}
-</ul>
+    <h1>Authorities List</h1>
+    <ul>
+        {% for authority in authorities: %}
+            <li>
+                {{ authority.name }}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

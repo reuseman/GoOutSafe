@@ -1,7 +1,8 @@
 # pyproject.toml
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--cov-report xml:cov.xml --cov monolith"
+addopts = "--cov-report xml:cov.xml --cov monolith -s -v"
 testpaths = [
     "tests",
 ]
+

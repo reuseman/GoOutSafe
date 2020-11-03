@@ -2,28 +2,28 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main %}
-<h3>{{ title }}</h3>
+    <h3>{{ title }}</h3>
 
 
-<form action="" method="POST">
-  {{ form.hidden_tag() }}
-  <dl>
-    {% for field in form.display %}
-    <dt>{{ form[field].label }}</dt>
-    <dd>{{ form[field]() }}</dd>
-    {% if form[field].errors %}
-    {% for e in form[field].errors %}
-    <p class="help-block">{{ e }}</p>
-    {% endfor %}
-    {% endif %}
-    {% endfor %}
-  </dl>
-  <p>
-    <input type=submit value="Publish">
-</form>
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <dl>
+            {% for field in form.display %}
+                <dt>{{ form[field].label }}</dt>
+                <dd>{{ form[field]() }}</dd>
+                {% if form[field].errors %}
+                    {% for e in form[field].errors %}
+                        <p class="help-block">{{ e }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </dl>
+        <p>
+            <input type=submit value="Publish">
+    </form>
 
-<!--TODO only show the links that are needed. If am on /login hide the first one-->
-<h5><a href="/login">Login as an User</a></h5>
-<h5><a href="/operator_login">Login as an Operator</a></h5>
-<h5><a href="/authority_login">Login as an Health Authority</a></h5>
+    <!--TODO only show the links that are needed. If am on /login hide the first one-->
+    <h5><a href="/login">Login as an User</a></h5>
+    <h5><a href="/operator_login">Login as an Operator</a></h5>
+    <h5><a href="/authority_login">Login as an Health Authority</a></h5>
 {% endblock %}

@@ -1,3 +1,4 @@
+from wtforms.fields.core import StringField
 from monolith.services.auth import authority_required
 from sys import displayhook
 from wtforms import widgets
@@ -7,7 +8,7 @@ from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith import db
 import wtforms as f
-from wtforms.validators import DataRequired, NumberRange, Email
+from wtforms.validators import DataRequired, Length, NumberRange, Email
 
 
 class LoginForm(FlaskForm):
@@ -163,3 +164,17 @@ class MarkPhoneNumberForm(FlaskForm):
     )
     submit = f.SubmitField("Mark")
     display = ["duration", "phone_number", "submit"]
+
+
+class ReviewForm(FlaskForm):
+    rating = IntegerField(
+        "Your rating",
+        validators=[
+            DataRequired(),
+            NumberRange(
+                min=1, max=5, message="The number of stars must be between 1 and 5"
+            ),
+        ],
+    )
+    message = f.TextAreaField("Your review",
+                              validators=[Length(min=30, message="The review should be at least of 30 characters.")])

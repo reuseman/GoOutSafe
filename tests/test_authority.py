@@ -27,8 +27,8 @@ def test_create_authority_view(client, db):
     assert fetched_user.lat == 23423423.4
     assert fetched_user.lon == 234234234
     assert urlparse(res.location).path == "/"
-    
-  
+
+
 def test_correct_login(client):
     add_authority(client)
 
