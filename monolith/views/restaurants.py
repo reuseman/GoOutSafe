@@ -1,13 +1,18 @@
 from flask.globals import session
 from monolith.models import precautions
 from flask.helpers import flash
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, url_for
 from monolith import db
 from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions
 from monolith.models.table import Table
 from monolith.services.auth import admin_required, current_user, operator_required
 from flask_login import current_user, login_user, logout_user, login_required
-from monolith.services.forms import CreateRestaurantForm, CreateTableForm, UserForm
+from monolith.services.forms import (
+    CreateRestaurantForm,
+    CreateTableForm,
+    ReviewForm,
+    UserForm,
+)
 from ..controllers import restaurant
 
 
@@ -18,9 +23,9 @@ restaurants = Blueprint("restaurants", __name__)
 def _restaurants(message=""):
     allrestaurants = db.session.query(Restaurant)
     if session:
-        role=session["role"]
+        role = session["role"]
     else:
-        role=""
+        role = ""
 
     return render_template(
         "restaurants.html",
@@ -49,8 +54,9 @@ def operator_restaurants(message=""):
     )
 
 
-@restaurants.route("/restaurants/<restaurant_id>")
+@restaurants.route("/restaurants/<restaurant_id>", methods=["GET", "POST"])
 def restaurant_sheet(restaurant_id):
+
     records = (
         db.session.query(Restaurant, Precautions, RestaurantsPrecautions)
         .filter(
@@ -64,6 +70,30 @@ def restaurant_sheet(restaurant_id):
     precautions = []
     for record in records:
         precautions.append(record.Precautions.name)
+
+    # REVIEWS
+    # TODO sort them by the most recent, or are they already in that order
+    # TODO show in the view the date of the review
+    reviews = restaurant.reviews
+    form = ReviewForm()
+    if form.is_submitted():
+        if current_user.is_anonymous:
+            flash("To review the restaurant you need to login.")
+            return redirect(url_for('auth.login'))
+        if form.validate():
+            if session["role"] != "user":
+                flash("Only a logged user can review a restaurant.")
+            else:
+                # Check if the user already did a review
+                if current_user.already_reviewed(restaurant):
+                    flash("You already reviewed this restaraunt")
+                else:
+                    rating = form.rating.data
+                    message = form.message.data
+                    current_user.review(restaurant, rating, message)
+                    db.session.commit()
+                    return redirect("/restaurants/" + restaurant_id)
+
     return render_template(
         "restaurantsheet.html",
         name=restaurant.name,
@@ -72,6 +102,8 @@ def restaurant_sheet(restaurant_id):
         lon=restaurant.lon,
         phone=restaurant.phone,
         precautions=precautions,
+        reviews=reviews,
+        form=form,
     )
 
 
@@ -128,13 +160,16 @@ def _tables(restaurant_id):
         alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
     else:
         status = 401
-    
-    return render_template(
-        "tables.html",
-        tables=alltables,
-        # base_url="http://127.0.0.1:5000/restaurants",
-        base_url=request.base_url,
-    ), status
+
+    return (
+        render_template(
+            "tables.html",
+            tables=alltables,
+            # base_url="http://127.0.0.1:5000/restaurants",
+            base_url=request.base_url,
+        ),
+        status,
+    )
 
 
 @restaurants.route(
