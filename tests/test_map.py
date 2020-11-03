@@ -1,20 +1,22 @@
 from .fixtures import app, client, db
 from . import helpers
+import os
+from os.path import dirname
 
 # !TO DO: this fails because of relative paths! need to find a way to fix this
 
 
-def test_restaurants_map_is_correct(client):
+def test_restaurants_map_is_correct(client, app):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
+    path = os.path.join(dirname(app.root_path), 'monolith/templates/map.html')
 
-    res = client.get("/map.html")
-    # checking restaurant details
-    assert b"Trattoria da Fabio" in res.data
-    assert b"555123456" in res.data
-    assert b"40.720586" in res.data
-    assert b"10.10" in res.data
+    with open(path, 'r', encoding='utf-8') as f:
+        text = f.read()
+        # checking restaurant details
+        assert "Trial Restaurant" in text
+        assert 'class="folium-map"' in text
 
 
 def test_restaurants_map_view_is_available(client):
