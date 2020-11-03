@@ -4,18 +4,15 @@ import os
 from os.path import dirname
 
 
-# !TO DO: this fails because of relative paths! need to find a way to fix this
-
-
 def test_restaurants_map_is_correct(client, app):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    path = os.path.join(dirname(app.root_path), 'monolith/templates/map.html')
 
     # in order to regenerate the map with test values
     res = client.get("/restaurants_map")
 
+    path = os.path.join(dirname(app.root_path), 'monolith/templates/map.html')
     with open(path, 'r', encoding='utf-8') as f:
         text = f.read()
         # checking restaurant details
