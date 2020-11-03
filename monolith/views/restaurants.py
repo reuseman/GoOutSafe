@@ -15,7 +15,6 @@ from monolith.services.forms import (
 )
 from ..controllers import restaurant
 
-
 restaurants = Blueprint("restaurants", __name__)
 
 
@@ -56,15 +55,14 @@ def operator_restaurants(message=""):
 
 @restaurants.route("/restaurants/<restaurant_id>", methods=["GET", "POST"])
 def restaurant_sheet(restaurant_id):
-
     records = (
         db.session.query(Restaurant, Precautions, RestaurantsPrecautions)
-        .filter(
+            .filter(
             Restaurant.id == int(restaurant_id),
             Restaurant.id == RestaurantsPrecautions.restaurant_id,
             RestaurantsPrecautions.precautions_id == Precautions.id,
         )
-        .all()
+            .all()
     )  # Join between tabels Restaurant, RestaurantsPrecautions and Precautions
     restaurant = records[0].Restaurant
     precautions = []
@@ -139,7 +137,7 @@ def create_restaurant():
             new_restaurant.operator_id = current_user.id
 
             if restaurant.add_new_restaurant(
-                new_restaurant, request.form.getlist("prec_measures")
+                    new_restaurant, request.form.getlist("prec_measures")
             ):
                 return redirect("operator/restaurants")
             else:

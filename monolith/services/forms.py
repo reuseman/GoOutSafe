@@ -176,4 +176,5 @@ class ReviewForm(FlaskForm):
             ),
         ],
     )
-    message = f.TextAreaField("Your review", validators=[Length(min=30, message="The review should be at least of 30 characters.")])
+    message = f.TextAreaField("Your review",
+                              validators=[Length(min=30, message="The review should be at least of 30 characters.")])

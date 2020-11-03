@@ -106,8 +106,8 @@ def operator():
 def health_authority():
     ha = (
         db.session.query(HealthAuthority)
-        .filter(HealthAuthority.email == "auth@mail.com")
-        .first()
+            .filter(HealthAuthority.email == "auth@mail.com")
+            .first()
     )
     if ha is None:
         example = HealthAuthority()

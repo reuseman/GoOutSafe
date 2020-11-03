@@ -116,7 +116,7 @@ def insert_precautions(db, precautions=precautions):
     db.session.commit()
 
 
-def insert_precautions_in_restaurant(db, restaurant:Restaurant, precautions_id=[1, 2, 4]):
+def insert_precautions_in_restaurant(db, restaurant: Restaurant, precautions_id=[1, 2, 4]):
     for precaution_id in precautions_id:
         db.session.add(RestaurantsPrecautions(restaurant_id=restaurant.id, precautions_id=precaution_id))
     db.session.commit()

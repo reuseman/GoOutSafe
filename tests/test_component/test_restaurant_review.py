@@ -30,8 +30,8 @@ def test_user_should_create_review(client, db):
     assert b"mario" in res.data
     assert b"5" in res.data
     assert (
-        b"It was a delicious dinner, but initially the service was not so excellent in the speed of serving the meals."
-        in res.data
+            b"It was a delicious dinner, but initially the service was not so excellent in the speed of serving the meals."
+            in res.data
     )
 
 
@@ -48,7 +48,7 @@ def test_user_should_create_review_if_already_did(client, db):
 
 
 def test_user_should_not_create_review_when_message_is_less_than_30_character(
-    client, db
+        client, db
 ):
     helpers.create_user(client)
     helpers.login_user(client)
@@ -159,7 +159,7 @@ def test_anonymous_user_should_see_review_form(client, db):
 
 
 def test_anonymous_user_should_be_redirected_on_login_page_when_create_review(
-    client, db
+        client, db
 ):
     helpers.insert_complete_restaurant(db)
 

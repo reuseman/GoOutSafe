@@ -97,8 +97,7 @@ def test_create_duplicate_restaurant(client, db):
 def test_create_table_view_is_available_operator(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
-    helpers.insert_restaurant_db()
-    q = db.session.query(Restaurant).filter_by(id=1).first()
+    q = helpers.insert_restaurant_db(db)
 
     res = client.get("/operator/restaurants/" + str(q.id) + "/create_table")
     assert res.status_code == 200

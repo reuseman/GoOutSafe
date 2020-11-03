@@ -2,50 +2,50 @@
 {% block title %}Index{% endblock %}
 
 {% block main %}
-<h1>GoOutSafe</h1>
+    <h1>GoOutSafe</h1>
 
-{% if current_user.is_authenticated and session['role'] == "user"%}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+    {% if current_user.is_authenticated and session['role'] == "user" %}
+        Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
 
-<h2>Your Restaurants</h2>
-{% for restaurant in restaurants%}
-<div>
-  <li>
-    {{restaurant.name}} -- Likes:{{restaurant.likes}}
-  </li>
-</div>
-{% endfor %}
+        <h2>Your Restaurants</h2>
+        {% for restaurant in restaurants %}
+            <div>
+                <li>
+                    {{ restaurant.name }} -- Likes:{{ restaurant.likes }}
+                </li>
+            </div>
+        {% endfor %}
 
-{% elif current_user.is_authenticated and session['role'] == "operator"%}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-Below you can see your restaurants.
+    {% elif current_user.is_authenticated and session['role'] == "operator" %}
+        Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+        Below you can see your restaurants.
 
-{% elif current_user.is_authenticated and session['role'] == "authority"%}
-Hi {{ current_user.name }}! <a href="/logout">Logout</a>
-Below you can mark users as positive, have fun!.
+    {% elif current_user.is_authenticated and session['role'] == "authority" %}
+        Hi {{ current_user.name }}! <a href="/logout">Logout</a>
+        Below you can mark users as positive, have fun!.
 
-<!--TODO refactor all the custom sub-views in an external file-->
-<section>
-  <h2>Add new Mark</h2>
-  <p>
-  <form method="POST" action="/marks/new/ssn">
-    <input type="submit" value="SSN" />
-  </form>
-  </p>
-  <p>
-  <form method="POST" action="/marks/new/email">
-    <input type="submit" value="Email" />
-  </form>
-  </p>
-  <p>
-  <form method="POST" action="/marks/new/phonenumber">
-    <input type="submit" value="Phone number" />
-  </form>
-  </p>
-</section>
+        <!--TODO refactor all the custom sub-views in an external file-->
+        <section>
+            <h2>Add new Mark</h2>
+            <p>
+            <form method="POST" action="/marks/new/ssn">
+                <input type="submit" value="SSN"/>
+            </form>
+            </p>
+            <p>
+            <form method="POST" action="/marks/new/email">
+                <input type="submit" value="Email"/>
+            </form>
+            </p>
+            <p>
+            <form method="POST" action="/marks/new/phonenumber">
+                <input type="submit" value="Phone number"/>
+            </form>
+            </p>
+        </section>
 
-{% else %}
-Hi Anonymous, <a href="/login">Log in</a>
-{{ session["role"] }}
-{% endif %}
+    {% else %}
+        Hi Anonymous, <a href="/login">Log in</a>
+        {{ session["role"] }}
+    {% endif %}
 {% endblock %}

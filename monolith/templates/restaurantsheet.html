@@ -35,41 +35,41 @@
             </section>
         {% endfor %}
         {% if session["role"] != "operator" and session["role"] != "authority" %}
-        <section>
-            <form method="POST">
-                <h3>Add your review</h3>
-                {{ form.hidden_tag() }}
-                <p>
-                    {% if form.rating.errors %}
-                        <ul class=errors>
-                            {% for error in form.rating.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                <label for="">
-                    <span>{{ form.rating.label }}</span>
-                </label> {{ form.rating() }}
-                </p>
-                <p>
-                    {% if form.message.errors %}
-                        <ul>
-                            {% for error in form.message.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                <label for="Message">
-                    <span>{{ form.message.label }}</span>
-                </label>
-                {{ form.message() }}
-                </p>
-                <p>
-                    <input type="submit" value="Post">
-                </p>
-            </form>
-        </section>
-        {%  endif %}
+            <section>
+                <form method="POST">
+                    <h3>Add your review</h3>
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {% if form.rating.errors %}
+                            <ul class=errors>
+                                {% for error in form.rating.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    <label for="">
+                        <span>{{ form.rating.label }}</span>
+                    </label> {{ form.rating() }}
+                    </p>
+                    <p>
+                        {% if form.message.errors %}
+                            <ul>
+                                {% for error in form.message.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    <label for="Message">
+                        <span>{{ form.message.label }}</span>
+                    </label>
+                    {{ form.message() }}
+                    </p>
+                    <p>
+                        <input type="submit" value="Post">
+                    </p>
+                </form>
+            </section>
+        {% endif %}
     </article>
 
 {% endblock %}
