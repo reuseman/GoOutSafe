@@ -60,7 +60,8 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("Latitude", validators=[DataRequired()])
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password",
+               "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -91,17 +92,10 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "Time of stay",
-        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"),
+                 ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
-<<<<<<< HEAD
-    opening_hours = f.DecimalField("Opening hours", validators=[
-                                   DataRequired(), NumberRange(0, 24, "Not a valid hour")])
-    closing_hours = f.DecimalField("Closing hours", validators=[
-                                   DataRequired(), NumberRange(0, 24, "Not a valid hour")])
-    cuisine_type = f.SelectField(
-        'Cuisine type', choices=CuisineType.choices(), validators=[DataRequired()])
-=======
     opening_hours = f.DecimalField(
         "Opening hours",
         validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")],
@@ -113,16 +107,11 @@ class CreateRestaurantForm(FlaskForm):
     cuisine_type = f.SelectField(
         "Cuisine type", choices=CuisineType.choices(), validators=[DataRequired()]
     )
->>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
     prec_measures = MultiCheckboxField(
         "Precautions",
         get_label="name",
         query_factory=precautions_choices,
     )
-<<<<<<< HEAD
-    display = ["name", "lat", "lon", "phone", "opening_hours",
-               "closing_hours", "cuisine_type", "time_of_stay", "prec_measures"]
-=======
     display = [
         "name",
         "lat",
@@ -134,7 +123,6 @@ class CreateRestaurantForm(FlaskForm):
         "time_of_stay",
         "prec_measures",
     ]
->>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
 
 class CreateTableForm(FlaskForm):
@@ -183,7 +171,8 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(
+            message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
@@ -292,7 +281,8 @@ class ChangePasswordForm(FlaskForm):
         label="New password",
         validators=[
             DataRequired(),
-            validators.EqualTo("password_confirm", message="Passwords must match"),
+            validators.EqualTo("password_confirm",
+                               message="Passwords must match"),
         ],
     )
     password_confirm = f.PasswordField(
@@ -314,7 +304,8 @@ class ChangeAnagraphicForm(FlaskForm):
     password = f.PasswordField(
         label="Type your password here to confirm", validators=[DataRequired()]
     )
-    display = ["firstname", "lastname", "fiscal_code", "dateofbirth", "password"]
+    display = ["firstname", "lastname",
+               "fiscal_code", "dateofbirth", "password"]
 
 
 class ChangeContactForm(FlaskForm):

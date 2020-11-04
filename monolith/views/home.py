@@ -30,10 +30,12 @@ def profile():
     if session["role"] == "authority":
         return redirect("/")
     elif session["role"] == "user":
-        user = db.session.query(User).filter(User.id == current_user.id).first()
+        user = db.session.query(User).filter(
+            User.id == current_user.id).first()
         return render_template("profile.html", user=user)
     elif session["role"] == "operator":
-        user = db.session.query(Operator).filter(Operator.id == current_user.id).first()
+        user = db.session.query(Operator).filter(
+            Operator.id == current_user.id).first()
         return render_template("profile.html", user=user)
 
 
@@ -43,19 +45,11 @@ def change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
-<<<<<<< HEAD
         if current_user.verify_password(form.old_password.data):
             current_user.password = form.new_password.data
             flash("Operation successful!")
         else:
             flash("You've input the wrong password!")
-=======
-        """new_operator = Operator()
-        form.populate_obj(new_operator)
-        db.session.add(new_operator)
-        db.session.commit()"""
-        return redirect("/my_profile/change_password")
->>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
     return render_template("change_profile.html", form=form)
 
@@ -66,7 +60,6 @@ def change_anagraphic():
     form = ChangeAnagraphicForm()
 
     if form.validate_on_submit():
-<<<<<<< HEAD
         if current_user.verify_password(form.password.data):
             if session["role"] == "user":
                 current_user.firstname = form.firstname.data
@@ -79,13 +72,6 @@ def change_anagraphic():
             flash("Operation successful!")
         else:
             flash("You've input the wrong password!")
-=======
-        """new_operator = Operator()
-        form.populate_obj(new_operator)
-        db.session.add(new_operator)
-        db.session.commit()"""
-        return redirect("/my_profile/change_anagraphic")
->>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
     return render_template("change_profile.html", form=form)
 
@@ -96,7 +82,6 @@ def change_contacts():
     form = ChangeContactForm()
 
     if form.validate_on_submit():
-<<<<<<< HEAD
         if current_user.verify_password(form.password.data):
             current_user.email = form.email.data
             current_user.phone_number = form.phone.data
@@ -104,12 +89,4 @@ def change_contacts():
             flash("Operation successful!")
         else:
             flash("You've input the wrong password!")
-=======
-        """new_operator = Operator()
-        form.populate_obj(new_operator)
-        db.session.add(new_operator)
-        db.session.commit()"""
-        return redirect("/my_profile/change_contacts")
-
->>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
     return render_template("change_profile.html", form=form)
