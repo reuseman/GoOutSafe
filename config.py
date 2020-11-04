@@ -15,11 +15,11 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///gooutsafe.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER = os.environ.get("MAIL_SERVER") or "smtp.googlemail.com"
-    MAIL_PORT = os.environ.get("MAIL_SERVER") or 587
-    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS") or 1
-    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
-    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    MAIL_SERVER = os.environ.get("MAIL_SERVER") or "localhost"
+    MAIL_PORT = os.environ.get("MAIL_SERVER") or 8025
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS") or False
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME") or None
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") or None
 
     CELERY_BROKER_URL = (
         os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6379/0"

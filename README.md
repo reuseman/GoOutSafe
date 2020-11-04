@@ -7,6 +7,9 @@
     pip install -r requirements/dev.txt
     
 
+### Server mail
+    python -m smtpd -n -c DebuggingServer localhost:8025
+
 ### Redis
     docker run --name redis -p 6379:6379 redis
 

@@ -33,28 +33,29 @@ def create_app(config_name):
     mail.init_app(app)
     celery.conf.update(app.config)
 
-    from .services import mock
+    # TODO move this out
+    # ! WHEN YOU NEED UNCOMMENT, RUN AND COMMENT AGAIN
+    # ! OTHERWISE TESTS WILL NOT WORK
+    # from .services import mock
 
-    mock.users(10)
-    mock.operator()
-    mock.restaurant()
-    mock.menu()
-    mock.table()
-    mock.precautions()
-    mock.restaurants_precautions()
-    mock.health_authority()
-    mock.mark_three_users()
-    mock.booking()
-
-    app.logger.info("Server startup")
+    # mock.users(10)
+    # mock.operator()
+    # mock.restaurant()
+    # mock.health_authority()
+    # mock.menu()
+    # mock.table()
+    # mock.precautions()
+    # mock.restaurants_precautions()
+    # mock.mark_three_users()
+    # mock.booking()
 
     # # Prova mail
     # from flask_mail import Message
 
     # msg = Message(
     #     "test subject",
-    #     sender="gooutsafe.squad2@gmail.com",
-    #     recipients=["gooutsafe.squad2@gmail.com"],
+    #     sender="gooutsafe.squad2@1gmail.com",
+    #     recipients=["gooutsafe.squad2@1gmail.com"],
     # )
     # msg.body = "text body"
     # msg.html = "<h1>HTML body</h1>"

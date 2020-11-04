@@ -122,3 +122,4 @@ monolith/gooutsafe_test.db
 
 scratch.py
 todo.txt
+monolith/templates/map.html
