@@ -6,7 +6,7 @@ from monolith import db
 from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions,Table, User, Booking
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
-from monolith.services.auth import admin_required, current_user, operator_required
+from monolith.services.auth import admin_required, current_user, operator_required, user_required
 from flask_login import current_user, login_user, logout_user, login_required
 from monolith.services.forms import (
     CreateRestaurantForm,
@@ -107,6 +107,9 @@ def restaurant_sheet(restaurant_id):
         lon=q_restaurant.lon,
         phone=q_restaurant.phone,
         precautions=precautions,
+        open=q_restaurant.opening_hours,
+        close=q_restaurant.closing_hours,
+        cuisine=q_restaurant.cuisine_type.value,
         menus=q_restaurant.menus,
         base_url=request.base_url,
         reviews=reviews,
@@ -116,6 +119,7 @@ def restaurant_sheet(restaurant_id):
 
 @restaurants.route("/restaurants/<restaurant_id>/book_table", methods=["GET","POST"])
 @login_required
+@user_required
 def book_table_form(restaurant_id):
     form = CreateBookingDateHourForm()
     max_table_seats = db.session.query(func.max(Table.seats)).filter(Table.restaurant_id==restaurant_id).first()[0] #Take max seats from tables of restaurant_ud
@@ -166,6 +170,7 @@ def book_table_form(restaurant_id):
 
 @restaurants.route("/restaurants/<restaurant_id>/book_table/confirm", methods=["GET","POST"])
 @login_required
+@user_required
 def confirm_booking(restaurant_id):
     booking_number=session["booking_number"]
     number_persons=session['number_persons']
@@ -242,9 +247,9 @@ def create_restaurant():
 
             new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
-
+            
             if restaurant.add_new_restaurant(
-                    new_restaurant, request.form.getlist("prec_measures")
+                new_restaurant, request.form.getlist("prec_measures")
             ):
                 return redirect("operator/restaurants")
             else:

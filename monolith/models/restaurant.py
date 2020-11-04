@@ -1,11 +1,22 @@
 from monolith import db
 from .table import Table
+import enum
 
 
 # precautions = db.Table('precautions',
 #     db.Column('precaution_id', db.Integer, db.ForeignKey('precaution.id'), primary_key=True),
 #     db.Column('restaurant', db.Integer, db.ForeignKey('restaurant.id'), primary_key=True)
 # )
+
+
+class CuisineType(enum.Enum):
+    ETHNIC = "Ethnic"
+    FAST_FOOD = "Fast Food"
+    PUB = "Pub"
+
+    @classmethod
+    def choices(cls):
+        return [(choice.name, choice.value) for choice in cls]
 
 
 class Restaurant(db.Model):
@@ -23,6 +34,9 @@ class Restaurant(db.Model):
 
     phone = db.Column(db.Integer)
     time_of_stay = db.Column(db.Integer)  # minutes
+    cuisine_type = db.Column(db.Enum(CuisineType))
+    opening_hours = db.Column(db.Float)
+    closing_hours = db.Column(db.Float)
     operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
 
     # precautions = db.relationship("Precaution", secondary=precautions, backref="restaurants")

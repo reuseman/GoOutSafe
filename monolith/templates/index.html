@@ -7,15 +7,15 @@
     {% if current_user.is_authenticated and session['role'] == "user" %}
         Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
 
-        <h2>Your Restaurants</h2>
-        <a href="/restaurants">See restaurants</a>
-        {% for restaurant in restaurants %}
+        <h2>Restaurants</h2>
+        <a href="/restaurants">See restaurants list</a>
+        <!-- {% for restaurant in restaurants %}
             <div>
                 <li>
                     {{ restaurant.name }} -- Likes:{{ restaurant.likes }}
                 </li>
             </div>
-        {% endfor %}
+        {% endfor %} -->
 
     {% elif current_user.is_authenticated and session['role'] == "operator" %}
         Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>

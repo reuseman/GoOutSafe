@@ -35,7 +35,6 @@ def test_create_restaurant_view_is_notavailable_ha(client):
     assert res.status_code == 401
 
 
-
 def test_restaurant_sheet(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -43,8 +42,8 @@ def test_restaurant_sheet(client, db):
 
     res = helpers.restaurant_sheet(client)
     restaurant = db.session.query(Restaurant).filter_by(id=1).first()
-    
-    restaurant_precautions= db.session.query(Precautions.name).filter(
+
+    restaurant_precautions = db.session.query(Precautions.name).filter(
         Precautions.id == RestaurantsPrecautions.precautions_id,
         RestaurantsPrecautions.restaurant_id == 1
     ).all()
@@ -55,6 +54,9 @@ def test_restaurant_sheet(client, db):
         assert bytes(prec.name, "utf-8") in res.data
 
     assert bytes(restaurant.name, "utf-8") in res.data
+    assert bytes(restaurant.cuisine_type.value, "utf-8") in res.data
+    assert bytes(str(restaurant.opening_hours), "utf-8") in res.data
+    assert bytes(str(restaurant.closing_hours), "utf-8") in res.data
     assert bytes(str(restaurant.phone), "utf-8") in res.data
     for menu in restaurant.menus:
         assert bytes(menu.name, "utf-8") in res.data
@@ -75,6 +77,9 @@ def test_create_restaurant(client, db):
     assert fetched_restaurant.lat == 40.720586
     assert fetched_restaurant.lon == 10.10
     assert fetched_restaurant.time_of_stay == 30
+    assert fetched_restaurant.opening_hours == 12
+    assert fetched_restaurant.closing_hours == 24
+    assert fetched_restaurant.cuisine_type.name == "ETHNIC"
     assert fetched_restaurant.operator.id == 1
     assert urlparse(res.location).path == "/operator/restaurants"
 
@@ -604,7 +609,6 @@ def test_tables(client, db):
         assert bytes(table.name, "utf-8") in res.data
 
 
-
 def test_create_menu_isnotavailable_anonymous(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -614,6 +618,7 @@ def test_create_menu_isnotavailable_anonymous(client, db):
     res = client.get("/operator/restaurants/1/create_menu")
 
     assert res.status_code == 401
+
 
 def test_create_menu_isnotavailable_user(client, db):
     helpers.create_operator(client)
@@ -628,13 +633,14 @@ def test_create_menu_isnotavailable_user(client, db):
 
     assert res.status_code == 401
 
+
 def test_create_menu_isavailable_operator(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
 
     res = client.get("/operator/restaurants/1/create_menu")
-    
+
     assert res.status_code == 200
 
 
@@ -658,7 +664,7 @@ def test_create_menu(client, db):
     helpers.create_restaurant(client)
 
     res = helpers.create_menu(client)
-    
+
     menu = db.session.query(Menu).filter_by(id=1).first()
     food = menu.foods.pop()
 
@@ -678,20 +684,20 @@ def test_create_duplicate_menu(client, db):
 
     helpers.create_menu(client)
     res = helpers.create_menu(client)
-    
-    assert res.status_code == 400 
+
+    assert res.status_code == 400
 
 
 def test_create_menu_bad_data(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    
+
     bad_menu = helpers.menu
     bad_menu["menu_name"] = ""
     res = helpers.create_menu(client, data=bad_menu)
     assert res.status_code == 400
-    
+
     bad_menu["menu_name"] = "Trial menu1"
     bad_menu["name"] = ""
     res = helpers.create_menu(client, data=bad_menu)
@@ -712,7 +718,7 @@ def test_create_menu_bad_data(client, db):
     bad_menu["price"] = "5"
     bad_menu["category"] = "WRONG_CAT"
     res = helpers.create_menu(client, data=bad_menu)
-    assert res.status_code == 400 
+    assert res.status_code == 400
     bad_menu["category"] = "DRINKS"
 
 
@@ -725,13 +731,13 @@ def test_show_menu(client, db):
 
     res = helpers.show_menu(client)
     menu = db.session.query(Menu).filter(Menu.restaurant_id == 1,
-        Menu.id == 1).first()
-        
+                                         Menu.id == 1).first()
+
     assert res.status_code == 200
     assert bytes(menu.name, "utf-8") in res.data
     for food in menu.foods:
         assert bytes(food.name, "utf-8") in res.data
-        assert bytes(str(food.price), "utf-8") in res.data 
+        assert bytes(str(food.price), "utf-8") in res.data
         assert bytes(food.category.value, "utf-8") in res.data
 
 

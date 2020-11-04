@@ -126,9 +126,9 @@ def restaurant():
     q = db.session.query(Restaurant).filter(Restaurant.id == 1)
     restaurant = q.first()
     if restaurant is None:
-        db.session.add(Restaurant(name = "Trial Restaurant", likes = 42, phone = 555123456, lat = 43.720586, lon = 10.408347, operator_id = 1, time_of_stay = 30))
-        db.session.add(Restaurant(name = "Trial Restaurant1", likes = 42, phone = 555123456, lat = 44.720586, lon = 10.408347, operator_id = 1, time_of_stay = 90))
-        db.session.add(Restaurant(name = "Trial Restaurant2", likes = 42, phone = 555123456, lat = 43.720586, lon = 9.408347, operator_id = 1, time_of_stay = 180))
+        db.session.add(Restaurant(name = "Trial Restaurant", likes = 42, phone = 555123456, lat = 43.720586, lon = 10.408347, operator_id = 1, time_of_stay = 30, cuisine_type="ETHNIC", opening_hours=12, closing_hours=24))
+        db.session.add(Restaurant(name = "Trial Restaurant1", likes = 42, phone = 555123456, lat = 44.720586, lon = 10.408347, operator_id = 1, time_of_stay = 90, cuisine_type="FAST_FOOD", opening_hours=0, closing_hours=24))
+        db.session.add(Restaurant(name = "Trial Restaurant2", likes = 42, phone = 555123456, lat = 43.720586, lon = 9.408347, operator_id = 1, time_of_stay = 180, cuisine_type="PUB", opening_hours=19, closing_hours=5))
         db.session.commit()
 
 

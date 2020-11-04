@@ -78,6 +78,9 @@ restaurant = dict(
     lat=40.720586,
     lon=10.10,
     time_of_stay=30,
+    cuisine_type="ETHNIC",
+    opening_hours=12,
+    closing_hours=24,
     operator_id=1,
 )
 
