@@ -3,6 +3,7 @@ from os import environ
 from monolith import celery
 from monolith import mail
 from typing import List
+from config import Config
 
 """
     Just as a reference 
@@ -43,7 +44,7 @@ def send_email(
     recipients: List[str],
     text_body,
     html_body,
-    sender=environ.get("MAIL_USERNAME"),
+    sender=Config.MAIL_SENDER,
     attachments=None,
 ):
 
