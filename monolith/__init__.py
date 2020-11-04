@@ -36,5 +36,6 @@ def create_app(config_name):
     mock.restaurants_precautions()
     mock.health_authority()
     mock.mark_three_users()
+    mock.booking()
 
     return app

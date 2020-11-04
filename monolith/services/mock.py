@@ -14,6 +14,7 @@ from monolith.models import (
     RestaurantsPrecautions,
     Mark,
     Table,
+    Booking,
 )
 from monolith.models.menu import Menu, Food
 
@@ -125,15 +126,9 @@ def restaurant():
     q = db.session.query(Restaurant).filter(Restaurant.id == 1)
     restaurant = q.first()
     if restaurant is None:
-        example = Restaurant()
-        example.name = "Trial Restaurant"
-        example.likes = 42
-        example.phone = 555123456
-        example.lat = 43.720586
-        example.lon = 10.408347
-        example.operator_id = 1
-        example.time_of_stay = 30
-        db.session.add(example)
+        db.session.add(Restaurant(name = "Trial Restaurant", likes = 42, phone = 555123456, lat = 43.720586, lon = 10.408347, operator_id = 1, time_of_stay = 30))
+        db.session.add(Restaurant(name = "Trial Restaurant1", likes = 42, phone = 555123456, lat = 44.720586, lon = 10.408347, operator_id = 1, time_of_stay = 90))
+        db.session.add(Restaurant(name = "Trial Restaurant2", likes = 42, phone = 555123456, lat = 43.720586, lon = 9.408347, operator_id = 1, time_of_stay = 180))
         db.session.commit()
 
 
@@ -159,6 +154,8 @@ def restaurants_precautions():
     if restaurant_precautions is None:
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
         db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
+        db.session.add(RestaurantsPrecautions(restaurant_id=2, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(restaurant_id=3, precautions_id=2))
         db.session.commit()
 
 
@@ -182,6 +179,21 @@ def table():
     if table is None:
         db.session.add(Table(name="1", seats=5, restaurant_id=1))
         db.session.add(Table(name="2", seats=3, restaurant_id=1))
+        db.session.add(Table(name="3", seats=3, restaurant_id=1))
+        db.session.add(Table(name="4", seats=6, restaurant_id=1))
+        db.session.add(Table(name="1", seats=10, restaurant_id=2))
+        db.session.add(Table(name="2", seats=3, restaurant_id=2))
+        db.session.add(Table(name="1", seats=2, restaurant_id=3))
+        db.session.add(Table(name="2", seats=2, restaurant_id=3))
+        db.session.commit()
+
+
+def booking():
+    booking = db.session.query(Booking).first()
+    if booking is None:
+        db.session.add(Booking(user_id=1, table_id=1, booking_number=1, start_booking=datetime.datetime.strptime(str(datetime.date.today())+' 8:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime(str(datetime.date.today())+' 8:30', '%Y-%m-%d %H:%M'), confirmed_booking=True))
+        db.session.add(Booking(user_id=1, table_id=7, booking_number=2, start_booking=datetime.datetime.strptime('2020-11-01 14:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime('2020-11-01 17:00', '%Y-%m-%d %H:%M'), confirmed_booking=True))
+        db.session.add(Booking(user_id=1, table_id=1, booking_number=3, start_booking=datetime.datetime.strptime('2020-10-01 8:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime('2020-10-01 8:30', '%Y-%m-%d %H:%M'), confirmed_booking=True))
         db.session.commit()
 
 

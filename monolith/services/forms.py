@@ -1,15 +1,17 @@
 from wtforms.fields.core import StringField
 from monolith.services.auth import authority_required
 from sys import displayhook
-from wtforms import widgets
 from wtforms.fields.html5 import DateField, EmailField, IntegerField
+from wtforms import widgets, validators, SubmitField
 from monolith.models.precautions import Precautions
 from monolith.models.menu import FoodCategory
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith import db
 import wtforms as f
-from wtforms.validators import DataRequired, Length, NumberRange, Email
+from wtforms.validators import DataRequired, Length, NumberRange, Email, Required
+from datetime import date
+from wtforms.fields import FormField, FieldList
 
 
 class LoginForm(FlaskForm):
@@ -184,3 +186,43 @@ class ReviewForm(FlaskForm):
     )
     message = f.TextAreaField("Your review",
                               validators=[Length(min=30, message="The review should be at least of 30 characters.")])
+class CreateBookingDateHourForm(FlaskForm):
+    booking_date = DateField('Booking Date', default=date.today())
+    submit = SubmitField('Submit')
+
+    def validate(self):
+        if (self.booking_date.data<date.today()):
+            return False
+        else:
+            return True
+
+
+def ConfirmBookingForm(size):
+    class ConfirmBookingForm(FlaskForm):
+        email=EmailField("Email", validators=[DataRequired(), Email()])
+        firstname=f.StringField("Firstname", validators=[DataRequired()])
+        lastname=f.StringField("Lastname", validators=[DataRequired()])
+        fiscal_code=f.StringField("Fiscal code", validators=[DataRequired(), Length(min=16,max=16)])
+
+    class ConfirmBookingForm(FlaskForm):
+        people = FieldList(FormField(ConfirmBookingForm), min_entries=1)
+        submit = SubmitField('Submit')
+
+        def validate(self):
+            for field in self.people.data:
+                if field['email'] == '' or field['firstname'] == '' or field['lastname'] == '' or field['fiscal_code'] == '': 
+                    return False
+            return True
+
+    fields = []
+    for i in range(int(size)):
+        fields.append({
+            'email':'',
+            'firstname':'',
+            'lastname': '',
+            'fiscal_code':'',
+        })
+    
+    form=ConfirmBookingForm(people=fields)
+
+    return form
