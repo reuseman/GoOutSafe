@@ -67,7 +67,8 @@ def test_create_restaurant_bad_data(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_restaurant = db.session.query(Restaurant).filter_by(operator_id=1).first()
+    fetched_restaurant = db.session.query(
+        Restaurant).filter_by(operator_id=1).first()
 
     assert fetched_restaurant is None
     assert res.status_code == 400
@@ -88,7 +89,8 @@ def test_create_duplicate_restaurant(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_dup_restaurant = db.session.query(Restaurant).filter_by(id=2).first()
+    fetched_dup_restaurant = db.session.query(
+        Restaurant).filter_by(id=2).first()
 
     assert res.status_code == 400
     assert fetched_dup_restaurant is None
@@ -97,8 +99,7 @@ def test_create_duplicate_restaurant(client, db):
 def test_create_table_view_is_available_operator(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
-    helpers.insert_restaurant_db()
-    q = db.session.query(Restaurant).filter_by(id=1).first()
+    q = helpers.insert_restaurant_db(db)
 
     res = client.get("/operator/restaurants/" + str(q.id) + "/create_table")
     assert res.status_code == 200
@@ -106,7 +107,7 @@ def test_create_table_view_is_available_operator(client, db):
 
 def test_create_table_view_is_notavailable_anonymous(client, db):
     helpers.create_operator(client)
-    helpers.insert_restaurant_db()
+    helpers.insert_restaurant_db(db)
     q = db.session.query(Restaurant).filter_by(id=1).first()
 
     res = client.get("/operator/restaurants/" + str(q.id) + "/create_table")
@@ -115,7 +116,7 @@ def test_create_table_view_is_notavailable_anonymous(client, db):
 
 def test_create_table_view_is_notavailable_user(client, db):
     helpers.create_operator(client)
-    helpers.insert_restaurant_db()
+    helpers.insert_restaurant_db(db)
 
     helpers.create_user(client)
     helpers.login_user(client)
@@ -128,7 +129,7 @@ def test_create_table_view_is_notavailable_user(client, db):
 
 def test_create_table_view_is_notavailable_ha(client, db):
     helpers.create_operator(client)
-    helpers.insert_restaurant_db()
+    helpers.insert_restaurant_db(db)
 
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -625,6 +626,6 @@ def test_create_menu_isnotavailable_ha(client, db):
 
 
 def test_restaurants(client, db):
-    helpers.insert_restaurant_db()
+    helpers.insert_restaurant_db(db)
     allrestaurants = db.session.query(Restaurant).all()
     assert len(allrestaurants) == 1

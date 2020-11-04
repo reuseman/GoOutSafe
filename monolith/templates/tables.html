@@ -2,16 +2,18 @@
 {% block title %}Tables{% endblock %}
 
 {% block main %}
-<h1>Tables List</h1>
-<ul>
-  {% for table in tables: %}
-  <li>
-    "{{table.name}}" Seats: {{table.seats}}
-    {% if current_user.is_authenticated %}
-      <a href="/operator/restaurants/{{table.restaurant_id}}/tables/{{table.id}}/edit_table">Edit table</a>
-      <a href="/operator/restaurants/{{table.restaurant_id}}/tables/{{table.id}}/delete_table">Delete table</a>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
+    <h1>Tables List</h1>
+    <ul>
+        {% for table in tables: %}
+            <li>
+                "{{ table.name }}" Seats: {{ table.seats }}
+                {% if current_user.is_authenticated %}
+                    <a href="/operator/restaurants/{{ table.restaurant_id }}/tables/{{ table.id }}/edit_table">Edit
+                        table</a>
+                    <a href="/operator/restaurants/{{ table.restaurant_id }}/tables/{{ table.id }}/delete_table">Delete
+                        table</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

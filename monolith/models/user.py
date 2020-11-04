@@ -32,7 +32,12 @@ class User(AbstractUser):
             rating (int): the rating
             message (str): the review itself
         """
-        self.reviews.append(Review(rating=rating, message=message))
+        self.reviews.append(
+            Review(user=self, restaurant=restaurant, rating=rating, message=message)
+        )
+
+    def already_reviewed(self, restaurant: Restaurant):
+        return sum(1 for r in self.reviews if r.restaurant_id == restaurant.id) != 0
 
     def has_been_marked(self) -> bool:
         """Returns weather the user has been marked in the past or is currently marked.

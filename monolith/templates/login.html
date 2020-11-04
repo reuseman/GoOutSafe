@@ -5,21 +5,21 @@
 <h3>{{ title }}</h3>
 
 
-<form action="" method="POST">
-  {{ form.hidden_tag() }}
-  <dl>
+<form action="" method="POST" class="ui form">
+    {{ form.hidden_tag() }}
     {% for field in form.display %}
-    <dt>{{ form[field].label }}</dt>
-    <dd>{{ form[field]() }}</dd>
+    <div class="field">
+        <label>{{ form[field].label }}</label>
+        {{ form[field]() }}
+    </div>
     {% if form[field].errors %}
     {% for e in form[field].errors %}
     <p class="help-block">{{ e }}</p>
     {% endfor %}
     {% endif %}
     {% endfor %}
-  </dl>
-  <p>
-    <input type=submit value="Publish">
+    <p>
+        <input type=submit value="Submit" class="ui button primary">
 </form>
 
 <!--TODO only show the links that are needed. If am on /login hide the first one-->

@@ -16,6 +16,8 @@ from monolith.models import (
     Table,
 )
 
+# ! IMPORTANT
+# FROM NOW ON LET'S PUT THE DEFINITION OF THE DATA IN tests/data.py, NOT HERE. IN ORDER TO HAVE A SINGLE TRUTH
 
 fake = Faker("it_IT")
 
@@ -104,8 +106,8 @@ def operator():
 def health_authority():
     ha = (
         db.session.query(HealthAuthority)
-        .filter(HealthAuthority.email == "auth@mail.com")
-        .first()
+            .filter(HealthAuthority.email == "auth@mail.com")
+            .first()
     )
     if ha is None:
         example = HealthAuthority()
@@ -140,6 +142,11 @@ def precautions():
     if precautions is None:
         db.session.add(Precautions(name="Amuchina"))
         db.session.add(Precautions(name="Social distancing"))
+        db.session.add(Precautions(name="Disposable menu"))
+        db.session.add(Precautions(name="Personnel required to wash hands regularly"))
+        db.session.add(Precautions(name="Obligatory masks for staff in public areas"))
+        db.session.add(Precautions(name="Tables sanitized at the end of each meal"))
+
         db.session.commit()
 
 

@@ -21,7 +21,7 @@ def new_ssn_mark():
         current_authority = current_user
         user_to_mark = User.query.filter_by(fiscal_code=ssn).first()
         if not user_to_mark:
-            flash("User not found.")
+            flash("User not found.", category="error")
         else:
             current_authority.mark(user_to_mark, form.duration.data)
             db.session.commit()
@@ -41,7 +41,7 @@ def new_email_mark():
         current_authority = current_user
         user_to_mark = User.query.filter_by(email=email).first()
         if not user_to_mark:
-            flash("User not found.")
+            flash("User not found.", category="error")
         else:
             current_authority.mark(user_to_mark, form.duration.data)
             db.session.commit()
@@ -61,7 +61,7 @@ def new_phonenumber_mark():
         current_authority = current_user
         user_to_mark = User.query.filter_by(phone_number=phone_number).first()
         if not user_to_mark:
-            flash("User not found.")
+            flash("User not found.", category="error")
         else:
             current_authority.mark(user_to_mark, form.duration.data)
             db.session.commit()
