@@ -70,13 +70,11 @@ def restaurant_sheet(restaurant_id):
     precautions = []
     for prec in q_restaurant_precautions:
         precautions.append(prec.name)
-    for record in records:
-        precautions.append(record.Precautions.name)
 
     # REVIEWS
     # TODO sort them by the most recent, or are they already in that order
     # TODO show in the view the date of the review
-    reviews = restaurant.reviews
+    reviews = q_restaurant.reviews
     form = ReviewForm()
     if form.is_submitted():
         if current_user.is_anonymous:
@@ -87,12 +85,12 @@ def restaurant_sheet(restaurant_id):
                 flash("Only a logged user can review a restaurant.")
             else:
                 # Check if the user already did a review
-                if current_user.already_reviewed(restaurant):
+                if current_user.already_reviewed(q_restaurant):
                     flash("You already reviewed this restaraunt")
                 else:
                     rating = form.rating.data
                     message = form.message.data
-                    current_user.review(restaurant, rating, message)
+                    current_user.review(q_restaurant, rating, message)
                     db.session.commit()
                     return redirect("/restaurants/" + restaurant_id)
 

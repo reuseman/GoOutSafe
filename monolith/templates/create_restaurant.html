@@ -3,20 +3,20 @@
 <body>
     <p class="error">
         {% for errmess in get_flashed_messages(False,['error']) %}
-        <br>{{ errmess }}
+            <br>{{ errmess }}
         {% endfor %}</p>
     <form action="" method="POST" class="ui form">
         {{ form.hidden_tag() }}
         {% for field in form.display %}
-        <div class="field">
-            <label>{{ form[field].label }}</label>
-            {{ form[field]() }}
-        </div>
-        {% if form[field].errors %}
-        {% for e in form[field].errors %}
-        <p class="help-block">{{ e }}</p>
-        {% endfor %}
-        {% endif %}
+            <div class="field">
+                <label>{{ form[field].label }}</label>
+                {{ form[field]() }}
+            </div>
+            {% if form[field].errors %}
+                {% for e in form[field].errors %}
+                <p class="help-block">{{ e }}</p>
+                {% endfor %}
+            {% endif %}
         {% endfor %}
         <p>
             <input type=submit value="Submit" class="ui button primary">
