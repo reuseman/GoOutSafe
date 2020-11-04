@@ -78,3 +78,11 @@ class User(AbstractUser):
 
     def get_remaining_mark_days(self, from_date=datetime.utcnow()):
         return (self.get_mark_expiration_date() - from_date).days - 1
+
+    def has_been_deleted(self) -> bool:
+        """Returns weather the user has unsubscribed
+
+        Returns:
+            bool: boolean value
+        """
+        return self.email == "deleted@deleted.it"

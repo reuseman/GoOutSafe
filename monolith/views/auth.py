@@ -73,31 +73,33 @@ def logout():
 
 @auth.route("/unsubscribe")
 def unsubscribe():
+
+    if( current_user == None or not session.get("role")):
+        return redirect("/login")
     
     if( session["role"] == "user" ):
         user = db.session.query(User).filter(User.email == current_user.email).first()
 
-        user.email = "anonymous@anonymous.it"
-        user.firstname = "anonymous"
-        user.lastname="anonymous"
-        user.password="anonymous"
-        user.dateofbirth=date(1995, 12, 31)
+        user.email = "deleted@deleted.it"
+        user.firstname = "deleted"
+        user.lastname="deleted"
+        user.password="deleted"
+        user.dateofbirth=date(2000, 1, 1)
         user.fiscal_code="AAAAAAAAAAAAAAAA"
         user.phone_number="+39333333333333"
 
     elif( session["role"] == "operator" ):
         operator = db.session.query(Operator).filter(User.email == current_user.email).first()
 
-        operator.email = "anonymous@anonymous.it"
-        operator.firstname = "anonymous"
-        operator.lastname="anonymous"
-        operator.password="anonymous"
-        operator.dateofbirth=date(1995, 12, 31)
+        operator.email = "deleted@deleted.it"
+        operator.firstname = "deleted"
+        operator.lastname="deleted"
+        operator.password="deleted"
+        operator.dateofbirth=date(2000, 1, 1)
         operator.fiscal_code="AAAAAAAAAAAAAAAA"
         operator.phone_number="+39333333333333"
 
     logout_user()
-    session.clear()
     db.session.commit()
     return redirect("/")
 
