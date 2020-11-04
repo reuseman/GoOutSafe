@@ -191,7 +191,7 @@ def test_create_table_bad_data(client, db):
     helpers.create_restaurant(client)
 
     data = dict(name="A10", seats=-5, restaurant_id=1)
-    res = helpers.create_table(client, data)
+    res = helpers.create_table(client, data=data)
 
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
@@ -206,7 +206,7 @@ def test_create_duplicate_table(client, db):
 
     helpers.create_table(client)
     data = dict(name="A10", seats=2, restaurant_id=1)
-    res = helpers.create_table(client, data)
+    res = helpers.create_table(client, data=data)
 
     fetched_table = db.session.query(Table).filter_by(id=2).first()
 
@@ -236,7 +236,7 @@ def test_create_table_not_owned_restaurant(client, db):
     res = helpers.create_table(client)
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
-    assert res.status_code == 400
+    assert res.status_code == 401
     assert fetched_table is None
 
 
@@ -250,7 +250,7 @@ def test_delete_table(client, db):
 
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
-    assert res.status_code == 302
+    assert res.status_code == 200
     assert fetched_table is None
 
 
@@ -287,7 +287,7 @@ def test_delete_table_not_owned_restaurant(client, db):
     res = helpers.delete_table(client)
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
-    assert res.status_code == 400
+    assert res.status_code == 401
     assert fetched_table is not None
 
 
@@ -310,7 +310,7 @@ def test_delete_table_bad_restaurant_id(client, db):
 
     res = helpers.delete_table(client, restaurant_id=5, table_id=1)
 
-    assert res.status_code == 400
+    assert res.status_code == 401
 
 
 def test_edit_table(client, db):
@@ -342,7 +342,7 @@ def test_edit_table_to_one_with_same_name(client, db):
 
     data["name"] = "A10"
     data["seats"] = 1
-    res = helpers.edit_table(client, data)
+    res = helpers.edit_table(client, table_id=2, data=data)
 
     fetched_table = db.session.query(Table).filter_by(id=2).first()
 
@@ -386,7 +386,7 @@ def test_edit_table_not_owned_restaurant(client, db):
     res = helpers.edit_table(client, table_data)
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
-    assert res.status_code == 400
+    assert res.status_code == 401
     assert fetched_table.name != "A1"
     assert fetched_table.seats != 1
 
@@ -399,7 +399,7 @@ def test_edit_table_bad_restaurant_id(client, db):
 
     res = helpers.edit_table(client, restaurant_id=2)
 
-    assert res.status_code == 400
+    assert res.status_code == 401
 
 
 def test_edit_table_bad_table_id(client, db):

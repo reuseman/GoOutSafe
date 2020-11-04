@@ -77,8 +77,11 @@ def test_add_new_table(client, db):
     restaurant.add_new_restaurant(new_restaurant)
 
     new_table = Table(**helpers.table)
+    res = restaurant.check_table_existence(new_table)
+    assert res == False
     res = restaurant.add_new_table(new_table)
-
+    assert res == True
+    res = restaurant.check_table_existence(new_table)
     assert res == True
     assert db.session.query(Table).filter_by(name=new_table.name).first() is not None
 
@@ -149,11 +152,11 @@ def test_edit_table_successful(client, db):
     new_table = Table(**helpers.table)
     restaurant.add_new_table(new_table)
 
-    res = restaurant.edit_table(Table(id=1, name="A8", seats=3))
+    res = restaurant.edit_table(Table(id=1, name="A10", seats=3))
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res == True
-    assert fetched_table.name == "A8"
+    assert fetched_table.name == "A10"
     assert fetched_table.seats == 3
     assert fetched_table.restaurant_id == 1
 
