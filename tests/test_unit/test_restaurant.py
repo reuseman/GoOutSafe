@@ -20,8 +20,8 @@ def test_add_new_restaurant_no_prec(client, db):
     )
     q_restprec = (
         db.session.query(RestaurantsPrecautions)
-            .filter_by(restaurant_id=new_restaurant.id)
-            .first()
+        .filter_by(restaurant_id=new_restaurant.id)
+        .first()
     )
 
     assert res == True
@@ -37,8 +37,8 @@ def test_add_new_restaurant(client, db):
     q_rest = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
     q_restprec = (
         db.session.query(RestaurantsPrecautions)
-            .filter_by(restaurant_id=new_restaurant.id)
-            .first()
+        .filter_by(restaurant_id=new_restaurant.id)
+        .first()
     )
 
     assert res == True
@@ -65,8 +65,8 @@ def test_already_added_restaurant(client, db):
 
     assert res == False
     assert (
-            db.session.query(Restaurant).filter_by(name=new_restaurant2.name).first()
-            is None
+        db.session.query(Restaurant).filter_by(name=new_restaurant2.name).first()
+        is None
     )
 
 
@@ -133,10 +133,10 @@ def test_already_added_table(client, db):
 
     assert res == False
     assert (
-            db.session.query(Table)
-            .filter_by(name=new_table2.name, seats=new_table2.seats)
-            .first()
-            is None
+        db.session.query(Table)
+        .filter_by(name=new_table2.name, seats=new_table2.seats)
+        .first()
+        is None
     )
 
 

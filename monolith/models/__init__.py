@@ -9,5 +9,3 @@ from .mark import Mark
 from .user import User
 from .health_authority import HealthAuthority
 from .booking import Booking
-
-

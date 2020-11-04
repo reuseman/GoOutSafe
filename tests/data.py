@@ -77,6 +77,13 @@ precaution3 = dict(name="Disposable menu")
 precaution4 = dict(name="Personnel required to wash hands regularly")
 precaution5 = dict(name="Obligatory masks for staff in public areas")
 precaution6 = dict(name="Tables sanitized at the end of each meal")
-precautions = [precaution1, precaution2, precaution3, precaution4, precaution5, precaution6]
+precautions = [
+    precaution1,
+    precaution2,
+    precaution3,
+    precaution4,
+    precaution5,
+    precaution6,
+]
 
 table = dict(name="A10", seats=10, restaurant_id=1)

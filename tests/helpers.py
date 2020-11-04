@@ -1,7 +1,13 @@
 from datetime import date
 from monolith.models.health_authority import HealthAuthority
 from monolith.models.menu import Menu, Food
-from monolith.models import User, Restaurant, RestaurantsPrecautions, HealthAuthority, Precautions
+from monolith.models import (
+    User,
+    Restaurant,
+    RestaurantsPrecautions,
+    HealthAuthority,
+    Precautions,
+)
 from monolith.services import mock
 from tests.data import precautions
 
@@ -86,10 +92,7 @@ restaurant = dict(
 
 
 menu = dict(
-    menu_name="Trial menu",
-    name="Pepperoni pizza",
-    price=5.0,
-    category="PIZZAS"
+    menu_name="Trial menu", name="Pepperoni pizza", price=5.0, category="PIZZAS"
 )
 
 
@@ -130,9 +133,15 @@ def insert_precautions(db, precautions=precautions):
     db.session.commit()
 
 
-def insert_precautions_in_restaurant(db, restaurant: Restaurant, precautions_id=[1, 2, 4]):
+def insert_precautions_in_restaurant(
+    db, restaurant: Restaurant, precautions_id=[1, 2, 4]
+):
     for precaution_id in precautions_id:
-        db.session.add(RestaurantsPrecautions(restaurant_id=restaurant.id, precautions_id=precaution_id))
+        db.session.add(
+            RestaurantsPrecautions(
+                restaurant_id=restaurant.id, precautions_id=precaution_id
+            )
+        )
     db.session.commit()
 
 
@@ -176,7 +185,10 @@ def create_menu(client, data=menu):
 
 
 def show_menu(client, restaurant_id=1, menu_id=1):
-    return client.get("/restaurants/" + str(restaurant_id) + "/show_menu/" + str(menu_id), follow_redirects=False)
+    return client.get(
+        "/restaurants/" + str(restaurant_id) + "/show_menu/" + str(menu_id),
+        follow_redirects=False,
+    )
 
 
 def restaurant_sheet(client, restaurant_id=1):

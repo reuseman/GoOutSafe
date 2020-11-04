@@ -12,8 +12,8 @@ def test_restaurants_map_is_correct(client, app):
     # in order to regenerate the map with test values
     res = client.get("/restaurants_map")
 
-    path = os.path.join(dirname(app.root_path), 'monolith/templates/map.html')
-    with open(path, 'r', encoding='utf-8') as f:
+    path = os.path.join(dirname(app.root_path), "monolith/templates/map.html")
+    with open(path, "r", encoding="utf-8") as f:
         text = f.read()
         # checking restaurant details
         assert 'class="folium-map"' in text

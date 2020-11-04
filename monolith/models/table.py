@@ -2,7 +2,6 @@ from monolith import db
 from monolith.models.booking import Booking
 
 
-
 class Table(db.Model):
     __tablename__ = "table"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
