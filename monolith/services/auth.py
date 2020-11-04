@@ -41,7 +41,7 @@ def user_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         authenticated = current_user.is_authenticated
-        if g.user is not authenticated:
+        if not authenticated:
             return redirect("/login")
         elif session["role"] != "user":
             return login_manager.unauthorized()
