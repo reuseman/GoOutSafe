@@ -1,9 +1,7 @@
-from re import U
 from flask import Blueprint, render_template, redirect, request, session, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import date
 
-from sqlalchemy.util.compat import u
 
 from monolith import db
 from monolith.models import User, Operator, HealthAuthority
@@ -51,8 +49,8 @@ def authority_login():
         email, password = form.data["email"], form.data["password"]
         authority = (
             db.session.query(HealthAuthority)
-                .filter(HealthAuthority.email == email)
-                .first()
+            .filter(HealthAuthority.email == email)
+            .first()
         )
 
         if authority is not None and authority.verify_password(password):
@@ -74,34 +72,33 @@ def logout():
 @auth.route("/unsubscribe")
 def unsubscribe():
 
-    if( current_user == None or not session.get("role")):
+    if current_user == None or not session.get("role"):
         return redirect("/login")
-    
-    if( session["role"] == "user" ):
+
+    if session["role"] == "user":
         user = db.session.query(User).filter(User.email == current_user.email).first()
 
         user.email = "deleted@deleted.it"
         user.firstname = "deleted"
-        user.lastname="deleted"
-        user.password="deleted"
-        user.dateofbirth=date(2000, 1, 1)
-        user.fiscal_code="AAAAAAAAAAAAAAAA"
-        user.phone_number="+39333333333333"
+        user.lastname = "deleted"
+        user.password = "deleted"
+        user.dateofbirth = date(2000, 1, 1)
+        user.fiscal_code = "AAAAAAAAAAAAAAAA"
+        user.phone_number = "+39333333333333"
 
-    elif( session["role"] == "operator" ):
-        operator = db.session.query(Operator).filter(User.email == current_user.email).first()
+    elif session["role"] == "operator":
+        operator = (
+            db.session.query(Operator).filter(User.email == current_user.email).first()
+        )
 
         operator.email = "deleted@deleted.it"
         operator.firstname = "deleted"
-        operator.lastname="deleted"
-        operator.password="deleted"
-        operator.dateofbirth=date(2000, 1, 1)
-        operator.fiscal_code="AAAAAAAAAAAAAAAA"
-        operator.phone_number="+39333333333333"
+        operator.lastname = "deleted"
+        operator.password = "deleted"
+        operator.dateofbirth = date(2000, 1, 1)
+        operator.fiscal_code = "AAAAAAAAAAAAAAAA"
+        operator.phone_number = "+39333333333333"
 
     logout_user()
     db.session.commit()
     return redirect("/")
-
-    
-    

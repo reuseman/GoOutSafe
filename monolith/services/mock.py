@@ -1,4 +1,3 @@
-import codicefiscale
 from faker import Faker
 from codicefiscale import codicefiscale as cf
 import datetime
@@ -108,8 +107,8 @@ def operator():
 def health_authority():
     ha = (
         db.session.query(HealthAuthority)
-            .filter(HealthAuthority.email == "auth@mail.com")
-            .first()
+        .filter(HealthAuthority.email == "auth@mail.com")
+        .first()
     )
     if ha is None:
         example = HealthAuthority()
@@ -207,3 +206,6 @@ def menu():
 
         db.session.add(menu)
         db.session.commit()
+
+
+# TODO add review mock

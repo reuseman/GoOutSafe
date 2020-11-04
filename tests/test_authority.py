@@ -14,12 +14,14 @@ def test_create_authority_view(client, db):
     res = add_authority(client)
 
     fetched_user = (
-        db.session.query(HealthAuthority).filter(HealthAuthority.email == "aslpisa@mail.com").first()
+        db.session.query(HealthAuthority)
+        .filter(HealthAuthority.email == "aslpisa@mail.com")
+        .first()
     )
 
     assert res.status_code == 302
     assert fetched_user.email == "aslpisa@mail.com"
-    assert fetched_user.name == "asl Pisa"
+    assert fetched_user.firstname == "asl Pisa"
     assert fetched_user.phone == 132123
     assert fetched_user.country == "Italy"
     assert fetched_user.state == "Toscana"
@@ -45,6 +47,7 @@ def test_correct_login(client):
 
 
 # Helpers methods
+
 
 def add_authority(client):
     return client.post(

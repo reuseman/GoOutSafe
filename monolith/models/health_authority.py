@@ -2,6 +2,11 @@ from datetime import datetime
 from monolith import db
 from .abstract_user import AbstractUser
 from . import Mark, User
+from monolith.services.background import tasks
+
+import logging
+
+logger = logging.getLogger("monolith")
 
 
 class HealthAuthority(AbstractUser):
@@ -24,6 +29,16 @@ class HealthAuthority(AbstractUser):
         super().__init__(*args, **kw)
 
     def mark(self, user: User, duration=14, starting_date=datetime.utcnow()):
+        logger.info(
+            f"Authority (id={self.id}, name={self.name}) just marked the user (ID={user.id}, firstname={user.firstname})"
+        )
         self.marks.append(
             Mark(user=user, authority=self, duration=duration, created=starting_date)
+        )
+        covid_19_positive_text = f"Hey {user.firstname},\nIn date {starting_date.strftime('%A %d. %B %Y')}, the health authority {self.name} marked you positive to Covid-19. Contact your personal doctor to protect your health and that of others."
+        tasks.send_email(
+            "You are positive to COVID-19",
+            [user.email],
+            covid_19_positive_text,
+            covid_19_positive_text,
         )

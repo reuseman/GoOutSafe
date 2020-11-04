@@ -1,11 +1,26 @@
 import os
+from logging import FileHandler, Formatter
+from logging.config import dictConfig
+
+fileHandler = FileHandler("monolith/monolith.log", encoding="utf-8")
+fileHandler.setFormatter(
+    Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")
+)
 
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "top secret"
     WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or "top secret CSRF"
+
     SQLALCHEMY_DATABASE_URI = "sqlite:///gooutsafe.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    MAIL_SERVER = os.environ.get("MAIL_SERVER") or "smtp.googlemail.com"
+    MAIL_PORT = os.environ.get("MAIL_SERVER") or 587
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS") or 1
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+
     CELERY_BROKER_URL = (
         os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6379/0"
     )
@@ -13,13 +28,18 @@ class Config:
         os.environ.get("CELERY_RESULT_BACKEND") or "redis://localhost:6379/0"
     )
 
+    # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
+    AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
+
     @staticmethod
     def init_app(app):
         pass
 
 
 class ProductionConfig(Config):
-    pass
+    @staticmethod
+    def init_app(app):
+        app.logger.addHandler(fileHandler)
 
 
 class DevelopmentConfig(Config):
@@ -31,6 +51,7 @@ class DevelopmentConfig(Config):
         from flask_debugtoolbar import DebugToolbarExtension
 
         app.debug = True
+        app.logger.addHandler(fileHandler)
         DebugToolbarExtension(app)
 
 

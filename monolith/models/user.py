@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 class User(AbstractUser):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    avatar_id = db.Column(db.Unicode(128))
     fiscal_code = db.Column(db.Unicode(128))
     email = db.Column(db.Unicode(128))
     phone_number = db.Column(db.Unicode(20))
@@ -25,6 +26,12 @@ class User(AbstractUser):
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
+
+        from hashlib import sha1
+        from base64 import b32encode
+
+        hashed = sha1((datetime.utcnow().isoformat() + self.firstname).encode("utf-8"))
+        self.avatar_id = b32encode(hashed.digest()).decode("utf-8")
 
     def review(self, restaurant: Restaurant, rating: int, message=""):
         """Add a review, formed by a rating and a message, to a specific restaurant
@@ -90,4 +97,13 @@ class User(AbstractUser):
         return self.email == "deleted@deleted.it"
 
     def check_equality_for_booking(self, firstname, lastname, email):
-        return (self.firstname==firstname and self.lastname==lastname and self.email==email)
+        return (
+            self.firstname == firstname
+            and self.lastname == lastname
+            and self.email == email
+        )
+
+    def get_avatar_link(self):
+        from flask import current_app
+
+        return current_app.config["AVATAR_PROVIDER"].format(seed=self.avatar_id)

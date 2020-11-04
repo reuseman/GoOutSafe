@@ -2,6 +2,7 @@ flask
 flask-login
 flask-wtf
 flask-sqlalchemy
+flask-mail
 pip-tools
 python-codicefiscale
 email_validator
