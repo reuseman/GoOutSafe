@@ -37,7 +37,7 @@ def _restaurants(message=""):
         "restaurants.html",
         message=message,
         restaurants=allrestaurants,
-        role=session["role"],
+        role=role,
         base_url=request.base_url,
     )
 
@@ -233,7 +233,7 @@ def _like(restaurant_id):
 @operator_required
 def create_restaurant():
     status = 200
-    form = CreateForm()
+    form = CreateRestaurantForm()
     if request.method == "POST":
 
         if form.validate_on_submit():
