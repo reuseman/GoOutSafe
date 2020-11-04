@@ -21,7 +21,7 @@ restaurants = Blueprint("restaurants", __name__)
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
     allrestaurants = db.session.query(Restaurant)
-    if session:
+    if current_user.is_authenticated:
         role = session["role"]
     else:
         role = ""
@@ -57,12 +57,12 @@ def operator_restaurants(message=""):
 def restaurant_sheet(restaurant_id):
     records = (
         db.session.query(Restaurant, Precautions, RestaurantsPrecautions)
-            .filter(
+        .filter(
             Restaurant.id == int(restaurant_id),
             Restaurant.id == RestaurantsPrecautions.restaurant_id,
             RestaurantsPrecautions.precautions_id == Precautions.id,
         )
-            .all()
+        .all()
     )  # Join between tabels Restaurant, RestaurantsPrecautions and Precautions
     restaurant = records[0].Restaurant
     precautions = []
@@ -108,7 +108,8 @@ def restaurant_sheet(restaurant_id):
 @restaurants.route("/restaurants/like/<restaurant_id>")
 @login_required
 def _like(restaurant_id):
-    q = Like.query.filter_by(liker_id=current_user.id, restaurant_id=restaurant_id)
+    q = Like.query.filter_by(liker_id=current_user.id,
+                             restaurant_id=restaurant_id)
     if q.first() is not None:
         new_like = Like()
         new_like.liker_id = current_user.id
@@ -155,7 +156,8 @@ def create_restaurant():
 def _tables(restaurant_id):
     status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
-        alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
+        alltables = db.session.query(Table).filter_by(
+            restaurant_id=restaurant_id)
     else:
         status = 401
 
