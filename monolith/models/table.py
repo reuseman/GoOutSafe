@@ -1,4 +1,6 @@
 from monolith import db
+from monolith.models.booking import Booking
+
 
 
 class Table(db.Model):
@@ -11,3 +13,4 @@ class Table(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurant.id"))
 
     restaurant = db.relationship("Restaurant", back_populates="tables")
+    booking = db.relationship("Booking", back_populates="table")

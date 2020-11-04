@@ -3,7 +3,7 @@ from monolith.models.abstract_user import AbstractUser
 from monolith.models.restaurant import Restaurant
 from monolith.models.mark import Mark
 from monolith.models.review import Review
-
+from monolith.models.booking import Booking
 from datetime import datetime, timedelta
 
 
@@ -20,6 +20,8 @@ class User(AbstractUser):
 
     marks = db.relationship("Mark", back_populates="user")
     reviews = db.relationship("Review", back_populates="user")
+
+    booking = db.relationship("Booking", back_populates="user")
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -86,3 +88,6 @@ class User(AbstractUser):
             bool: boolean value
         """
         return self.email == "deleted@deleted.it"
+
+    def check_equality_for_booking(self, firstname, lastname, email):
+        return (self.firstname==firstname and self.lastname==lastname and self.email==email)
