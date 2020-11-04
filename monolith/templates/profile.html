@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Your Profile{% endblock %}
+
+{% block main %}
+<h2 class="ui dividing header">Profile information</h2>
+<p>Welcome to your profile page, {{ session["name"] }}! Below you can check and modify your information.</p>
+<div class="row ui list">
+    <div class="item">First Name: {{ user.firstname }}</div>
+    <div class="item">Last Name: {{ user.lastname }}</div>
+    <div class="item">Fiscal Code: {{user.fiscal_code}}</div>
+    <div class="item">Phone Number: {{user.phone_number}}</div>
+    <div class="item">Email: {{user.email}}</div>
+</div>
+{% endblock %}
