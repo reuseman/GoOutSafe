@@ -1,5 +1,9 @@
+from re import U
 from flask import Blueprint, render_template, redirect, request, session, flash
 from flask_login import current_user, login_user, logout_user, login_required
+from datetime import date
+
+from sqlalchemy.util.compat import u
 
 from monolith import db
 from monolith.models import User, Operator, HealthAuthority
@@ -65,3 +69,37 @@ def logout():
     logout_user()
     session.clear()
     return redirect("/")
+
+
+@auth.route("/unsubscribe")
+def unsubscribe():
+    
+    if( session["role"] == "user" ):
+        user = db.session.query(User).filter(User.email == current_user.email).first()
+
+        user.email = "anonymous@anonymous.it"
+        user.firstname = "anonymous"
+        user.lastname="anonymous"
+        user.password="anonymous"
+        user.dateofbirth=date(1995, 12, 31)
+        user.fiscal_code="AAAAAAAAAAAAAAAA"
+        user.phone_number="+39333333333333"
+
+    elif( session["role"] == "operator" ):
+        operator = db.session.query(Operator).filter(User.email == current_user.email).first()
+
+        operator.email = "anonymous@anonymous.it"
+        operator.firstname = "anonymous"
+        operator.lastname="anonymous"
+        operator.password="anonymous"
+        operator.dateofbirth=date(1995, 12, 31)
+        operator.fiscal_code="AAAAAAAAAAAAAAAA"
+        operator.phone_number="+39333333333333"
+
+    logout_user()
+    session.clear()
+    db.session.commit()
+    return redirect("/")
+
+    
+    
