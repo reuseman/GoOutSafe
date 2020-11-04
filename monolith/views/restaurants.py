@@ -162,9 +162,12 @@ def create_restaurant():
 def create_menu(restaurant_id):
     status = 200
     
+    zipped = None
+    name = ""
     if request.method == "POST":
         menu = Menu()
         menu.name = request.form["menu_name"]
+        name = request.form["menu_name"]
 
         if menu.name == "":
             flash("No empty menu name!", category="error")
@@ -175,9 +178,10 @@ def create_menu(restaurant_id):
             menu.restaurant_id = int(restaurant_id)
 
             food_names = set()
-            for name, price, category in zip(request.form.getlist('name'), 
-                                            request.form.getlist('price'), 
-                                            request.form.getlist('category')):
+            zipped = zip(request.form.getlist('name'), 
+                        request.form.getlist('price'), 
+                        request.form.getlist('category'))
+            for name, price, category in zipped:
                 food = Food()
                 food.name = name
                 food.category = category
@@ -215,7 +219,15 @@ def create_menu(restaurant_id):
             status = 400
             flash("There is already a menu with the same name!", category="error")
 
-    return render_template("create_menu.html", choices=FoodCategory.choices()), status
+    if zipped or name:
+        zip_to_send = zip(request.form.getlist('name'), 
+                        request.form.getlist('price'), 
+                        request.form.getlist('category'))
+                        
+        return render_template("create_menu.html", choices=FoodCategory.choices(), 
+            items=zip_to_send, menu_name=name), status
+    else:
+        return render_template("create_menu.html", choices=FoodCategory.choices()), status
 
 
 @restaurants.route("/restaurants/<restaurant_id>/show_menu/<menu_id>", methods=["GET", "POST"])
