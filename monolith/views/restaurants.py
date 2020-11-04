@@ -181,7 +181,6 @@ def create_menu(restaurant_id):
                 food = Food()
                 food.name = name
                 food.category = category
-                print(food.category)
                 choices = [i[0] for i in FoodCategory.choices()]
                 try:
                     food.price = float(price)
