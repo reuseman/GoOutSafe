@@ -33,6 +33,7 @@ def test_add_new_restaurant(client, db):
     helpers.create_operator(client)
     new_restaurant = Restaurant(**helpers.restaurant)
 
+    helpers.insert_precautions(db)
     res = restaurant.add_new_restaurant(new_restaurant, [1, 2])
     q_rest = db.session.query(Restaurant).filter_by(name=new_restaurant.name).first()
     q_restprec = (
