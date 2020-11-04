@@ -6,9 +6,11 @@ from .operators import operators
 from .health_authorities import authorities
 from .marks import marks
 from .restaurants_map import restaurants_map
+from .profile import my_profile
 
 blueprints = [
     home,
+    my_profile,
     auth,
     users,
     restaurants,
