@@ -328,6 +328,7 @@ def test_edit_table(client, db):
     assert res.status_code == 302
     assert fetched_table.name == "A5"
     assert fetched_table.seats == 6
+    assert urlparse(res.location).path == "/restaurants/1/tables"
 
 
 def test_edit_table_to_one_with_same_name(client, db):
@@ -675,6 +676,7 @@ def test_create_menu(client, db):
     assert food.name == helpers.menu["name"]
     assert food.price == helpers.menu["price"]
     assert food.category.name == helpers.menu["category"]
+    assert urlparse(res.location).path == "/restaurants/1"
 
 
 def test_create_duplicate_menu(client, db):

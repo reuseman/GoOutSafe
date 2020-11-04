@@ -320,7 +320,7 @@ def create_menu(restaurant_id):
                 if status == 200:
                     db.session.add(menu)
                     db.session.commit()
-                    return redirect("/operator/restaurants")
+                    return redirect("/restaurants/" + str(restaurant_id))
             else:
                 status = 400
                 flash("There is already a menu with the same name!", category="error")
