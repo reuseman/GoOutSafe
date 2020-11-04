@@ -15,6 +15,7 @@ from monolith.models import (
     Mark,
     Table,
 )
+from monolith.models.menu import Menu, Food
 
 
 fake = Faker("it_IT")
@@ -174,4 +175,16 @@ def table():
     if table is None:
         db.session.add(Table(name="1", seats=5, restaurant_id=1))
         db.session.add(Table(name="2", seats=3, restaurant_id=1))
+        db.session.commit()
+
+
+def menu():
+    q = db.session.query(Menu).filter(Menu.restaurant_id == 1)
+    menu = q.first()
+    if menu is None:
+        menu = Menu(name="Trial Menu", restaurant_id=1)
+        menu.foods.append(Food(name="Pepperoni pizza", price=5, category="PIZZAS"))
+        menu.foods.append(Food(name="Water bottle", price=2, category="DRINKS"))
+
+        db.session.add(menu)
         db.session.commit()

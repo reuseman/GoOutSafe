@@ -1,16 +1,17 @@
 from flask.globals import session
 from monolith.models import precautions
 from flask.helpers import flash
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, jsonify
 from monolith import db
 from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions
-from monolith.models.menu import Menu, Food
+from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
 from monolith.services.auth import admin_required, current_user, operator_required
 from flask_login import current_user, login_user, logout_user, login_required
 from monolith.services.forms import CreateRestaurantForm, CreateTableForm, UserForm, CreateMenuForm, CategoryForm, FoodForm
 from ..controllers import restaurant
 
+import json 
 
 restaurants = Blueprint("restaurants", __name__)
 
@@ -52,27 +53,33 @@ def operator_restaurants(message=""):
 
 @restaurants.route("/restaurants/<restaurant_id>")
 def restaurant_sheet(restaurant_id):
-    records = (
-        db.session.query(Restaurant, Precautions, RestaurantsPrecautions)
-        .filter(
-            Restaurant.id == int(restaurant_id),
-            Restaurant.id == RestaurantsPrecautions.restaurant_id,
-            RestaurantsPrecautions.precautions_id == Precautions.id,
+    q_restaurant = (
+        db.session.query(Restaurant).filter_by(
+            id=int(restaurant_id)
         )
-        .all()
-    )  # Join between tabels Restaurant, RestaurantsPrecautions and Precautions
-    restaurant = records[0].Restaurant
+        .first()
+    )
+    q_restaurant_precautions= db.session.query(Precautions.name).filter(
+        Precautions.id == RestaurantsPrecautions.precautions_id,
+        RestaurantsPrecautions.restaurant_id == int(restaurant_id)
+    ).all()
+
     precautions = []
-    for record in records:
-        precautions.append(record.Precautions.name)
+    for prec in q_restaurant_precautions:
+        precautions.append(prec.name)
+
     return render_template(
         "restaurantsheet.html",
-        name=restaurant.name,
-        likes=restaurant.likes,
-        lat=restaurant.lat,
-        lon=restaurant.lon,
-        phone=restaurant.phone,
+        id=q_restaurant.id,
+        name=q_restaurant.name,
+        likes=q_restaurant.likes,
+        lat=q_restaurant.lat,
+        lon=q_restaurant.lon,
+        phone=q_restaurant.phone,
         precautions=precautions,
+        menus=q_restaurant.menus,
+        # base_url="http://127.0.0.1:5000/restaurants/<restaurant_id>",
+        base_url=request.base_url,
     )
 
 
@@ -125,34 +132,70 @@ def create_restaurant():
 @operator_required
 def create_menu(restaurant_id):
     status = 200
-    form = CreateMenuForm()
-
-    if form.add_category.data:
-        form.categories.append_entry()
-        return render_template("create_menu.html", form=form), status
-
-    for category in form.categories:
-        if category.add_food.data:
-            category.foods.append_entry()
-            return render_template("create_menu.html", form=form), status
-        if category.remove_category.data:
-            form.categories.entries.remove(category)
-            return render_template("create_menu.html", form=form), status
-        
-        for food in category.foods:
-            if food.remove_food.data:
-                category.foods.entries.remove(food)
-                return render_template("create_menu.html", form=form), status
-
-    if request.method == "POST":
-        if form.validate_on_submit():
-            pass
-        else:
-            flash("Duplicate category or food name!", category="error")
-            status = 400
     
-    return render_template("create_menu.html", form=form), status
+    if request.method == "POST":
+        menu = Menu()
+        menu.name = request.form["menu_name"]
 
+        if menu.name == "":
+            flash("No empty menu name!", category="error")
+            status = 400
+
+        q = db.session.query(Menu).filter_by(name=menu.name).first()
+        if q is None and status == 200:
+            menu.restaurant_id = int(restaurant_id)
+
+            food_names = set()
+            for name, price, category in zip(request.form.getlist('name'), 
+                                            request.form.getlist('price'), 
+                                            request.form.getlist('category')):
+                food = Food()
+                food.name = name
+                food.category = category
+                print(food.category)
+                choices = [i[0] for i in FoodCategory.choices()]
+                try:
+                    food.price = float(price)
+                    is_float = True
+                except ValueError:
+                    is_float = False
+                
+                if not is_float:
+                    flash("Not a valid price number", category="error")
+                    status = 400
+                elif food.price < 0:
+                    flash("No negative values!", category="error")
+                    status = 400
+                elif food.name == "":
+                    flash("No empty food name!", category="error")
+                    status = 400
+                elif food.category not in choices:
+                    flash("Wrong category selected!", category="error")
+                    status = 400
+                elif food.name in food_names:
+                    flash("No duplicate food name!", category="error")
+                    status = 400
+                else:
+                    menu.foods.append(food)
+                    food_names.add(food.name)
+
+            if status == 200:
+                db.session.add(menu)
+                db.session.commit()
+                return redirect("/operator/restaurants")
+        else:
+            status = 400
+            flash("There is already a menu with the same name!", category="error")
+
+    return render_template("create_menu.html", choices=FoodCategory.choices()), status
+
+
+@restaurants.route("/restaurants/<restaurant_id>/show_menu/<menu_id>", methods=["GET", "POST"])
+def show_menu(restaurant_id, menu_id):
+    q_restaurant_menu = db.session.query(Menu).filter(Menu.restaurant_id == restaurant_id,
+        Menu.id == menu_id).first()
+
+    return render_template("show_menu.html", menu=q_restaurant_menu)
 
 
 @restaurants.route("/restaurants/<restaurant_id>/tables")

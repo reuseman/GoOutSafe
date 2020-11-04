@@ -1,6 +1,7 @@
 from datetime import date
 from monolith.models.health_authority import HealthAuthority
 from monolith.models import User
+from monolith.models.menu import Menu, Food
 from monolith.services import mock
 
 # DATA
@@ -76,6 +77,15 @@ restaurant = dict(
     operator_id=1,
 )
 
+
+menu = dict(
+    menu_name="Trial menu",
+    name="Pepperoni pizza",
+    price=5.0,
+    category="PIZZAS"
+)
+
+
 table = dict(name="A10", seats=10, restaurant_id=1)
 
 # CREATION
@@ -125,6 +135,22 @@ def create_restaurant(client, data=restaurant):
         data=data,
         follow_redirects=False,
     )
+
+
+def create_menu(client, data=menu):
+    return client.post(
+        "/operator/restaurants/1/create_menu",
+        data=data,
+        follow_redirects=False,
+    )
+
+
+def show_menu(client, restaurant_id=1, menu_id=1):
+    return client.get("/restaurants/" + str(restaurant_id) + "/show_menu/" + str(menu_id), follow_redirects=False)
+
+
+def restaurant_sheet(client, restaurant_id=1):
+    return client.get("/restaurants/" + str(restaurant_id), follow_redirects=False)
 
 
 def operator_restaurants(client):

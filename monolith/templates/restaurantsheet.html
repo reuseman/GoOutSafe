@@ -21,4 +21,14 @@
   </li>
   {% endfor %}
 </ul>
+<h3>Menus:</h3>
+<ul>
+  {% for menu in menus: %}
+  <li>
+    {{menu.name}}
+    <a href="{{base_url}}/show_menu/{{menu.id}}">Show details</a>
+  </li>
+  {% endfor %}
+</ul>
+<a href="/operator/restaurants/{{id}}/create_menu">Create new menu</a>
 {% endblock %}

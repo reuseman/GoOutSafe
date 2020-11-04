@@ -1,52 +1,79 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}Create menu{% endblock %}
 
 {% block main %}
-<html>
- <body>
-  <p class="error">
-    {% for errmess in get_flashed_messages(False,['error']) %}
-      <br>{{ errmess }}
-    {% endfor%}</p>
-  <form action="" method="POST">
-    {{ form.hidden_tag() }}
-    <table>
-      <th>{{ form["name"].label }}</th>
-      <th>{{ form["name"] }}</th>
-      <th>{{ form["add_category"] }}</th>
-        
-      {% for category in form.categories %}
-        <table>
-          <tr>
-            <th>{{ category["name"].label }}</th>
-            <th>{{ category["name"] }}</th>
-            {% if form.categories|length > 1 %}
-              <th>{{ category["remove_category"] }}</th>
-            {% endif %}
-          </tr>
-          <tr>
-            <th>Food name</th>
-            <th>Food price</th>
-            <th>{{ category.add_food }}</th>
-          </tr>
-          {% for food in category.foods %}
-            <tr>
-              <td>{{ food["name"] }}</td>
-              <td>{{ food["price"] }}</td>
 
-              {% if category.foods|length > 1 %}
-                <td>{{ food["remove_food"] }}</td>
-              {% endif %}
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    
+    <script>
+
+      $(document).ready(function() {
+        var t = $('#example').DataTable( {
+          "ordering": false,
+          "bFilter": false,
+          "columnDefs": [
+            { "width": "35%", "targets": 0 },
+            { "width": "20%", "targets": 1 },
+            { "width": "20%", "targets": 2 },
+            { "width": "25%", "targets": 3 }
+          ]
+        } );
+
+        $('#addRow').on( 'click', function () {
+          t.row.add( [
+            '<input type="text" name="name" form="my_form" required>',
+            '<input type="number" step="0.50" min=0 name="price" form="my_form" required>',
+            '<select size="1" name="category" form="my_form"> \
+              {% for choice in choices: %} \
+                <option value="{{choice[0]}}">{{choice[1]}}</option> \
+              {% endfor %} \
+            <\select>',
+            '<button class="remove">Delete food</button>'
+          ] ).draw( false );
+        } );
+
+        // Automatically add a first row of data
+        $('#addRow').click();
+
+        $('#example').on('click', '.remove', function () {
+          t.row($(this).parents('tr')).remove().draw();
+        });
+      } );
+    </script>
+  </head>
+
+  <body>
+    <p class="error">
+      {% for errmess in get_flashed_messages(False,['error']) %}
+        <br>{{ errmess }}
+      {% endfor%}
+    </p>
+      <form method="POST" id="my_form"></form>
+      <table id="example" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th align="center" colspan=2>Menu name</th>
+              <td colspan = 2><input id="menu_name" type="text" name="menu_name" form="my_form" required></td>
             </tr>
-          {% endfor %}
-        </table>
-      {% endfor %}
-    </table>
-    {% if form.errors %}
-    {{ form.errors }}
-    {% endif %}
-    <input type=submit value="Submit">
-  </form>
+            <tr>
+              <th align="center">Food name</th>
+              <th align="center">Price</th>
+              <th align="center">Category</th>
+              <th align="center"><button id="addRow">Add food</button></th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th align="right" colspan="4">
+                <button class="submit" form="my_form">Submit</button>
+              </th>
+            </tr>
+          </tfoot>
+      </table>
  </body>
 </html>
 

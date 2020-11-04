@@ -30,6 +30,7 @@ def create_app(config_name):
     mock.users(10)
     mock.operator()
     mock.restaurant()
+    mock.menu()
     mock.table()
     mock.precautions()
     mock.restaurants_precautions()

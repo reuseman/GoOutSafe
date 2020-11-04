@@ -1,6 +1,7 @@
 from .fixtures import app, client, db
 from . import helpers
-from monolith.models import Restaurant, Table
+from monolith.models import Restaurant, Table, RestaurantsPrecautions, Precautions
+from monolith.models.menu import Menu, Food, MenuItems
 
 from urllib.parse import urlparse
 
@@ -32,6 +33,31 @@ def test_create_restaurant_view_is_notavailable_ha(client):
 
     res = client.get("/create_restaurant")
     assert res.status_code == 401
+
+
+
+def test_restaurant_sheet(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = helpers.restaurant_sheet(client)
+    restaurant = db.session.query(Restaurant).filter_by(id=1).first()
+    
+    restaurant_precautions= db.session.query(Precautions.name).filter(
+        Precautions.id == RestaurantsPrecautions.precautions_id,
+        RestaurantsPrecautions.restaurant_id == 1
+    ).all()
+
+    assert res.status_code == 200
+
+    for prec in restaurant_precautions:
+        assert bytes(prec.name, "utf-8") in res.data
+
+    assert bytes(restaurant.name, "utf-8") in res.data
+    assert bytes(str(restaurant.phone), "utf-8") in res.data
+    for menu in restaurant.menus:
+        assert bytes(menu.name, "utf-8") in res.data
 
 
 def test_create_restaurant(client, db):
@@ -610,6 +636,7 @@ def test_create_menu_isavailable_operator(client, db):
     
     assert res.status_code == 200
 
+
 def test_create_menu_isnotavailable_ha(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -622,6 +649,89 @@ def test_create_menu_isnotavailable_ha(client, db):
     res = client.get("/operator/restaurants/1/create_menu")
 
     assert res.status_code == 401
+
+
+def test_create_menu(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = helpers.create_menu(client)
+    
+    menu = db.session.query(Menu).filter_by(id=1).first()
+    food = menu.foods.pop()
+
+    assert res.status_code == 302
+    assert menu is not None
+    assert menu.restaurant_id == 1
+    assert menu.name == helpers.menu["menu_name"]
+    assert food.name == helpers.menu["name"]
+    assert food.price == helpers.menu["price"]
+    assert food.category.name == helpers.menu["category"]
+
+
+def test_create_duplicate_menu(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    helpers.create_menu(client)
+    res = helpers.create_menu(client)
+    
+    assert res.status_code == 400 
+
+
+def test_create_menu_bad_data(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    
+    bad_menu = helpers.menu
+    bad_menu["menu_name"] = ""
+    res = helpers.create_menu(client, data=bad_menu)
+    assert res.status_code == 400
+    
+    bad_menu["menu_name"] = "Trial menu1"
+    bad_menu["name"] = ""
+    res = helpers.create_menu(client, data=bad_menu)
+    assert res.status_code == 400
+
+    bad_menu["menu_name"] = "Trial menu2"
+    bad_menu["name"] = "Trial food"
+    bad_menu["price"] = ""
+    res = helpers.create_menu(client, data=bad_menu)
+    assert res.status_code == 400
+
+    bad_menu["menu_name"] = "Trial menu3"
+    bad_menu["price"] = "-5"
+    res = helpers.create_menu(client, data=bad_menu)
+    assert res.status_code == 400
+
+    bad_menu["menu_name"] = "Trial menu4"
+    bad_menu["price"] = "5"
+    bad_menu["category"] = "WRONG_CAT"
+    res = helpers.create_menu(client, data=bad_menu)
+    assert res.status_code == 400 
+    bad_menu["category"] = "DRINKS"
+
+
+def test_show_menu(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    helpers.create_menu(client)
+
+    res = helpers.show_menu(client)
+    menu = db.session.query(Menu).filter(Menu.restaurant_id == 1,
+        Menu.id == 1).first()
+        
+    assert res.status_code == 200
+    assert bytes(menu.name, "utf-8") in res.data
+    for food in menu.foods:
+        assert bytes(food.name, "utf-8") in res.data
+        assert bytes(str(food.price), "utf-8") in res.data 
+        assert bytes(food.category.value, "utf-8") in res.data
 
 
 def test_restaurants(client, db):
