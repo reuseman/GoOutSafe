@@ -107,6 +107,9 @@ def restaurant_sheet(restaurant_id):
         lon=q_restaurant.lon,
         phone=q_restaurant.phone,
         precautions=precautions,
+        open=q_restaurant.opening_hours,
+        close=q_restaurant.closing_hours,
+        cuisine=q_restaurant.cuisine_type.value,
         menus=q_restaurant.menus,
         base_url=request.base_url,
         reviews=reviews,
@@ -242,9 +245,9 @@ def create_restaurant():
 
             new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
-
+            
             if restaurant.add_new_restaurant(
-                    new_restaurant, request.form.getlist("prec_measures")
+                new_restaurant, request.form.getlist("prec_measures")
             ):
                 return redirect("operator/restaurants")
             else:

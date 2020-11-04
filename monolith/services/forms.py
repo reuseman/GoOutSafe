@@ -4,6 +4,7 @@ from sys import displayhook
 from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from wtforms import widgets, validators, SubmitField
 from monolith.models.precautions import Precautions
+from monolith.models.restaurant import CuisineType
 from monolith.models.menu import FoodCategory
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
@@ -73,7 +74,7 @@ class MultiCheckboxField(QuerySelectMultipleField):
 class CreateRestaurantForm(FlaskForm):
     name = f.StringField("Name", validators=[DataRequired()])
     lat = f.FloatField(
-        "latitude",
+        "Latitude",
         validators=[
             DataRequired(),
             NumberRange(-90, 90, "Latitude must be between -90 and 90"),
@@ -93,12 +94,15 @@ class CreateRestaurantForm(FlaskForm):
                  ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
+    opening_hours = f.DecimalField("Opening hours", validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")])
+    closing_hours = f.DecimalField("Closing hours", validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")])
+    cuisine_type = f.SelectField('Cuisine type', choices=CuisineType.choices(), validators=[DataRequired()])
     prec_measures = MultiCheckboxField(
         "Precautions",
         get_label="name",
         query_factory=precautions_choices,
     )
-    display = ["name", "lat", "lon", "phone", "time_of_stay", "prec_measures"]
+    display = ["name", "lat", "lon", "phone", "opening_hours", "closing_hours", "cuisine_type", "time_of_stay", "prec_measures"]
 
 
 class CreateTableForm(FlaskForm):

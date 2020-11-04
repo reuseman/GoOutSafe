@@ -4,6 +4,8 @@
 {% block main %}
     <h1>{{ name }} -- Likes: {{ likes }}</h1>
     <h2>Phone: {{ phone }}</h2>
+    <h3>Opening hours: {{ open }} Closing hours: {{ close}}</h3>
+    <h3>Cuisine type: {{ cuisine }} </h3>
     <ul>
         {% if current_user.is_authenticated %}
             <iframe width="600" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
@@ -73,16 +75,7 @@
             </section>
         {% endif %}
     </article>
-
-</ul>
-<h3>Precautions:</h3>
-<ul>
-  {% for precaution in precautions: %}
-  <li>
-    {{precaution}}
-  </li>
-  {% endfor %}
-</ul>
+    
 <h3>Menus:</h3>
 <ul>
   {% for menu in menus: %}
