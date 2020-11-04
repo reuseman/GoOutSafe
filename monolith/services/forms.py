@@ -186,12 +186,14 @@ class ReviewForm(FlaskForm):
     )
     message = f.TextAreaField("Your review",
                               validators=[Length(min=30, message="The review should be at least of 30 characters.")])
+
+
 class CreateBookingDateHourForm(FlaskForm):
     booking_date = DateField('Booking Date', default=date.today())
     submit = SubmitField('Submit')
 
     def validate(self):
-        if (self.booking_date.data<date.today()):
+        if (self.booking_date.data < date.today()):
             return False
         else:
             return True
@@ -199,10 +201,11 @@ class CreateBookingDateHourForm(FlaskForm):
 
 def ConfirmBookingForm(size):
     class ConfirmBookingForm(FlaskForm):
-        email=EmailField("Email", validators=[DataRequired(), Email()])
-        firstname=f.StringField("Firstname", validators=[DataRequired()])
-        lastname=f.StringField("Lastname", validators=[DataRequired()])
-        fiscal_code=f.StringField("Fiscal code", validators=[DataRequired(), Length(min=16,max=16)])
+        email = EmailField("Email", validators=[DataRequired(), Email()])
+        firstname = f.StringField("Firstname", validators=[DataRequired()])
+        lastname = f.StringField("Lastname", validators=[DataRequired()])
+        fiscal_code = f.StringField("Fiscal code", validators=[
+                                    DataRequired(), Length(min=16, max=16)])
 
     class ConfirmBookingForm(FlaskForm):
         people = FieldList(FormField(ConfirmBookingForm), min_entries=1)
@@ -210,19 +213,52 @@ def ConfirmBookingForm(size):
 
         def validate(self):
             for field in self.people.data:
-                if field['email'] == '' or field['firstname'] == '' or field['lastname'] == '' or field['fiscal_code'] == '': 
+                if field['email'] == '' or field['firstname'] == '' or field['lastname'] == '' or field['fiscal_code'] == '':
                     return False
             return True
 
     fields = []
     for i in range(int(size)):
         fields.append({
-            'email':'',
-            'firstname':'',
+            'email': '',
+            'firstname': '',
             'lastname': '',
-            'fiscal_code':'',
+            'fiscal_code': '',
         })
-    
-    form=ConfirmBookingForm(people=fields)
+
+    form = ConfirmBookingForm(people=fields)
 
     return form
+
+
+class ChangePasswordForm(FlaskForm):
+    new_password = f.PasswordField(label='New password', validators=[
+        DataRequired(),
+        validators.EqualTo("password_confirm", message='Passwords must match')
+    ])
+    password_confirm = f.PasswordField(label='Confirm new password', validators=[
+        DataRequired()
+    ])
+    old_password = f.PasswordField(label="Type your old password here", validators=[
+        DataRequired()])
+    display = ["new_password", "password_confirm", "old_password"]
+
+
+class ChangeAnagraphicForm(FlaskForm):
+    firstname = f.StringField("Firstname", validators=[DataRequired()])
+    lastname = f.StringField("Lastname", validators=[DataRequired()])
+    fiscal_code = f.StringField("Fiscal code", validators=[
+        DataRequired(), Length(min=16, max=16)])
+    dateofbirth = DateField("Date of birth", validators=[DataRequired()])
+    password = f.PasswordField(label="Type your password here to confirm", validators=[
+        DataRequired()])
+    display = ["firstname", "lastname",
+               "fiscal_code", "dateofbirth", "password"]
+
+
+class ChangeContactForm(FlaskForm):
+    email = f.StringField("Email", validators=[DataRequired()])
+    phone = f.IntegerField("Phone", validators=[DataRequired()])
+    password = f.PasswordField(label="Type your password here to confirm", validators=[
+        DataRequired()])
+    display = ["email", "phone", "password"]

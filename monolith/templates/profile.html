@@ -7,8 +7,23 @@
 <div class="row ui list">
     <div class="item">First Name: {{ user.firstname }}</div>
     <div class="item">Last Name: {{ user.lastname }}</div>
-    <div class="item">Fiscal Code: {{user.fiscal_code}}</div>
+    {% if session["role"] == user %}
     <div class="item">Phone Number: {{user.phone_number}}</div>
+    {% endif %}
+    <div class="item">Fiscal Code: {{user.fiscal_code}}</div>
     <div class="item">Email: {{user.email}}</div>
 </div>
+
+<div class="row">
+    <div class="ui dividing header">Modify your information</div>
+    <h3 class="row">Change password</h3>
+    <iframe id="restaurants_map" src="{{ url_for('home.change_password') }} " width="400" height="300"></iframe>
+    <h3 class="row">Change anagraphic information</h3>
+    <iframe id="restaurants_map" src="{{ url_for('home.change_anagraphic') }} " width="400" height="300"></iframe>
+    <h3 class="row">Change your contact information</h3>
+    <iframe id="restaurants_map" src="{{ url_for('home.change_contacts') }} " width="400" height="300"></iframe>
+
+</div>
+</div>
+
 {% endblock %}
