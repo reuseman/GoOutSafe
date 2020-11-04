@@ -1,10 +1,14 @@
 from datetime import date
 from monolith.models.health_authority import HealthAuthority
-from monolith.models import User
 from monolith.models.menu import Menu, Food
+from monolith.models import User, Restaurant, RestaurantsPrecautions, HealthAuthority, Precautions
 from monolith.services import mock
+from tests.data import precautions
 
 # DATA
+# ! IMPORTANT
+# FROM NOW ON LET'S PUT THE DEFINITION OF THE DATA IN tests/data.py, NOT HERE. IN ORDER TO HAVE A SINGLE TRUTH
+# HERE ONLY THE METHODS
 
 user = dict(
     email="mariobrown@gmail.com",
@@ -88,6 +92,7 @@ menu = dict(
 
 table = dict(name="A10", seats=10, restaurant_id=1)
 
+
 # CREATION
 
 
@@ -109,8 +114,30 @@ def insert_user(db, data=user) -> User:
     return temp
 
 
-def insert_restaurant_db():
-    mock.restaurant()
+def insert_restaurant_db(db, data=restaurant) -> Restaurant:
+    temp = Restaurant(**data)
+    db.session.add(temp)
+    db.session.commit()
+    return temp
+
+
+def insert_precautions(db, precautions=precautions):
+    for p in precautions:
+        db.session.add(Precautions(**p))
+    db.session.commit()
+
+
+def insert_precautions_in_restaurant(db, restaurant: Restaurant, precautions_id=[1, 2, 4]):
+    for precaution_id in precautions_id:
+        db.session.add(RestaurantsPrecautions(restaurant_id=restaurant.id, precautions_id=precaution_id))
+    db.session.commit()
+
+
+def insert_complete_restaurant(db):
+    restaurant = insert_restaurant_db(db)
+    insert_precautions(db)
+    insert_precautions_in_restaurant(db, restaurant=restaurant)
+    return restaurant
 
 
 def create_operator(client, data=operator2):

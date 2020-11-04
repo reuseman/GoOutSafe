@@ -2,7 +2,6 @@ from monolith import db
 from sqlalchemy.orm import relationship
 
 
-
 class RestaurantsPrecautions(db.Model):
     __tablename__ = "restaurants_precautions"
 

@@ -1,3 +1,4 @@
+from wtforms.fields.core import StringField
 from monolith.services.auth import authority_required
 from sys import displayhook
 from wtforms import widgets
@@ -8,8 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith import db
 import wtforms as f
-from wtforms.validators import DataRequired, NumberRange, Email, ValidationError, Optional
-from wtforms import Form
+from wtforms.validators import DataRequired, Length, NumberRange, Email
 
 
 class LoginForm(FlaskForm):
@@ -19,11 +19,13 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    email = EmailField("email", validators=[DataRequired(), Email()])
-    firstname = f.StringField("firstname", validators=[DataRequired()])
-    lastname = f.StringField("lastname", validators=[DataRequired()])
-    password = f.PasswordField("password", validators=[DataRequired()])
-    dateofbirth = DateField("dateofbirth", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    firstname = f.StringField("First name", validators=[
+                              DataRequired()], render_kw={"placeholder": "Mario"})
+    lastname = f.StringField("Last name", validators=[
+                             DataRequired()], render_kw={"placeholder": "Rossi"})
+    password = f.PasswordField("Password", validators=[DataRequired()])
+    dateofbirth = DateField("Date of birth", validators=[DataRequired()])
     display = ["email", "firstname", "lastname", "password", "dateofbirth"]
 
 
@@ -53,7 +55,8 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("Latitude", validators=[DataRequired()])
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password",
+               "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -84,7 +87,8 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "Time of stay",
-        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"),
+                 ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
     prec_measures = MultiCheckboxField(
@@ -93,35 +97,6 @@ class CreateRestaurantForm(FlaskForm):
         query_factory=precautions_choices,
     )
     display = ["name", "lat", "lon", "phone", "time_of_stay", "prec_measures"]
-
-
-def validate_no_dup(form, field):
-    set_categories = set()
-    for category in field.data:
-        if category["name"] in set_categories:
-            raise ValidationError("Duplicate!")
-        else:
-            set_categories.add(category["name"])
-
-
-class FoodForm(Form):
-    name = f.StringField("food name")
-    price = f.DecimalField("price", places=2, validators=[NumberRange(min=0, message="No negative values")])
-    remove_food = f.SubmitField(label="Remove food")
-
-
-class CategoryForm(Form):
-    name = f.SelectField("category", validators=[DataRequired()], choices=FoodCategory.choices())
-    foods = f.FieldList(f.FormField(FoodForm), "", validators=[validate_no_dup], min_entries=1, max_entries=10)
-    add_food = f.SubmitField(label="Add food")
-    remove_category = f.SubmitField(label="Remove category")
-
-
-class CreateMenuForm(FlaskForm):
-    name = f.StringField("menu name", validators=[DataRequired()])
-    categories = f.FieldList(f.FormField(CategoryForm), 
-        "categories", validators=[validate_no_dup], min_entries=1, max_entries=10)
-    add_category = f.SubmitField(label="Add category")
 
 
 class CreateTableForm(FlaskForm):
@@ -170,7 +145,8 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(
+            message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
@@ -194,3 +170,17 @@ class MarkPhoneNumberForm(FlaskForm):
     )
     submit = f.SubmitField("Mark")
     display = ["duration", "phone_number", "submit"]
+
+
+class ReviewForm(FlaskForm):
+    rating = IntegerField(
+        "Your rating",
+        validators=[
+            DataRequired(),
+            NumberRange(
+                min=1, max=5, message="The number of stars must be between 1 and 5"
+            ),
+        ],
+    )
+    message = f.TextAreaField("Your review",
+                              validators=[Length(min=30, message="The review should be at least of 30 characters.")])
