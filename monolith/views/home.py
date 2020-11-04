@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, request
 from flask_login import login_required
+from flask.helpers import flash
 
 from monolith import db
 from monolith.models import Restaurant, Like, User, Operator
@@ -42,40 +43,73 @@ def change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
+<<<<<<< HEAD
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.new_password.data
+            flash("Operation successful!")
+        else:
+            flash("You've input the wrong password!")
+=======
         """new_operator = Operator()
         form.populate_obj(new_operator)
         db.session.add(new_operator)
         db.session.commit()"""
         return redirect("/my_profile/change_password")
+>>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
     return render_template("change_profile.html", form=form)
 
 
-@home.route("/my_profile/change_anagraphic", methods=["GET", "POST"])
-@login_required
+@ home.route("/my_profile/change_anagraphic", methods=["GET", "POST"])
+@ login_required
 def change_anagraphic():
     form = ChangeAnagraphicForm()
 
     if form.validate_on_submit():
+<<<<<<< HEAD
+        if current_user.verify_password(form.password.data):
+            if session["role"] == "user":
+                current_user.firstname = form.firstname.data
+            else:
+                current_user.name = form.firstname.data
+            current_user.lastname = form.lastname.data
+            current_user.dateofbirth = form.dateofbirth.data
+            current_user.fiscal_code = form.fiscal_code.data
+            db.session.commit()
+            flash("Operation successful!")
+        else:
+            flash("You've input the wrong password!")
+=======
         """new_operator = Operator()
         form.populate_obj(new_operator)
         db.session.add(new_operator)
         db.session.commit()"""
         return redirect("/my_profile/change_anagraphic")
+>>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
     return render_template("change_profile.html", form=form)
 
 
-@home.route("/my_profile/change_contacts", methods=["GET", "POST"])
-@login_required
+@ home.route("/my_profile/change_contacts", methods=["GET", "POST"])
+@ login_required
 def change_contacts():
     form = ChangeContactForm()
 
     if form.validate_on_submit():
+<<<<<<< HEAD
+        if current_user.verify_password(form.password.data):
+            current_user.email = form.email.data
+            current_user.phone_number = form.phone.data
+            db.session.commit()
+            flash("Operation successful!")
+        else:
+            flash("You've input the wrong password!")
+=======
         """new_operator = Operator()
         form.populate_obj(new_operator)
         db.session.add(new_operator)
         db.session.commit()"""
         return redirect("/my_profile/change_contacts")
 
+>>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
     return render_template("change_profile.html", form=form)
