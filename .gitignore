@@ -107,6 +107,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+#folium
+map.html
+
 # personal
 .idea
 ./monolith/gooutsafe.db

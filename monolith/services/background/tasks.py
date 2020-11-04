@@ -1,4 +1,8 @@
-from gooutsafe import celery
+from flask_mail import Message
+from os import environ
+from monolith import celery
+from monolith import mail
+from typing import List
 
 """
     Just as a reference 
@@ -29,3 +33,25 @@ def mul(x, y):
 @celery.task
 def xsum(numbers):
     return sum(numbers)
+
+
+# send_email("GoOutSafe - Notificaton", ["gooutsafe.squad2@gmail.com"],
+# "Not a good news", "Not a good news (when you can render html)")
+@celery.task
+def send_email(
+    subject,
+    recipients: List[str],
+    text_body,
+    html_body,
+    sender=environ.get("MAIL_USERNAME"),
+    attachments=None,
+):
+
+    msg = Message(subject, sender=sender, recipients=recipients)
+    msg.body = text_body
+    msg.html = html_body
+    if attachments:
+        for attachment in attachments:
+            msg.attach(*attachment)
+
+    mail.send(msg)

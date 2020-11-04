@@ -3,10 +3,23 @@ from monolith.models import precautions
 from flask.helpers import flash
 from flask import Blueprint, redirect, render_template, request, url_for, make_response
 from monolith import db
-from monolith.models import Restaurant, Like, Precautions, RestaurantsPrecautions,Table, User, Booking
+from monolith.models import (
+    Restaurant,
+    Like,
+    Precautions,
+    RestaurantsPrecautions,
+    Table,
+    User,
+    Booking,
+)
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
-from monolith.services.auth import admin_required, current_user, operator_required, user_required
+from monolith.services.auth import (
+    admin_required,
+    current_user,
+    operator_required,
+    user_required,
+)
 from flask_login import current_user, login_user, logout_user, login_required
 from monolith.services.forms import (
     CreateRestaurantForm,
@@ -14,16 +27,17 @@ from monolith.services.forms import (
     ReviewForm,
     UserForm,
     CreateBookingDateHourForm,
-    ConfirmBookingForm
+    ConfirmBookingForm,
 )
 from ..controllers import restaurant
 from datetime import date, timedelta, datetime
-from sqlalchemy import func 
+from sqlalchemy import func
 from flask_login import current_user
 
 restaurants = Blueprint("restaurants", __name__)
 
-booking_number=-1
+booking_number = -1
+
 
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
@@ -60,16 +74,15 @@ def operator_restaurants(message=""):
 
 @restaurants.route("/restaurants/<restaurant_id>", methods=["GET", "POST"])
 def restaurant_sheet(restaurant_id):
-    q_restaurant = (
-        db.session.query(Restaurant).filter_by(
-            id=int(restaurant_id)
+    q_restaurant = db.session.query(Restaurant).filter_by(id=int(restaurant_id)).first()
+    q_restaurant_precautions = (
+        db.session.query(Precautions.name)
+        .filter(
+            Precautions.id == RestaurantsPrecautions.precautions_id,
+            RestaurantsPrecautions.restaurant_id == int(restaurant_id),
         )
-        .first()
+        .all()
     )
-    q_restaurant_precautions= db.session.query(Precautions.name).filter(
-        Precautions.id == RestaurantsPrecautions.precautions_id,
-        RestaurantsPrecautions.restaurant_id == int(restaurant_id)
-    ).all()
 
     precautions = []
     for prec in q_restaurant_precautions:
@@ -83,7 +96,7 @@ def restaurant_sheet(restaurant_id):
     if form.is_submitted():
         if current_user.is_anonymous:
             flash("To review the restaurant you need to login.")
-            return redirect(url_for('auth.login'))
+            return redirect(url_for("auth.login"))
         if form.validate():
             if session["role"] != "user":
                 flash("Only a logged user can review a restaurant.")
@@ -117,110 +130,183 @@ def restaurant_sheet(restaurant_id):
     )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/book_table", methods=["GET","POST"])
+@restaurants.route("/restaurants/<restaurant_id>/book_table", methods=["GET", "POST"])
 @login_required
 @user_required
 def book_table_form(restaurant_id):
     form = CreateBookingDateHourForm()
-    max_table_seats = db.session.query(func.max(Table.seats)).filter(Table.restaurant_id==restaurant_id).first()[0] #Take max seats from tables of restaurant_ud
-    time=[]
-    range_hour=db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
-    for i in range(480,1320,range_hour):
-        time.append(str(timedelta(minutes=i))[:-3]+" - "+str(timedelta(minutes=i+range_hour))[:-3])
-    
+    max_table_seats = (
+        db.session.query(func.max(Table.seats))
+        .filter(Table.restaurant_id == restaurant_id)
+        .first()[0]
+    )  # Take max seats from tables of restaurant_ud
+    time = []
+    range_hour = (
+        db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
+    )
+    for i in range(480, 1320, range_hour):
+        time.append(
+            str(timedelta(minutes=i))[:-3]
+            + " - "
+            + str(timedelta(minutes=i + range_hour))[:-3]
+        )
+
     if request.method == "POST":
         if form.validate_on_submit():
             number_persons = int(request.form["number_persons"])
             booking_hour_start = request.form["booking_hour"].split(" - ")[0]
             booking_hour_end = request.form["booking_hour"].split(" - ")[1]
             booking_date = request.form["booking_date"]
-            booking_date_start=datetime.strptime(booking_date+" "+booking_hour_start, '%Y-%m-%d %H:%M') 
-            booking_date_end=datetime.strptime(booking_date+" "+booking_hour_end, '%Y-%m-%d %H:%M') 
+            booking_date_start = datetime.strptime(
+                booking_date + " " + booking_hour_start, "%Y-%m-%d %H:%M"
+            )
+            booking_date_end = datetime.strptime(
+                booking_date + " " + booking_hour_end, "%Y-%m-%d %H:%M"
+            )
 
-            restaurant = db.session.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
-            table = restaurant.get_free_table(number_persons,booking_date_start)
-            
+            restaurant = (
+                db.session.query(Restaurant)
+                .filter(Restaurant.id == restaurant_id)
+                .first()
+            )
+            table = restaurant.get_free_table(number_persons, booking_date_start)
+
             if table is None:
-                flash("No tables avaible for "+str(number_persons)+" people for this date and time")
+                flash(
+                    "No tables avaible for "
+                    + str(number_persons)
+                    + " people for this date and time"
+                )
             else:
                 global booking_number
                 if booking_number == -1:
-                    booking_number = db.session.query(func.max(Booking.booking_number)).first()[0]
-                    booking_number+=1
+                    booking_number = db.session.query(
+                        func.max(Booking.booking_number)
+                    ).first()[0]
+                    booking_number += 1
 
-                confirmed_bookign = True if number_persons==1 else False                    
-                db.session.add(Booking(user_id=current_user.id, table_id=table, booking_number=booking_number, start_booking=booking_date_start, end_booking=booking_date_end, confirmed_booking=confirmed_bookign))
+                confirmed_bookign = True if number_persons == 1 else False
+                db.session.add(
+                    Booking(
+                        user_id=current_user.id,
+                        table_id=table,
+                        booking_number=booking_number,
+                        start_booking=booking_date_start,
+                        end_booking=booking_date_end,
+                        confirmed_booking=confirmed_bookign,
+                    )
+                )
                 db.session.commit()
-            
+
                 old_booking_number = booking_number
-                booking_number+=1
+                booking_number += 1
 
                 if confirmed_bookign:
                     flash("Booking confirmed")
                     return redirect("/restaurants")
                 else:
-                    session['booking_number']=old_booking_number
-                    session['number_persons']=number_persons
-                    return(redirect(url_for('.confirm_booking', restaurant_id=restaurant_id)))
+                    session["booking_number"] = old_booking_number
+                    session["number_persons"] = number_persons
+                    return redirect(
+                        url_for(".confirm_booking", restaurant_id=restaurant_id)
+                    )
         else:
-            flash("Are you really able to go back to the past?") 
-            
-    return render_template("book_table.html", form=form, max_table_seats=max_table_seats, hours_list=time)
+            flash("Are you really able to go back to the past?")
+
+    return render_template(
+        "book_table.html", form=form, max_table_seats=max_table_seats, hours_list=time
+    )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/book_table/confirm", methods=["GET","POST"])
+@restaurants.route(
+    "/restaurants/<restaurant_id>/book_table/confirm", methods=["GET", "POST"]
+)
 @login_required
 @user_required
 def confirm_booking(restaurant_id):
-    booking_number=session["booking_number"]
-    number_persons=session['number_persons']
-    form = ConfirmBookingForm(number_persons-1)
+    booking_number = session["booking_number"]
+    number_persons = session["number_persons"]
+    form = ConfirmBookingForm(number_persons - 1)
     error = False
 
     if form.validate_on_submit():
-        booking = db.session.query(Booking).filter_by(booking_number=booking_number).first()
+        booking = (
+            db.session.query(Booking).filter_by(booking_number=booking_number).first()
+        )
 
         for i, field in enumerate(form.people):
-            user = db.session.query(User).filter_by(fiscal_code=field.fiscal_code.data).first()
+            user = (
+                db.session.query(User)
+                .filter_by(fiscal_code=field.fiscal_code.data)
+                .first()
+            )
             if user is None:
-                if db.session.query(User).filter_by(email=field.email.data).first() is None: #check if email is already in the db or not
-                    user = User(firstname=field.firstname.data, lastname=field.lastname.data, email=field.email.data, fiscal_code=field.fiscal_code.data)
+                if (
+                    db.session.query(User).filter_by(email=field.email.data).first()
+                    is None
+                ):  # check if email is already in the db or not
+                    user = User(
+                        firstname=field.firstname.data,
+                        lastname=field.lastname.data,
+                        email=field.email.data,
+                        fiscal_code=field.fiscal_code.data,
+                    )
                     db.session.add(user)
                     db.session.commit()
                 else:
-                    flash("Person "+str(i+1)+ ", mail already used from another from a registered user")
+                    flash(
+                        "Person "
+                        + str(i + 1)
+                        + ", mail already used from another from a registered user"
+                    )
                     error = True
                     break
             else:
-                if not user.check_equality_for_booking(field.firstname.data, field.lastname.data, field.email.data): #if the user exists, check if the data filled are correct
-                    flash("Person "+str(i+1)+ ", incorrect data")
+                if not user.check_equality_for_booking(
+                    field.firstname.data, field.lastname.data, field.email.data
+                ):  # if the user exists, check if the data filled are correct
+                    flash("Person " + str(i + 1) + ", incorrect data")
                     error = True
                     break
                 if booking.user_already_booked(user.id):
-                    flash("Person "+str(i+1)+ ", user already registered in the booking")
+                    flash(
+                        "Person "
+                        + str(i + 1)
+                        + ", user already registered in the booking"
+                    )
                     error = True
                     break
-            db.session.add(Booking(user_id=user.id, table_id=booking.table_id, booking_number=booking.booking_number, start_booking=booking.start_booking, end_booking=booking.end_booking, confirmed_booking=True))
-        
+            db.session.add(
+                Booking(
+                    user_id=user.id,
+                    table_id=booking.table_id,
+                    booking_number=booking.booking_number,
+                    start_booking=booking.start_booking,
+                    end_booking=booking.end_booking,
+                    confirmed_booking=True,
+                )
+            )
+
         if error:
             db.session.rollback()
         else:
-            booking.confirmed_booking=True
+            booking.confirmed_booking = True
             db.session.commit()
 
-            session.pop('booking_number', None)
-            session.pop('number_persons', None)
+            session.pop("booking_number", None)
+            session.pop("number_persons", None)
             flash("Booking confirmed")
-            return redirect('/restaurants')
+            return redirect("/restaurants")
 
-    return render_template("confirm_booking.html", form=form, number_persons=int(number_persons))
+    return render_template(
+        "confirm_booking.html", form=form, number_persons=int(number_persons)
+    )
 
 
 @restaurants.route("/restaurants/like/<restaurant_id>")
 @login_required
 def _like(restaurant_id):
-    q = Like.query.filter_by(liker_id=current_user.id,
-                             restaurant_id=restaurant_id)
+    q = Like.query.filter_by(liker_id=current_user.id, restaurant_id=restaurant_id)
     if q.first() is not None:
         new_like = Like()
         new_like.liker_id = current_user.id
@@ -247,7 +333,7 @@ def create_restaurant():
 
             new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
-            
+
             if restaurant.add_new_restaurant(
                 new_restaurant, request.form.getlist("prec_measures")
             ):
@@ -261,12 +347,14 @@ def create_restaurant():
     return render_template("create_restaurant.html", form=form), status
 
 
-@restaurants.route("/operator/restaurants/<restaurant_id>/create_menu", methods=["GET", "POST"])
+@restaurants.route(
+    "/operator/restaurants/<restaurant_id>/create_menu", methods=["GET", "POST"]
+)
 @login_required
 @operator_required
 def create_menu(restaurant_id):
     status = 200
-    
+
     zipped = None
     name = ""
     if request.method == "POST":
@@ -283,9 +371,11 @@ def create_menu(restaurant_id):
             menu.restaurant_id = int(restaurant_id)
 
             food_names = set()
-            zipped = zip(request.form.getlist('name'), 
-                        request.form.getlist('price'), 
-                        request.form.getlist('category'))
+            zipped = zip(
+                request.form.getlist("name"),
+                request.form.getlist("price"),
+                request.form.getlist("category"),
+            )
             for name, price, category in zipped:
                 food = Food()
                 food.name = name
@@ -296,7 +386,7 @@ def create_menu(restaurant_id):
                     is_float = True
                 except ValueError:
                     is_float = False
-                
+
                 if not is_float:
                     flash("Not a valid price number", category="error")
                     status = 400
@@ -325,20 +415,37 @@ def create_menu(restaurant_id):
             flash("There is already a menu with the same name!", category="error")
 
     if zipped or name:
-        zip_to_send = zip(request.form.getlist('name'), 
-                        request.form.getlist('price'), 
-                        request.form.getlist('category'))
-                        
-        return render_template("create_menu.html", choices=FoodCategory.choices(), 
-            items=zip_to_send, menu_name=name), status
+        zip_to_send = zip(
+            request.form.getlist("name"),
+            request.form.getlist("price"),
+            request.form.getlist("category"),
+        )
+
+        return (
+            render_template(
+                "create_menu.html",
+                choices=FoodCategory.choices(),
+                items=zip_to_send,
+                menu_name=name,
+            ),
+            status,
+        )
     else:
-        return render_template("create_menu.html", choices=FoodCategory.choices()), status
+        return (
+            render_template("create_menu.html", choices=FoodCategory.choices()),
+            status,
+        )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/show_menu/<menu_id>", methods=["GET", "POST"])
+@restaurants.route(
+    "/restaurants/<restaurant_id>/show_menu/<menu_id>", methods=["GET", "POST"]
+)
 def show_menu(restaurant_id, menu_id):
-    q_restaurant_menu = db.session.query(Menu).filter(Menu.restaurant_id == restaurant_id,
-        Menu.id == menu_id).first()
+    q_restaurant_menu = (
+        db.session.query(Menu)
+        .filter(Menu.restaurant_id == restaurant_id, Menu.id == menu_id)
+        .first()
+    )
 
     return render_template("show_menu.html", menu=q_restaurant_menu)
 
@@ -349,8 +456,7 @@ def show_menu(restaurant_id, menu_id):
 def _tables(restaurant_id):
     status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
-        alltables = db.session.query(Table).filter_by(
-            restaurant_id=restaurant_id)
+        alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
     else:
         status = 401
 

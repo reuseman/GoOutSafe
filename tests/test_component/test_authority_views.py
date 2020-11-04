@@ -217,7 +217,7 @@ def test_ha_should_not_work_with_duration_less_than_one_on_email_mark_page(clien
 
 
 def test_ha_should_not_work_with_duration_more_than_sixty_on_email_mark_page(
-        client, db
+    client, db
 ):
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -298,7 +298,7 @@ def test_ha_should_mark_one_user_on_phone_number_mark_page(client, db):
 
 
 def test_ha_should_not_work_with_a_phone_number_not_in_db_on_phone_number_mark_page(
-        client, db
+    client, db
 ):
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -334,7 +334,7 @@ def test_ha_should_not_work_with_string_duration_on_phone_number_mark_page(clien
 
 
 def test_ha_should_not_work_with_duration_less_than_one_on_phone_number_mark_page(
-        client, db
+    client, db
 ):
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -353,7 +353,7 @@ def test_ha_should_not_work_with_duration_less_than_one_on_phone_number_mark_pag
 
 
 def test_ha_should_not_work_with_duration_more_than_sixty_on_phone_number_mark_page(
-        client, db
+    client, db
 ):
     helpers.create_health_authority(client)
     helpers.login_authority(client)

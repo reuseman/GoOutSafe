@@ -11,8 +11,7 @@
     docker run --name redis -p 6379:6379 redis
 
 ### Celery
-    cd monolith/services
-    celery -A gooutsafe.celery worker -l INFO
+    celery -A monolith.celery worker -l INFO
 
     
 ### Running Flask

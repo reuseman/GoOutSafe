@@ -1,4 +1,3 @@
-import codicefiscale
 from faker import Faker
 from codicefiscale import codicefiscale as cf
 import datetime
@@ -108,8 +107,8 @@ def operator():
 def health_authority():
     ha = (
         db.session.query(HealthAuthority)
-            .filter(HealthAuthority.email == "auth@mail.com")
-            .first()
+        .filter(HealthAuthority.email == "auth@mail.com")
+        .first()
     )
     if ha is None:
         example = HealthAuthority()
@@ -126,9 +125,48 @@ def restaurant():
     q = db.session.query(Restaurant).filter(Restaurant.id == 1)
     restaurant = q.first()
     if restaurant is None:
-        db.session.add(Restaurant(name = "Trial Restaurant", likes = 42, phone = 555123456, lat = 43.720586, lon = 10.408347, operator_id = 1, time_of_stay = 30, cuisine_type="ETHNIC", opening_hours=12, closing_hours=24))
-        db.session.add(Restaurant(name = "Trial Restaurant1", likes = 42, phone = 555123456, lat = 44.720586, lon = 10.408347, operator_id = 1, time_of_stay = 90, cuisine_type="FAST_FOOD", opening_hours=0, closing_hours=24))
-        db.session.add(Restaurant(name = "Trial Restaurant2", likes = 42, phone = 555123456, lat = 43.720586, lon = 9.408347, operator_id = 1, time_of_stay = 180, cuisine_type="PUB", opening_hours=19, closing_hours=5))
+        db.session.add(
+            Restaurant(
+                name="Trial Restaurant",
+                likes=42,
+                phone=555123456,
+                lat=43.720586,
+                lon=10.408347,
+                operator_id=1,
+                time_of_stay=30,
+                cuisine_type="ETHNIC",
+                opening_hours=12,
+                closing_hours=24,
+            )
+        )
+        db.session.add(
+            Restaurant(
+                name="Trial Restaurant1",
+                likes=42,
+                phone=555123456,
+                lat=44.720586,
+                lon=10.408347,
+                operator_id=1,
+                time_of_stay=90,
+                cuisine_type="FAST_FOOD",
+                opening_hours=0,
+                closing_hours=24,
+            )
+        )
+        db.session.add(
+            Restaurant(
+                name="Trial Restaurant2",
+                likes=42,
+                phone=555123456,
+                lat=43.720586,
+                lon=9.408347,
+                operator_id=1,
+                time_of_stay=180,
+                cuisine_type="PUB",
+                opening_hours=19,
+                closing_hours=5,
+            )
+        )
         db.session.commit()
 
 
@@ -191,9 +229,48 @@ def table():
 def booking():
     booking = db.session.query(Booking).first()
     if booking is None:
-        db.session.add(Booking(user_id=1, table_id=1, booking_number=1, start_booking=datetime.datetime.strptime(str(datetime.date.today())+' 8:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime(str(datetime.date.today())+' 8:30', '%Y-%m-%d %H:%M'), confirmed_booking=True))
-        db.session.add(Booking(user_id=1, table_id=7, booking_number=2, start_booking=datetime.datetime.strptime('2020-11-01 14:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime('2020-11-01 17:00', '%Y-%m-%d %H:%M'), confirmed_booking=True))
-        db.session.add(Booking(user_id=1, table_id=1, booking_number=3, start_booking=datetime.datetime.strptime('2020-10-01 8:00', '%Y-%m-%d %H:%M'), end_booking=datetime.datetime.strptime('2020-10-01 8:30', '%Y-%m-%d %H:%M'), confirmed_booking=True))
+        db.session.add(
+            Booking(
+                user_id=1,
+                table_id=1,
+                booking_number=1,
+                start_booking=datetime.datetime.strptime(
+                    str(datetime.date.today()) + " 8:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    str(datetime.date.today()) + " 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=1,
+                table_id=7,
+                booking_number=2,
+                start_booking=datetime.datetime.strptime(
+                    "2020-11-01 14:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-11-01 17:00", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=1,
+                table_id=1,
+                booking_number=3,
+                start_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
         db.session.commit()
 
 
@@ -207,3 +284,6 @@ def menu():
 
         db.session.add(menu)
         db.session.commit()
+
+
+# TODO add review mock

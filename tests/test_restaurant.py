@@ -43,10 +43,14 @@ def test_restaurant_sheet(client, db):
     res = helpers.restaurant_sheet(client)
     restaurant = db.session.query(Restaurant).filter_by(id=1).first()
 
-    restaurant_precautions = db.session.query(Precautions.name).filter(
-        Precautions.id == RestaurantsPrecautions.precautions_id,
-        RestaurantsPrecautions.restaurant_id == 1
-    ).all()
+    restaurant_precautions = (
+        db.session.query(Precautions.name)
+        .filter(
+            Precautions.id == RestaurantsPrecautions.precautions_id,
+            RestaurantsPrecautions.restaurant_id == 1,
+        )
+        .all()
+    )
 
     assert res.status_code == 200
 
@@ -98,8 +102,7 @@ def test_create_restaurant_bad_data(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_restaurant = db.session.query(
-        Restaurant).filter_by(operator_id=1).first()
+    fetched_restaurant = db.session.query(Restaurant).filter_by(operator_id=1).first()
 
     assert fetched_restaurant is None
     assert res.status_code == 400
@@ -120,8 +123,7 @@ def test_create_duplicate_restaurant(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_dup_restaurant = db.session.query(
-        Restaurant).filter_by(id=2).first()
+    fetched_dup_restaurant = db.session.query(Restaurant).filter_by(id=2).first()
 
     assert res.status_code == 400
     assert fetched_dup_restaurant is None
@@ -730,8 +732,7 @@ def test_show_menu(client, db):
     helpers.create_menu(client)
 
     res = helpers.show_menu(client)
-    menu = db.session.query(Menu).filter(Menu.restaurant_id == 1,
-                                         Menu.id == 1).first()
+    menu = db.session.query(Menu).filter(Menu.restaurant_id == 1, Menu.id == 1).first()
 
     assert res.status_code == 200
     assert bytes(menu.name, "utf-8") in res.data

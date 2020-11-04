@@ -19,18 +19,19 @@
     <!--<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>-->
     <header>
         <div class="ui centered grid">
+            <div class="row"></div>
             <div class="row">
                 <div class="ui container"><a href="/" title="Home Page"><img width=20%
                             src="{{ url_for('static', filename='assets/logo.png') }}" alt="Go Out Safe"></a></div>
             </div>
             <div class="row">
-                <div class="ui compact menu center">
-                    <a href="/" class="item yellow" title="Home Page">Home</a>
+                <div class="ui red compact menu center primary">
+                    <a href="/" class="item" title="Home Page">Home</a>
                     {% if not (current_user.is_authenticated and current_user.is_active) %}
-                    <a href="/login" class="item button active">Login</a>
+                    <a href="/login" class="item">Login</a>
                     {% else %}
-                    <div class="item">Hi, {{ session["name"] }}! </div>
-                    <a href="/logout" class="item button">Logout</a>
+                    <div class="item"></i>Hi, {{ session["name"] }}! </div>
+                    <a href="/logout" class="item">Logout</a>
                     {% endif %}
                 </div>
             </div>
@@ -60,6 +61,7 @@
         <section class="ui text container">
             {% block main %}{% endblock %}
         </section>
+        <div class="ui divider hidden"></div>
     </main>
     <!--<footer class="ui inverted vertical footer segment">
         <div class="ui container">

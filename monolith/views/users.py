@@ -20,8 +20,13 @@ def create_user():
     form = UserForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            new_user = User()
-            form.populate_obj(new_user)
+            new_user = User(
+                firstname=form.firstname.data,
+                lastname=form.lastname.data,
+                email=form.email.data,
+                password=form.password.data,
+                dateofbirth=form.dateofbirth.data,
+            )
             db.session.add(new_user)
             db.session.commit()
             return redirect("/")

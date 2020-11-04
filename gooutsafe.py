@@ -7,8 +7,6 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 # APP
-from monolith import create_app
-from monolith.services.background.celery import make_celery
+from monolith import create_app, celery
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
-celery = make_celery(app)

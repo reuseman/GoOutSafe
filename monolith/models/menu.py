@@ -2,9 +2,10 @@ from monolith import db
 import enum
 
 
-MenuItems = db.Table('menuitems',
-    db.Column('menu_id', db.Integer, db.ForeignKey('menu.id'), primary_key=True),
-    db.Column('food_id', db.Integer, db.ForeignKey('food.id'), primary_key=True)
+MenuItems = db.Table(
+    "menuitems",
+    db.Column("menu_id", db.Integer, db.ForeignKey("menu.id"), primary_key=True),
+    db.Column("food_id", db.Integer, db.ForeignKey("food.id"), primary_key=True),
 )
 
 
@@ -32,6 +33,7 @@ class Menu(db.Model):
 
     restaurant = db.relationship("Restaurant", back_populates="menus")
     foods = db.relationship("Food", secondary=MenuItems, back_populates="menu")
+
 
 class Food(db.Model):
     __tablename__ = "food"

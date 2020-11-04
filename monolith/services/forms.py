@@ -23,10 +23,12 @@ class LoginForm(FlaskForm):
 
 class UserForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired(), Email()])
-    firstname = f.StringField("First name", validators=[
-                              DataRequired()], render_kw={"placeholder": "Mario"})
-    lastname = f.StringField("Last name", validators=[
-                             DataRequired()], render_kw={"placeholder": "Rossi"})
+    firstname = f.StringField(
+        "First name", validators=[DataRequired()], render_kw={"placeholder": "Mario"}
+    )
+    lastname = f.StringField(
+        "Last name", validators=[DataRequired()], render_kw={"placeholder": "Rossi"}
+    )
     password = f.PasswordField("Password", validators=[DataRequired()])
     dateofbirth = DateField("Date of birth", validators=[DataRequired()])
     display = ["email", "firstname", "lastname", "password", "dateofbirth"]
@@ -58,8 +60,7 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("Latitude", validators=[DataRequired()])
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password",
-               "country", "state", "city", "lat", "lon"]
+    display = ["email", "name", "password", "country", "state", "city", "lat", "lon"]
 
 
 def precautions_choices():
@@ -90,23 +91,50 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "Time of stay",
-        choices=[("30", "30 minutes"),
-                 ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
+<<<<<<< HEAD
     opening_hours = f.DecimalField("Opening hours", validators=[
                                    DataRequired(), NumberRange(0, 24, "Not a valid hour")])
     closing_hours = f.DecimalField("Closing hours", validators=[
                                    DataRequired(), NumberRange(0, 24, "Not a valid hour")])
     cuisine_type = f.SelectField(
         'Cuisine type', choices=CuisineType.choices(), validators=[DataRequired()])
+=======
+    opening_hours = f.DecimalField(
+        "Opening hours",
+        validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")],
+    )
+    closing_hours = f.DecimalField(
+        "Closing hours",
+        validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")],
+    )
+    cuisine_type = f.SelectField(
+        "Cuisine type", choices=CuisineType.choices(), validators=[DataRequired()]
+    )
+>>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
     prec_measures = MultiCheckboxField(
         "Precautions",
         get_label="name",
         query_factory=precautions_choices,
     )
+<<<<<<< HEAD
     display = ["name", "lat", "lon", "phone", "opening_hours",
                "closing_hours", "cuisine_type", "time_of_stay", "prec_measures"]
+=======
+    display = [
+        "name",
+        "lat",
+        "lon",
+        "phone",
+        "opening_hours",
+        "closing_hours",
+        "cuisine_type",
+        "time_of_stay",
+        "prec_measures",
+    ]
+>>>>>>> 0cdcd31fdbab3b223d0b3723f216307cde801480
 
 
 class CreateTableForm(FlaskForm):
@@ -155,8 +183,7 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(
-            message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
@@ -183,25 +210,38 @@ class MarkPhoneNumberForm(FlaskForm):
 
 
 class ReviewForm(FlaskForm):
-    rating = IntegerField(
+    rating = f.SelectField(
         "Your rating",
-        validators=[
-            DataRequired(),
-            NumberRange(
-                min=1, max=5, message="The number of stars must be between 1 and 5"
-            ),
+        coerce=int,
+        choices=[
+            (5, "5 - Awesome!"),
+            (4, "4 - Very good"),
+            (3, "3 - Average"),
+            (2, "2 - Poor"),
+            (1, "1 - Never again"),
         ],
     )
-    message = f.TextAreaField("Your review",
-                              validators=[Length(min=30, message="The review should be at least of 30 characters.")])
+    message = f.TextAreaField(
+        "Your review",
+        validators=[
+            Length(min=30, message="The review should be at least of 30 characters.")
+        ],
+    )
+    message = f.TextAreaField(
+        "Your review",
+        validators=[
+            Length(min=30, message="The review should be at least of 30 characters.")
+        ],
+    )
+    display = ["rating", "message"]
 
 
 class CreateBookingDateHourForm(FlaskForm):
-    booking_date = DateField('Booking Date', default=date.today())
-    submit = SubmitField('Submit')
+    booking_date = DateField("Booking Date", default=date.today())
+    submit = SubmitField("Submit")
 
     def validate(self):
-        if (self.booking_date.data < date.today()):
+        if self.booking_date.data < date.today():
             return False
         else:
             return True
@@ -212,27 +252,35 @@ def ConfirmBookingForm(size):
         email = EmailField("Email", validators=[DataRequired(), Email()])
         firstname = f.StringField("Firstname", validators=[DataRequired()])
         lastname = f.StringField("Lastname", validators=[DataRequired()])
-        fiscal_code = f.StringField("Fiscal code", validators=[
-                                    DataRequired(), Length(min=16, max=16)])
+        fiscal_code = f.StringField(
+            "Fiscal code", validators=[DataRequired(), Length(min=16, max=16)]
+        )
 
     class ConfirmBookingForm(FlaskForm):
         people = FieldList(FormField(ConfirmBookingForm), min_entries=1)
-        submit = SubmitField('Submit')
+        submit = SubmitField("Submit")
 
         def validate(self):
             for field in self.people.data:
-                if field['email'] == '' or field['firstname'] == '' or field['lastname'] == '' or field['fiscal_code'] == '':
+                if (
+                    field["email"] == ""
+                    or field["firstname"] == ""
+                    or field["lastname"] == ""
+                    or field["fiscal_code"] == ""
+                ):
                     return False
             return True
 
     fields = []
     for i in range(int(size)):
-        fields.append({
-            'email': '',
-            'firstname': '',
-            'lastname': '',
-            'fiscal_code': '',
-        })
+        fields.append(
+            {
+                "email": "",
+                "firstname": "",
+                "lastname": "",
+                "fiscal_code": "",
+            }
+        )
 
     form = ConfirmBookingForm(people=fields)
 
@@ -240,33 +288,39 @@ def ConfirmBookingForm(size):
 
 
 class ChangePasswordForm(FlaskForm):
-    new_password = f.PasswordField(label='New password', validators=[
-        DataRequired(),
-        validators.EqualTo("password_confirm", message='Passwords must match')
-    ])
-    password_confirm = f.PasswordField(label='Confirm new password', validators=[
-        DataRequired()
-    ])
-    old_password = f.PasswordField(label="Type your old password here", validators=[
-        DataRequired()])
+    new_password = f.PasswordField(
+        label="New password",
+        validators=[
+            DataRequired(),
+            validators.EqualTo("password_confirm", message="Passwords must match"),
+        ],
+    )
+    password_confirm = f.PasswordField(
+        label="Confirm new password", validators=[DataRequired()]
+    )
+    old_password = f.PasswordField(
+        label="Type your old password here", validators=[DataRequired()]
+    )
     display = ["new_password", "password_confirm", "old_password"]
 
 
 class ChangeAnagraphicForm(FlaskForm):
     firstname = f.StringField("Firstname", validators=[DataRequired()])
     lastname = f.StringField("Lastname", validators=[DataRequired()])
-    fiscal_code = f.StringField("Fiscal code", validators=[
-        DataRequired(), Length(min=16, max=16)])
+    fiscal_code = f.StringField(
+        "Fiscal code", validators=[DataRequired(), Length(min=16, max=16)]
+    )
     dateofbirth = DateField("Date of birth", validators=[DataRequired()])
-    password = f.PasswordField(label="Type your password here to confirm", validators=[
-        DataRequired()])
-    display = ["firstname", "lastname",
-               "fiscal_code", "dateofbirth", "password"]
+    password = f.PasswordField(
+        label="Type your password here to confirm", validators=[DataRequired()]
+    )
+    display = ["firstname", "lastname", "fiscal_code", "dateofbirth", "password"]
 
 
 class ChangeContactForm(FlaskForm):
     email = f.StringField("Email", validators=[DataRequired(), Email()])
     phone = f.IntegerField("Phone", validators=[DataRequired()])
-    password = f.PasswordField(label="Type your password here to confirm", validators=[
-        DataRequired()])
+    password = f.PasswordField(
+        label="Type your password here to confirm", validators=[DataRequired()]
+    )
     display = ["email", "phone", "password"]
