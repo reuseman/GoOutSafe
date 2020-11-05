@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block main %}
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
+    <table>
+        <tr>
+            <th>Booking id</th>
+            <th>Table</th>
+            <th>Booking people</th>
+            <th>Date</th>
+        </tr>
+            {% for book in booking_list %}
+                <tr>
+                    <td>{{book[0].booking_number}}</td>
+                    <td>{{book[1].name}}</td>
+                    <td>{{book[2]}}</td>
+                    {% set date = (book[0].start_booking) | string%}
+                    {% set hour = date.split(' ')[1]%}
+                    <td>{{hour[:-3]}}</td>  <!-- print only HH:MM -->
+                </tr>
+            {% endfor %}
+    </table>
+{% endblock %}

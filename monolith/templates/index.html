@@ -17,9 +17,11 @@ Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
             </div>
         {% endfor %} -->
 
-{% elif current_user.is_authenticated and session['role'] == "operator" %}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-Below you can see your restaurants.
+    {% elif current_user.is_authenticated and session['role'] == "operator" %}
+        Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+       
+        <h2>Restaurants</h2>
+        <a href="/restaurants">See restaurants list</a>
 
 {% elif current_user.is_authenticated and session['role'] == "authority" %}
 Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>

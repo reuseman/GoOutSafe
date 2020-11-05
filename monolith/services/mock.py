@@ -85,6 +85,14 @@ def default_user():
             dateofbirth=datetime.datetime(2020, 10, 5),
         )
         db.session.add(example)
+        example = User(
+            email="gino@pasticcino.com",
+            firstname="Admin",
+            lastname="Admin",
+            password="admin",
+            dateofbirth=datetime.datetime(2020, 10, 5),
+        )
+        db.session.add(example)
         db.session.commit()
 
 
@@ -96,6 +104,16 @@ def operator():
         example.firstname = "OperatorAdmin"
         example.lastname = "OperatorAdmin"
         example.email = "operator@example.com"
+        example.dateofbirth = datetime.datetime(2020, 10, 9)
+        example.is_admin = True
+        example.password = "admin"
+        example.fiscal_code = "my_fiscal_code"
+        db.session.add(example)
+        
+        example = Operator()
+        example.firstname = "OperatorAdmin"
+        example.lastname = "OperatorAdmin"
+        example.email = "operator1@example.com"
         example.dateofbirth = datetime.datetime(2020, 10, 9)
         example.is_admin = True
         example.password = "admin"

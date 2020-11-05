@@ -9,7 +9,8 @@ from monolith.models import (
     Precautions,
 )
 from monolith.services import mock
-from tests.data import precautions
+from tests.data import precautions, booking
+
 
 # DATA
 # ! IMPORTANT
@@ -97,6 +98,7 @@ menu = dict(
 
 
 table = dict(name="A10", seats=10, restaurant_id=1)
+
 
 
 # CREATION
@@ -267,6 +269,13 @@ def logout(client):
 def login_authority(client, data=health_authority):
     return client.post(
         "/authority_login",
+        data=data,
+        follow_redirects=False,
+    )
+
+def booking(client, data=booking[0]):
+    return client.post(
+        "/restaurants/1/book_table",
         data=data,
         follow_redirects=False,
     )

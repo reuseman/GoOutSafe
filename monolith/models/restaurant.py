@@ -35,8 +35,8 @@ class Restaurant(db.Model):
     phone = db.Column(db.Integer)
     time_of_stay = db.Column(db.Integer)  # minutes
     cuisine_type = db.Column(db.Enum(CuisineType))
-    opening_hours = db.Column(db.Float)
-    closing_hours = db.Column(db.Float)
+    opening_hours = db.Column(db.Integer)
+    closing_hours = db.Column(db.Integer)
     operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
 
     # precautions = db.relationship("Precaution", secondary=precautions, backref="restaurants")

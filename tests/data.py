@@ -87,3 +87,8 @@ precautions = [
 ]
 
 table = dict(name="A10", seats=10, restaurant_id=1)
+
+
+booking1 = dict(number_persons=1, booking_hour="8:00 - 8:30", booking_date=date.today(),)
+booking1 = dict(number_persons=10, booking_hour="8:00 - 8:30", booking_date=date.today(),)
+booking = [booking1]

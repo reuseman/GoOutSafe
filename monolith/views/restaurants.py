@@ -11,6 +11,7 @@ from monolith.models import (
     Table,
     User,
     Booking,
+    Mark
 )
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
@@ -53,6 +54,8 @@ def _restaurants(message=""):
         restaurants=allrestaurants,
         role=role,
         base_url=request.base_url,
+        operator_restaurants=False
+
     )
 
 
@@ -69,6 +72,7 @@ def operator_restaurants(message=""):
         restaurants=operator_restaurants,
         role=session["role"],
         base_url=request.base_url,
+        operator_restaurants=True
     )
 
 
@@ -127,6 +131,7 @@ def restaurant_sheet(restaurant_id):
         base_url=request.base_url,
         reviews=reviews,
         form=form,
+        operator_id=q_restaurant.operator_id
     )
 
 
@@ -134,23 +139,20 @@ def restaurant_sheet(restaurant_id):
 @login_required
 @user_required
 def book_table_form(restaurant_id):
-    form = CreateBookingDateHourForm()
-    max_table_seats = (
-        db.session.query(func.max(Table.seats))
-        .filter(Table.restaurant_id == restaurant_id)
-        .first()[0]
-    )  # Take max seats from tables of restaurant_ud
-    time = []
-    range_hour = (
-        db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
-    )
-    for i in range(480, 1320, range_hour):
-        time.append(
-            str(timedelta(minutes=i))[:-3]
-            + " - "
-            + str(timedelta(minutes=i + range_hour))[:-3]
-        )
+    if db.session.query(Mark).filter_by(user_id=current_user.id).first() is not None:
+        flash("You are marked so you can't book a table")
+        return redirect("/restaurants/"+str(restaurant_id))
 
+    form = CreateBookingDateHourForm()
+    max_table_seats = db.session.query(func.max(Table.seats)).filter(Table.restaurant_id==restaurant_id).first()[0] #Take max seats from tables of restaurant_ud
+    time =[]
+    range_hour = db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
+    opening_hour = int(db.session.query(Restaurant.opening_hours).filter_by(id=restaurant_id).first()[0] * 60)
+    closing_hour = int(db.session.query(Restaurant.closing_hours).filter_by(id=restaurant_id).first()[0] * 60)
+    if(closing_hour < opening_hour): closing_hour = closing_hour + (24*60)
+    for i in range(opening_hour,closing_hour,range_hour):
+        time.append(str(timedelta(minutes=i))[:-3]+" - "+str(timedelta(minutes=i+range_hour))[:-3])
+    
     if request.method == "POST":
         if form.validate_on_submit():
             number_persons = int(request.form["number_persons"])
@@ -180,22 +182,14 @@ def book_table_form(restaurant_id):
             else:
                 global booking_number
                 if booking_number == -1:
-                    booking_number = db.session.query(
-                        func.max(Booking.booking_number)
-                    ).first()[0]
-                    booking_number += 1
+                    booking_number = db.session.query(func.max(Booking.booking_number)).first()[0]
+                    if booking_number is None:
+                        booking_number=1
+                    else:
+                        booking_number+=1
 
-                confirmed_bookign = True if number_persons == 1 else False
-                db.session.add(
-                    Booking(
-                        user_id=current_user.id,
-                        table_id=table,
-                        booking_number=booking_number,
-                        start_booking=booking_date_start,
-                        end_booking=booking_date_end,
-                        confirmed_booking=confirmed_bookign,
-                    )
-                )
+                confirmed_bookign = True if number_persons==1 else False                    
+                db.session.add(Booking(user_id=current_user.id, table_id=table, booking_number=booking_number, start_booking=booking_date_start, end_booking=booking_date_end, confirmed_booking=confirmed_bookign))
                 db.session.commit()
 
                 old_booking_number = booking_number
@@ -562,3 +556,26 @@ def delete_table(restaurant_id, table_id):
         return redirect("/"), status
 
     return redirect("/restaurants/" + restaurant_id + "/tables"), status
+
+@restaurants.route("/operator/restaurants/<restaurant_id>/reservations", methods=["GET", "POST"])
+@login_required
+@operator_required
+def see_reservations(restaurant_id):
+    operator_id = db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
+
+    if operator_id != current_user.id:
+        flash("Access denied")
+        return redirect("/operator/restaurants")
+
+    tomorrow = date.today()+ timedelta(days=1)
+
+    booking_list = db.session\
+        .query(Booking,Table,func.count())\
+            .join(Table)\
+            .join(Restaurant)\
+            .filter(Restaurant.id==restaurant_id, Booking.start_booking>=date.today(), Booking.start_booking<tomorrow)\
+            .group_by(Booking.booking_number)\
+            .order_by(Booking.start_booking.asc()
+        ).all()
+
+    return render_template("reservations.html", booking_list=booking_list)
