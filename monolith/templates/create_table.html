@@ -4,10 +4,6 @@
 {% block main %}
 
 <body>
-    <p class="error">
-        {% for errmess in get_flashed_messages(False,['error']) %}
-        <br>{{ errmess }}
-        {% endfor %}</p>
     <form action="" method="POST" class="ui form">
         {{ form.hidden_tag() }}
         {% for field in form.display %}

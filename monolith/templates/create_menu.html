@@ -49,11 +49,6 @@
   </head>
 
   <body>
-    <p class="error">
-      {% for errmess in get_flashed_messages(False,['error']) %}
-        <br>{{ errmess }}
-      {% endfor%}
-    </p>
       <form method="POST" id="my_form"></form>
       <table id="example" class="display" style="width:100%">
           <thead>
