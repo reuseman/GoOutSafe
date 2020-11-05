@@ -1,5 +1,4 @@
 from .review import Review
-from .like import Like
 from .operator import Operator
 from .restaurant import Restaurant
 from .restaurants_precautions import RestaurantsPrecautions

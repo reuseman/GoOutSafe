@@ -25,10 +25,6 @@ class Restaurant(db.Model):
 
     name = db.Column(db.Text(100))
 
-    likes = db.Column(
-        db.Integer
-    )  # will store the number of likes, periodically updated in background
-
     lat = db.Column(db.Float)  # restaurant latitude
     lon = db.Column(db.Float)  # restaurant longitude
 

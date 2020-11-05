@@ -146,7 +146,6 @@ def restaurant():
         db.session.add(
             Restaurant(
                 name="Trial Restaurant",
-                likes=42,
                 phone=555123456,
                 lat=43.720586,
                 lon=10.408347,
@@ -160,7 +159,6 @@ def restaurant():
         db.session.add(
             Restaurant(
                 name="Trial Restaurant1",
-                likes=42,
                 phone=555123456,
                 lat=44.720586,
                 lon=10.408347,
@@ -174,7 +172,6 @@ def restaurant():
         db.session.add(
             Restaurant(
                 name="Trial Restaurant2",
-                likes=42,
                 phone=555123456,
                 lat=43.720586,
                 lon=9.408347,

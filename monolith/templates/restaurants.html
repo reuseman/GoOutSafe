@@ -7,11 +7,8 @@
 <ul>
   {% for restaurant in restaurants: %}
   <li>
-    <a href="{{base_url}}/{{restaurant.id}}">"{{restaurant.name}}"</a> Likes: {{restaurant.likes}}
+    <a href="{{base_url}}/{{restaurant.id}}">"{{restaurant.name}}"</a>
     {% if current_user.is_authenticated %}
-    {% if role != 'operator' or (role == 'operator' and current_user.id != restaurant.operator_id) %}
-    <a href="{{base_url}}/like/{{restaurant.id}}">Like it!</a>
-    {% endif %}
     <a href="/restaurants/{{restaurant.id}}">See Details!</a>
     {% if role == 'operator' and current_user.id == restaurant.operator_id %}
     <a href="/restaurants/{{restaurant.id}}/tables">Show tables</a>
