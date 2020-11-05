@@ -65,7 +65,7 @@ class User(AbstractUser):
         Returns:
             bool: boolean value
         """
-        return self.has_been_marked() and self.get_remaining_mark_days() > 0
+        return (self.has_been_marked() and self.get_remaining_mark_days() > 0)
 
     def get_last_mark(self) -> Mark:
         """
