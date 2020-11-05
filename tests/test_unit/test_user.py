@@ -1,3 +1,4 @@
+from tests.helpers import create_user
 from monolith.models.review import Review
 from ..fixtures import db, app, client
 from .. import helpers
@@ -83,3 +84,20 @@ def test_review_should_create_review_assosiaction(client, db):
     assert review.rating == 5
     assert review.message == "This was an amazing place to have a dinner!"
     assert review.created.date() == datetime.utcnow().date()
+
+
+def test_user_auth_cycle(client):
+
+    res = helpers.create_user(client)
+    assert res.status_code == 302
+
+    res = helpers.login_user(client)
+    assert res.status_code == 302
+
+    res = helpers.logout(client)
+    assert res.status_code == 302
+
+    helpers.login_user(client)
+    res = helpers.unsubscribe(client)
+
+    assert res.status_code == 302
