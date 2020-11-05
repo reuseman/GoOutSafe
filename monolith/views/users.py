@@ -29,7 +29,7 @@ def create_user():
                     email=form.email.data,
                     password=form.password.data,
                     dateofbirth=form.dateofbirth.data,
-                    phone_number=form.phone.data,
+                    phone_number=form.phone_number.data,
                     fiscal_code=form.fiscal_code.data,
                 )
 

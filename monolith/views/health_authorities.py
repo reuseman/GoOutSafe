@@ -10,12 +10,15 @@ authorities = Blueprint("authorities", __name__)
 def create_authority():
     form = AuthorityForm()
     if request.method == "POST":
-
         if form.validate_on_submit():
-            new_authority = HealthAuthority()
-            form.populate_obj(new_authority)
-            db.session.add(new_authority)
-            db.session.commit()
-            return redirect("/")
+            authority = db.session.query(HealthAuthority.id).filter_by(email=form.email.data).scalar()
+            if authority is not None:
+                return redirect("/login/authority")
+            else:
+                new_authority = HealthAuthority()
+                form.populate_obj(new_authority)
+                db.session.add(new_authority)
+                db.session.commit()
+                return redirect("/")
 
     return render_template("create_health_authority.html", form=form)

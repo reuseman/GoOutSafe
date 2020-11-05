@@ -31,9 +31,9 @@ class UserForm(FlaskForm):
     )
     password = f.PasswordField("Password", validators=[DataRequired()])
     dateofbirth = DateField("Date of birth", validators=[DataRequired()])
-    phone = f.IntegerField("Phone", validators=[DataRequired()])
+    phone_number = f.IntegerField("Phone", validators=[DataRequired()])
     fiscal_code = f.StringField("Fiscal Code", validators=[DataRequired()])
-    display = ["email", "firstname", "lastname", "password", "dateofbirth", "phone", "fiscal_code"]
+    display = ["email", "firstname", "lastname", "password", "dateofbirth", "phone_number", "fiscal_code"]
 
 
 # TODO Validators are missing?
@@ -45,7 +45,7 @@ class OperatorForm(UserForm):
         "lastname",
         "password",
         "dateofbirth",
-        "phone",
+        "phone_number",
         "fiscal_code",
     ]
 
@@ -63,7 +63,7 @@ class AuthorityForm(FlaskForm):
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
     display = ["email", "name", "password",
-               "country", "state", "city", "lat", "lon"]
+               "country", "state", "city", "lat", "lon", "phone"]
 
 
 def precautions_choices():
