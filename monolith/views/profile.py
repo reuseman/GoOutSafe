@@ -11,10 +11,10 @@ from monolith.services.forms import (
     ChangeContactForm,
 )
 
-my_profile = Blueprint("my_profile", __name__)
+me = Blueprint("me", __name__)
 
 
-@my_profile.route("/my_profile")
+@me.route("/me")
 @login_required
 def profile():
     if session["role"] == "authority":
@@ -29,7 +29,7 @@ def profile():
         return render_template("profile.html", user=user)
 
 
-@my_profile.route("/my_profile/change_password", methods=["GET", "POST"])
+@me.route("/me/change_password", methods=["GET", "POST"])
 @login_required
 def change_password():
     form = ChangePasswordForm()
@@ -44,7 +44,7 @@ def change_password():
     return render_template("change_profile.html", form=form)
 
 
-@ my_profile.route("/my_profile/change_anagraphic", methods=["GET", "POST"])
+@ me.route("/me/change_anagraphic", methods=["GET", "POST"])
 @ login_required
 def change_anagraphic():
     form = ChangeAnagraphicForm()
@@ -63,7 +63,7 @@ def change_anagraphic():
     return render_template("change_profile.html", form=form)
 
 
-@ my_profile.route("/my_profile/change_contacts", methods=["GET", "POST"])
+@ me.route("/me/change_contacts", methods=["GET", "POST"])
 @ login_required
 def change_contacts():
     form = ChangeContactForm()
