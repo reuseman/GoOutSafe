@@ -92,7 +92,7 @@ def unsubscribe():
 
     elif session["role"] == "operator":
         operator = (
-            db.session.query(Operator).filter(User.email == current_user.email).first()
+            db.session.query(Operator).filter(Operator.email == current_user.email).first()
         )
 
         operator.email = "deleted@deleted.it"
