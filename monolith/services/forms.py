@@ -96,11 +96,11 @@ class CreateRestaurantForm(FlaskForm):
                  ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
-    opening_hours = f.DecimalField(
+    opening_hours = f.IntegerField(
         "Opening hours",
         validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")],
     )
-    closing_hours = f.DecimalField(
+    closing_hours = f.IntegerField(
         "Closing hours",
         validators=[DataRequired(), NumberRange(0, 24, "Not a valid hour")],
     )
