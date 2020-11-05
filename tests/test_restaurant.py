@@ -114,16 +114,19 @@ def test_create_duplicate_restaurant(client, db):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
 
-    data = dict(
-        name="Trattoria da Fabio",
-        phone=4961,
+    restaurant = dict(
+        name="Trattoria da Pippo",
+        phone=615543,
         lat=40.720586,
         lon=10.10,
-        time_of_stay=180,
+        time_of_stay=30,
+        cuisine_type="ETHNIC",
+        opening_hours=12,
+        closing_hours=24,
         operator_id=1,
     )
 
-    res = helpers.create_restaurant(client, data)
+    res = helpers.create_restaurant(client, restaurant)
     fetched_dup_restaurant = db.session.query(
         Restaurant).filter_by(id=2).first()
 
@@ -612,6 +615,30 @@ def test_tables(client, db):
     assert res.status_code == 200
     for table in q_table:
         assert bytes(table.name, "utf-8") in res.data
+
+
+def test_tables_not_owned_restaurant(client, db):
+    helpers.create_operator(client)
+
+    data = dict(
+        email="pippo@lalocanda.com",
+        firstname="pippo",
+        lastname="pluto",
+        password="5678",
+        dateofbirth="1963-01-01",
+        fiscal_code="UIBCAIUBBVX",
+    )
+
+    helpers.create_operator(client, data)
+
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    res = client.get("/restaurants/1/tables")
+
+    assert res.status_code == 401
 
 
 def test_create_menu_isnotavailable_anonymous(client, db):
