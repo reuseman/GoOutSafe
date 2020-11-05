@@ -58,7 +58,7 @@ def _restaurants(message=""):
     )
 
 
-@restaurants.route("/operator/restaurants")
+@restaurants.route("/restaurants/mine")
 @login_required
 @operator_required
 def operator_restaurants(message=""):
@@ -312,7 +312,7 @@ def _like(restaurant_id):
     return _restaurants(message)
 
 
-@restaurants.route("/create_restaurant", methods=["GET", "POST"])
+@restaurants.route("/restaurants/new", methods=["GET", "POST"])
 @login_required
 @operator_required
 def create_restaurant():
@@ -330,7 +330,7 @@ def create_restaurant():
             if restaurant.add_new_restaurant(
                 new_restaurant, request.form.getlist("prec_measures")
             ):
-                return redirect("operator/restaurants")
+                return redirect("/restaurants/mine")
             else:
                 flash("Restaurant already added", category="error")
                 status = 400
@@ -341,7 +341,7 @@ def create_restaurant():
 
 
 @restaurants.route(
-    "/operator/restaurants/<restaurant_id>/create_menu", methods=["GET", "POST"]
+    "/restaurants/<restaurant_id>/menus/new", methods=["GET", "POST"]
 )
 @login_required
 @operator_required
@@ -432,7 +432,7 @@ def create_menu(restaurant_id):
 
 
 @restaurants.route(
-    "/restaurants/<restaurant_id>/show_menu/<menu_id>", methods=["GET", "POST"]
+    "/restaurants/<restaurant_id>/menus/show/<menu_id>", methods=["GET", "POST"]
 )
 def show_menu(restaurant_id, menu_id):
     q_restaurant_menu = (
@@ -455,7 +455,6 @@ def _tables(restaurant_id):
         render_template(
             "tables.html",
             tables=alltables,
-            # base_url="http://127.0.0.1:5000/restaurants",
             base_url=request.base_url,
         ),
         status,
@@ -465,17 +464,14 @@ def _tables(restaurant_id):
         return (
             render_template(
                 "tables.html",
-                # base_url="http://127.0.0.1:5000/restaurants",
                 base_url=request.base_url,
             ),
             status,
         )
 
-    
-
 
 @restaurants.route(
-    "/operator/restaurants/<restaurant_id>/create_table", methods=["GET", "POST"]
+    "/restaurants/<restaurant_id>/tables/new", methods=["GET", "POST"]
 )
 @login_required
 @operator_required
@@ -505,7 +501,7 @@ def create_table(restaurant_id):
 
 
 @restaurants.route(
-    "/operator/restaurants/<restaurant_id>/tables/<table_id>/edit_table",
+    "/restaurants/<restaurant_id>/tables/edit/<table_id>",
     methods=["GET", "POST"],
 )
 @login_required
@@ -543,7 +539,7 @@ def edit_table(restaurant_id, table_id):
 
 
 @restaurants.route(
-    "/operator/restaurants/<restaurant_id>/tables/<table_id>/delete_table",
+    "/restaurants/<restaurant_id>/tables/delete/<table_id>",
     methods=["GET", "POST"],
 )
 @login_required
@@ -565,7 +561,8 @@ def delete_table(restaurant_id, table_id):
 
     return redirect("/restaurants/" + restaurant_id + "/tables"), status
 
-@restaurants.route("/operator/restaurants/<restaurant_id>/reservations", methods=["GET", "POST"])
+
+@restaurants.route("/restaurants/<restaurant_id>/reservations", methods=["GET", "POST"])
 @login_required
 @operator_required
 def see_reservations(restaurant_id):
