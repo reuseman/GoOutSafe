@@ -784,6 +784,16 @@ def test_create_duplicate_menu(client, db):
     assert res.status_code == 400
 
 
+def test_create_menu_duplicate_foods(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = helpers.create_menu(client, helpers.menu_dup_food)
+
+    assert res.status_code == 400
+
+
 def test_create_menu_not_owned_restaurant(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
