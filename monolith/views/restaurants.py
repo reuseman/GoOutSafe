@@ -512,7 +512,6 @@ def create_table(restaurant_id):
                 status = 400
     else:
         status = 401
-        flash("Can't add a table to a not owned restaurant", category="error")
 
     return render_template("create_table.html", form=form), status
 
@@ -550,7 +549,6 @@ def edit_table(restaurant_id, table_id):
                 status = 400
     else:
         status = 401
-        flash("Can't edit a table of a not owned restaurant", category="error")
 
     return render_template("create_table.html", form=form), status
 
@@ -573,8 +571,6 @@ def delete_table(restaurant_id, table_id):
             flash("The table to be deleted does not exist!", category="error")
     else:
         status = 401
-        flash("Can't delete a table of a not owned restaurant", category="error")
-        return redirect("/"), status
 
     return redirect("/restaurants/" + restaurant_id + "/tables"), status
 
