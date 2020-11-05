@@ -6,7 +6,7 @@ from monolith import mail, db
 from typing import List
 from config import Config
 from celery.schedules import crontab
-from monolith.models import User
+from monolith.models import User, Restaurant
 
 """
     Just as a reference 
@@ -26,40 +26,46 @@ from monolith.models import User
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    # # Calls test('hello') every 10 seconds.
-    # sender.add_periodic_task(10.0, test.s("hello"), name="add every 10")
+    # Calls test('hello') every 10 seconds.
+    sender.add_periodic_task(
+        60.0,
+        compute_restaurants_rating_average.s(),
+        name="compute restaurants rating average",
+    )
 
     # # Calls test('world') every 30 seconds
     # sender.add_periodic_task(30.0, test.s("world"), expires=10)
 
     # Executes every Monday morning at 7:30 a.m.
-    sender.add_periodic_task(
-        crontab(hour=7, minute=30, day_of_week=1),
-        test.s("Happy Mondays!"),
-    )
+    # sender.add_periodic_task(
+    #     crontab(hour=7, minute=30, day_of_week=1),
+    #     test.s("Happy Mondays!"),
+    # )
+
+
+# @app.task
+# def test(arg):
+#     q = db.session.query(User).filter(User.id == 1).first()
+#     print(q.firstname)
+#     print(arg)
+
+
+# @app.task
+# def add(x, y):
+#     return x + y
 
 
 @app.task
-def test(arg):
-    flask_app = current_app._get_current_object()
-    q = db.session.query(User).filter(User.id == 1).first()
-    print(q.firstname)
-    print(arg)
+def compute_restaurants_rating_average():
+    restaurants = db.session.query(Restaurant).all()
 
+    for restaurant in restaurants:
+        reviews = restaurant.reviews
+        average_rating = sum(review.rating for review in reviews)
 
-@app.task
-def add(x, y):
-    return x + y
+        restaurant.average_rating = average_rating
 
-
-@app.task
-def mul(x, y):
-    return x * y
-
-
-@app.task
-def xsum(numbers):
-    return sum(numbers)
+    db.session.commit()
 
 
 # send_email("GoOutSafe - Notificaton", ["gooutsafe.squad2@gmail.com"],
