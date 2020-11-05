@@ -183,7 +183,7 @@ def test_edit_table_unsuccessful(client, db):
 def test_check_restaurant_ownership(client, db):
     helpers.create_operator(client)
     op1 = db.session.query(Operator).filter_by(id=1).first()
-    helpers.create_operator2(client)
+    helpers.create_operator2(client, helpers.operator3)
     op2 = db.session.query(Operator).filter_by(id=2).first()
 
     new_restaurant = Restaurant(**helpers.restaurant)
