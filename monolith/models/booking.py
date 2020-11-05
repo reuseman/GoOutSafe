@@ -19,6 +19,7 @@ class Booking(db.Model):
     start_booking = db.Column(db.DateTime, nullable=False)
     end_booking = db.Column(db.DateTime, nullable=False)
     confirmed_booking = db.Column(db.Boolean, default=False)
+    checkin = db.Column(db.Boolean, default=False)
 
     def user_already_booked(self, id):
         user_list = list(

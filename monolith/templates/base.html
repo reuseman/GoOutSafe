@@ -49,7 +49,6 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div>{{category}}</div>
                     {% if category == "success" %}
                         <div class="ui success message">
                             <i class="close icon"></i>
