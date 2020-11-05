@@ -98,6 +98,9 @@ def test_create_restaurant_bad_data(client, db):
         lat=-500.75,
         lon=900.98,
         time_of_stay=200,
+        cuisine_type="ETHNIC",
+        opening_hours=12,
+        closing_hours=24,
         operator_id=1,
     )
 
@@ -229,22 +232,13 @@ def test_create_duplicate_table(client, db):
 def test_create_table_not_owned_restaurant(client, db):
     helpers.create_operator(client)
 
-    data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-
-    helpers.create_operator(client, data)
+    helpers.create_operator(client, helpers.operator3)
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.logout(client)
 
-    helpers.login_operator(client, data)
+    helpers.login_operator(client, helpers.operator3)
     res = helpers.create_table(client)
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
@@ -328,23 +322,14 @@ def test_delete_table_not_exists(client, db):
 def test_delete_table_not_owned_restaurant(client, db):
     helpers.create_operator(client)
 
-    data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-
-    helpers.create_operator(client, data)
+    helpers.create_operator(client, helpers.operator3)
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
     helpers.logout(client)
 
-    helpers.login_operator(client, data)
+    helpers.login_operator(client, helpers.operator3)
     res = helpers.delete_table(client)
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
@@ -379,7 +364,7 @@ def test_edit_table_view_is_notavailable_user(client, db):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.login_operator(client)
+    helpers.logout(client)
 
     helpers.create_user(client)
     helpers.login_user(client)
@@ -474,23 +459,14 @@ def test_edit_table_not_exists(client, db):
 def test_edit_table_not_owned_restaurant(client, db):
     helpers.create_operator(client)
 
-    op_data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-
-    helpers.create_operator(client, op_data)
+    helpers.create_operator(client, helpers.operator3)
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
     helpers.logout(client)
 
-    helpers.login_operator(client, op_data)
+    helpers.login_operator(client, helpers.operator3)
 
     table_data = dict(id=1, name="A1", seats=1)
     res = helpers.edit_table(client, table_data)
@@ -581,20 +557,12 @@ def test_operator_restaurant(client, db):
 def test_operator_restaurant_empty(client, db):
     helpers.create_operator(client)
 
-    op_data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-    helpers.create_operator(client, op_data)
+    helpers.create_operator(client, helpers.operator3)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.logout(client)
 
-    helpers.login_operator(client, op_data)
+    helpers.login_operator(client, helpers.operator3)
     res = helpers.operator_restaurants(client)
     op_restaurants = db.session.query(Restaurant).filter_by(operator_id=1)
 
@@ -722,23 +690,14 @@ def test_tables(client, db):
 def test_tables_not_owned_restaurant(client, db):
     helpers.create_operator(client)
 
-    data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-
-    helpers.create_operator(client, data)
+    helpers.create_operator(client, helpers.operator3)
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
     helpers.logout(client)
 
-    helpers.login_operator(client, data)
+    helpers.login_operator(client, helpers.operator3)
 
     res = client.get("/restaurants/1/tables")
 
@@ -831,16 +790,8 @@ def test_create_menu_not_owned_restaurant(client, db):
     helpers.create_restaurant(client)
     helpers.logout(client)
 
-    data = dict(
-        email="pippo@lalocanda.com",
-        firstname="pippo",
-        lastname="pluto",
-        password="5678",
-        dateofbirth="1963-01-01",
-        fiscal_code="UIBCAIUBBVX",
-    )
-
-    helpers.create_operator(client, data)
+    helpers.create_operator(client, helpers.operator3)
+    helpers.login_operator(client, helpers.operator3)
     helpers.create_menu(client)
     res = helpers.create_menu(client)
 

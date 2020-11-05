@@ -10,6 +10,7 @@ from monolith.models import (
 )
 from monolith.services import mock
 from tests.data import precautions, booking
+from werkzeug.datastructures import MultiDict
 
 
 # DATA
@@ -44,6 +45,7 @@ operator = dict(
     password="5678",
     dateofbirth="01/01/1963",
     fiscal_code="YLLGPP63A01B519O",
+    phone="+39331303313094",
 )
 
 operator2 = dict(
@@ -53,6 +55,18 @@ operator2 = dict(
     password="5678",
     dateofbirth="1963-01-01",
     fiscal_code="YLLGPP63A01B519O",
+    phone="+39331303313094",
+)
+
+
+operator3 = dict(
+    email="pippopioppo@ploppi.com",
+    firstname="pippo",
+    lastname="pioppo",
+    password="ploppi",
+    dateofbirth="1963-01-01",
+    fiscal_code="YLLGPP63A01B519O",
+    phone="+39331303313094",
 )
 
 health_authority = dict(
@@ -93,7 +107,10 @@ restaurant = dict(
 
 
 menu = dict(
-    menu_name="Trial menu", name="Pepperoni pizza", price=5.0, category="PIZZAS"
+    menu_name="Trial menu", 
+    name="Pepperoni pizza", 
+    price=5.0,
+    category="PIZZAS"
 )
 
 

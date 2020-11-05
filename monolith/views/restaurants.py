@@ -348,9 +348,9 @@ def create_restaurant():
 def create_menu(restaurant_id):
     status = 200
     
+    zipped = None
+    name = ""
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
-        zipped = None
-        name = ""
         if request.method == "POST":
             menu = Menu()
             menu.name = request.form["menu_name"]

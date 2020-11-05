@@ -45,7 +45,7 @@ class OperatorForm(UserForm):
         "lastname",
         "password",
         "dateofbirth",
-        "phone"
+        "phone",
         "fiscal_code",
     ]
 
