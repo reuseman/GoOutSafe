@@ -3,7 +3,7 @@ from flask_login import login_required
 from flask.helpers import flash
 
 from monolith import db
-from monolith.models import Restaurant, Like, User, Operator
+from monolith.models import Restaurant, User, Operator
 from monolith.services.auth import current_user
 from monolith.services.forms import (
     ChangePasswordForm,

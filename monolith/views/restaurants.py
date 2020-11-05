@@ -5,7 +5,6 @@ from flask import Blueprint, redirect, render_template, request, url_for, make_r
 from monolith import db
 from monolith.models import (
     Restaurant,
-    Like,
     Precautions,
     RestaurantsPrecautions,
     Table,
@@ -309,23 +308,6 @@ def confirm_booking(restaurant_id):
     )
 
 
-@restaurants.route("/restaurants/like/<restaurant_id>")
-@login_required
-def _like(restaurant_id):
-    q = Like.query.filter_by(liker_id=current_user.id,
-                             restaurant_id=restaurant_id)
-    if q.first() is not None:
-        new_like = Like()
-        new_like.liker_id = current_user.id
-        new_like.restaurant_id = restaurant_id
-        db.session.add(new_like)
-        db.session.commit()
-        message = ""
-    else:
-        message = "You've already liked this place!"
-    return _restaurants(message)
-
-
 @restaurants.route("/restaurants/new", methods=["GET", "POST"])
 @login_required
 @operator_required
@@ -338,7 +320,6 @@ def create_restaurant():
             new_restaurant = Restaurant()
             form.populate_obj(new_restaurant)
 
-            new_restaurant.likes = 0
             new_restaurant.operator_id = current_user.id
 
             if restaurant.add_new_restaurant(
