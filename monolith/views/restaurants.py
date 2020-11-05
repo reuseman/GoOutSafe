@@ -16,7 +16,6 @@ from monolith.models import (
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
 from monolith.services.auth import (
-    admin_required,
     current_user,
     operator_required,
     user_required,

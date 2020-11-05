@@ -6,12 +6,6 @@ from monolith.services.forms import AuthorityForm
 authorities = Blueprint("authorities", __name__)
 
 
-@authorities.route("/authorities")
-def _authorities():
-    authority_list = db.session.query(HealthAuthority)
-    return render_template("authorities.html", authorities=authority_list)
-
-
 @authorities.route("/create_authority", methods=["GET", "POST"])
 def create_authority():
     form = AuthorityForm()

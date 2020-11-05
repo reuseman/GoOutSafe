@@ -758,7 +758,7 @@ def test_restaurant_booking_is_avaible_logged_user(client,):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_user(client)
     helpers.login_user(client)
@@ -766,18 +766,20 @@ def test_restaurant_booking_is_avaible_logged_user(client,):
     res = client.get("/restaurants/1/book_table")
     assert res.status_code == 200
 
+
 def test_restaurant_booking_not_avaible_ha(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_health_authority(client)
     helpers.login_authority(client)
 
     res = client.get("/restaurants/1/book_table")
     assert res.status_code == 401
+
 
 def test_restaurant_booking_not_avaible_operator(client):
     helpers.create_operator(client)
@@ -792,19 +794,19 @@ def test_restaurant_booking_not_avaible_operator(client):
 def test_restaurant_booking_not_avaible_anonymous(client):
     res = client.get("/restaurants/1/book_table")
     assert res.status_code == 401
-    
+
 
 def test_restaurant_booking(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_user(client)
     helpers.login_user(client)
 
-    res=helpers.booking(client)
+    res = helpers.booking(client)
 
     assert res.status_code == 302
 
@@ -814,13 +816,12 @@ def test_restaurant_all_tables_booked(client):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_user(client)
     helpers.login_user(client)
 
-    res=helpers.booking(client)
-    res=helpers.booking(client)
-
+    res = helpers.booking(client)
+    res = helpers.booking(client)
 
     assert res.status_code == 500
