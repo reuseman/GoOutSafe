@@ -10,10 +10,7 @@ from monolith import login_manager
 def operator_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        authenticated = current_user.is_authenticated
-        if not authenticated:
-            return redirect("/operator_login")
-        elif session["role"] != "operator":
+        if session["role"] != "operator":
             return login_manager.unauthorized()
             # need to implement logic for logout maybe? or templated error page
             pass
@@ -40,10 +37,7 @@ def authority_required(f):
 def user_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        authenticated = current_user.is_authenticated
-        if not authenticated:
-            return redirect("/login")
-        elif session["role"] != "user":
+        if session["role"] != "user":
             return login_manager.unauthorized()
         return f(*args, **kwargs)
 
