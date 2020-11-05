@@ -1,4 +1,5 @@
 from flask.globals import session
+from sqlalchemy.sql.functions import user
 from monolith.models import precautions
 from flask.helpers import flash
 from flask import Blueprint, redirect, render_template, request, url_for, make_response
@@ -11,7 +12,7 @@ from monolith.models import (
     User,
     Booking,
     Mark,
-    Operator
+    Operator,
 )
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
@@ -28,12 +29,13 @@ from monolith.services.forms import (
     UserForm,
     CreateBookingDateHourForm,
     ConfirmBookingForm,
-    ChooseReservationData
+    ChooseReservationData,
 )
 from ..controllers import restaurant
 from datetime import date, timedelta, datetime
 from sqlalchemy import func
 from flask_login import current_user
+from monolith.services.background.tasks import send_email
 
 restaurants = Blueprint("restaurants", __name__)
 
@@ -54,8 +56,7 @@ def _restaurants(message=""):
         restaurants=allrestaurants,
         role=role,
         base_url=request.base_url,
-        operator_restaurants=False
-
+        operator_restaurants=False,
     )
 
 
@@ -72,14 +73,13 @@ def operator_restaurants(message=""):
         restaurants=operator_restaurants,
         role=session["role"],
         base_url=request.base_url,
-        operator_restaurants=True
+        operator_restaurants=True,
     )
 
 
 @restaurants.route("/restaurants/<restaurant_id>", methods=["GET", "POST"])
 def restaurant_sheet(restaurant_id):
-    q_restaurant = db.session.query(Restaurant).filter_by(
-        id=int(restaurant_id)).first()
+    q_restaurant = db.session.query(Restaurant).filter_by(id=int(restaurant_id)).first()
     q_restaurant_precautions = (
         db.session.query(Precautions.name)
         .filter(
@@ -131,7 +131,7 @@ def restaurant_sheet(restaurant_id):
         base_url=request.base_url,
         reviews=reviews,
         form=form,
-        operator_id=q_restaurant.operator_id
+        operator_id=q_restaurant.operator_id,
     )
 
 
@@ -141,23 +141,38 @@ def restaurant_sheet(restaurant_id):
 def book_table_form(restaurant_id):
     if db.session.query(Mark).filter_by(user_id=current_user.id).first() is not None:
         flash("You are marked so you can't book a table")
-        return redirect("/restaurants/"+str(restaurant_id))
+        return redirect("/restaurants/" + str(restaurant_id))
 
     form = CreateBookingDateHourForm()
-    max_table_seats = db.session.query(func.max(Table.seats)).filter(
-        Table.restaurant_id == restaurant_id).first()[0]  # Take max seats from tables of restaurant_ud
+    max_table_seats = (
+        db.session.query(func.max(Table.seats))
+        .filter(Table.restaurant_id == restaurant_id)
+        .first()[0]
+    )  # Take max seats from tables of restaurant_ud
     time = []
-    range_hour = db.session.query(Restaurant.time_of_stay).filter_by(
-        id=restaurant_id).first()[0]
-    opening_hour = int(db.session.query(Restaurant.opening_hours).filter_by(
-        id=restaurant_id).first()[0] * 60)
-    closing_hour = int(db.session.query(Restaurant.closing_hours).filter_by(
-        id=restaurant_id).first()[0] * 60)
-    if(closing_hour < opening_hour):
-        closing_hour = closing_hour + (24*60)
+    range_hour = (
+        db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
+    )
+    opening_hour = int(
+        db.session.query(Restaurant.opening_hours)
+        .filter_by(id=restaurant_id)
+        .first()[0]
+        * 60
+    )
+    closing_hour = int(
+        db.session.query(Restaurant.closing_hours)
+        .filter_by(id=restaurant_id)
+        .first()[0]
+        * 60
+    )
+    if closing_hour < opening_hour:
+        closing_hour = closing_hour + (24 * 60)
     for i in range(opening_hour, closing_hour, range_hour):
-        time.append(str(timedelta(minutes=i))[
-                    :-3]+" - "+str(timedelta(minutes=i+range_hour))[:-3])
+        time.append(
+            str(timedelta(minutes=i))[:-3]
+            + " - "
+            + str(timedelta(minutes=i + range_hour))[:-3]
+        )
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -177,8 +192,7 @@ def book_table_form(restaurant_id):
                 .filter(Restaurant.id == restaurant_id)
                 .first()
             )
-            table = restaurant.get_free_table(
-                number_persons, booking_date_start)
+            table = restaurant.get_free_table(number_persons, booking_date_start)
 
             if table is None:
                 flash(
@@ -190,29 +204,37 @@ def book_table_form(restaurant_id):
                 global booking_number
                 if booking_number == -1:
                     booking_number = db.session.query(
-                        func.max(Booking.booking_number)).first()[0]
+                        func.max(Booking.booking_number)
+                    ).first()[0]
                     if booking_number is None:
                         booking_number = 1
                     else:
                         booking_number += 1
 
                 confirmed_bookign = True if number_persons == 1 else False
-                db.session.add(Booking(user_id=current_user.id, table_id=table, booking_number=booking_number,
-                                       start_booking=booking_date_start, end_booking=booking_date_end, confirmed_booking=confirmed_bookign))
+                db.session.add(
+                    Booking(
+                        user_id=current_user.id,
+                        table_id=table,
+                        booking_number=booking_number,
+                        start_booking=booking_date_start,
+                        end_booking=booking_date_end,
+                        confirmed_booking=confirmed_bookign,
+                    )
+                )
                 db.session.commit()
 
                 old_booking_number = booking_number
                 booking_number += 1
 
                 if confirmed_bookign:
-                    flash("Booking confirmed", category='success')
+                    flash("Booking confirmed", category="success")
                     return redirect("/restaurants")
                 else:
                     session["booking_number"] = old_booking_number
                     session["number_persons"] = number_persons
                     return redirect(
-                        url_for(".confirm_booking",
-                                restaurant_id=restaurant_id)
+                        url_for(".confirm_booking", restaurant_id=restaurant_id)
                     )
         else:
             flash("Are you really able to go back to the past?")
@@ -235,8 +257,7 @@ def confirm_booking(restaurant_id):
 
     if form.validate_on_submit():
         booking = (
-            db.session.query(Booking).filter_by(
-                booking_number=booking_number).first()
+            db.session.query(Booking).filter_by(booking_number=booking_number).first()
         )
 
         for i, field in enumerate(form.people):
@@ -247,8 +268,7 @@ def confirm_booking(restaurant_id):
             )
             if user is None:
                 if (
-                    db.session.query(User).filter_by(
-                        email=field.email.data).first()
+                    db.session.query(User).filter_by(email=field.email.data).first()
                     is None
                 ):  # check if email is already in the db or not
                     user = User(
@@ -261,9 +281,7 @@ def confirm_booking(restaurant_id):
                     db.session.commit()
                 else:
                     flash(
-                        "Person "
-                        + str(i + 1)
-                        + ", mail already used from another user"
+                        "Person " + str(i + 1) + ", mail already used from another user"
                     )
                     error = True
                     break
@@ -301,12 +319,42 @@ def confirm_booking(restaurant_id):
 
             session.pop("booking_number", None)
             session.pop("number_persons", None)
-            flash("Booking confirmed", category='success')
+            flash("Booking confirmed", category="success")
+
+            send_booking_confirmation_mail(booking_number)
             return redirect("/restaurants")
 
     return render_template(
         "confirm_booking.html", form=form, number_persons=int(number_persons)
     )
+
+
+def send_booking_confirmation_mail(booking_number):
+    bookings = (
+        db.session.query(Booking).filter(Booking.booking_number == booking_number).all()
+    )
+    first_user = None
+
+    for i in range(0, len(bookings)):
+        booking = bookings[i]
+        user = booking.user
+        booking_date = booking.start_booking.strftime("%d %b %Y, %H:%M")
+        restaurant = booking.table.restaurant.name
+
+        if i == 0:
+            first_user = user
+            # Send mail to the person that booked
+            mail_message = f"Hey {user.firstname}!\nThe booking at {restaurant} in date {booking_date} is confirmed.\nHave a safe meal!\n\nThe team of GoOutSafe"
+        else:
+            # Send mail to the people that have been booked by the first person
+            mail_message = f"Hey {user.firstname}!\nYour friend {first_user.firstname} booked at {restaurant} in date {booking_date}.\nHave a safe meal!\n\nThe team of GoOutSafe"
+
+        send_email(
+            f"Booking at {restaurant} has been confirmed!",
+            [user.email],
+            mail_message,
+            mail_message,
+        )
 
 
 @restaurants.route("/restaurants/new", methods=["GET", "POST"])
@@ -336,9 +384,7 @@ def create_restaurant():
     return render_template("create_restaurant.html", form=form), status
 
 
-@restaurants.route(
-    "/restaurants/<restaurant_id>/menus/new", methods=["GET", "POST"]
-)
+@restaurants.route("/restaurants/<restaurant_id>/menus/new", methods=["GET", "POST"])
 @login_required
 @operator_required
 def create_menu(restaurant_id):
@@ -361,9 +407,11 @@ def create_menu(restaurant_id):
                 menu.restaurant_id = int(restaurant_id)
 
                 food_names = set()
-                zipped = zip(request.form.getlist('name'),
-                             request.form.getlist('price'),
-                             request.form.getlist('category'))
+                zipped = zip(
+                    request.form.getlist("name"),
+                    request.form.getlist("price"),
+                    request.form.getlist("category"),
+                )
                 for name, price, category in zipped:
                     food = Food()
                     food.name = name
@@ -400,8 +448,7 @@ def create_menu(restaurant_id):
                     return redirect("/restaurants/" + str(restaurant_id))
             else:
                 status = 400
-                flash("There is already a menu with the same name!",
-                      category="error")
+                flash("There is already a menu with the same name!", category="error")
     else:
         status = 401
 
@@ -423,8 +470,7 @@ def create_menu(restaurant_id):
         )
     else:
         return (
-            render_template("create_menu.html",
-                            choices=FoodCategory.choices()),
+            render_template("create_menu.html", choices=FoodCategory.choices()),
             status,
         )
 
@@ -448,8 +494,7 @@ def show_menu(restaurant_id, menu_id):
 def _tables(restaurant_id):
     status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
-        alltables = db.session.query(Table).filter_by(
-            restaurant_id=restaurant_id)
+        alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
         return (
             render_template(
                 "tables.html",
@@ -469,9 +514,7 @@ def _tables(restaurant_id):
         )
 
 
-@restaurants.route(
-    "/restaurants/<restaurant_id>/tables/new", methods=["GET", "POST"]
-)
+@restaurants.route("/restaurants/<restaurant_id>/tables/new", methods=["GET", "POST"])
 @login_required
 @operator_required
 def create_table(restaurant_id):
@@ -561,7 +604,9 @@ def delete_table(restaurant_id, table_id):
 @login_required
 @operator_required
 def operator_reservations_list(restaurant_id):
-    operator_id = db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
+    operator_id = (
+        db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
+    )
 
     if operator_id != current_user.id:
         flash("Access denied")
@@ -571,86 +616,155 @@ def operator_reservations_list(restaurant_id):
     date_show = date.today()
     tomorrow = date_show + timedelta(days=1)
 
-    booking_list = db.session\
-        .query(Booking, Table, func.count())\
-        .join(Table)\
-        .join(Restaurant)\
-        .filter(Restaurant.id == restaurant_id, Booking.start_booking >= date.today(), Booking.start_booking < tomorrow)\
-        .group_by(Booking.booking_number)\
-        .order_by(Booking.start_booking.asc()
-                  ).all()
+    booking_list = (
+        db.session.query(Booking, Table, func.count())
+        .join(Table)
+        .join(Restaurant)
+        .filter(
+            Restaurant.id == restaurant_id,
+            Booking.start_booking >= date.today(),
+            Booking.start_booking < tomorrow,
+        )
+        .group_by(Booking.booking_number)
+        .order_by(Booking.start_booking.asc())
+        .all()
+    )
 
     if request.method == "POST":
         if form.validate_on_submit():
-            chosen_date = datetime.strptime(request.form['date'], "%Y-%m-%d")
+            chosen_date = datetime.strptime(request.form["date"], "%Y-%m-%d")
             tomorrow = chosen_date + timedelta(days=1)
-            date_show = request.form['date']
+            date_show = request.form["date"]
 
-            booking_list = db.session\
-                .query(Booking, Table, func.count())\
-                .join(Table)\
-                .join(Restaurant)\
-                .filter(Restaurant.id == restaurant_id, Booking.start_booking >= chosen_date, Booking.start_booking < tomorrow)\
-                .group_by(Booking.booking_number)\
-                .order_by(Booking.start_booking.asc()
-                          ).all()
+            booking_list = (
+                db.session.query(Booking, Table, func.count())
+                .join(Table)
+                .join(Restaurant)
+                .filter(
+                    Restaurant.id == restaurant_id,
+                    Booking.start_booking >= chosen_date,
+                    Booking.start_booking < tomorrow,
+                )
+                .group_by(Booking.booking_number)
+                .order_by(Booking.start_booking.asc())
+                .all()
+            )
 
     total_people = 0
     for booking in booking_list:
         total_people += booking[2]
 
-    return render_template("reservations.html", form=form, booking_list=booking_list, date=date_show, total_people=total_people, base_url=request.base_url)
+    return render_template(
+        "reservations.html",
+        form=form,
+        booking_list=booking_list,
+        date=date_show,
+        total_people=total_people,
+        base_url=request.base_url,
+    )
 
 
-
-@restaurants.route("/restaurants/<restaurant_id>/reservations/<booking_number>", methods=["GET", "POST"])
+@restaurants.route(
+    "/restaurants/<restaurant_id>/reservations/<booking_number>",
+    methods=["GET", "POST"],
+)
 @operator_required
 @login_required
 def operator_checkin_reservation(restaurant_id, booking_number):
-    allow_operation = db.session.query(Booking).join(Table).join(Restaurant).join(Operator).filter(Booking.booking_number==booking_number, Operator.id==current_user.id).first()
-    if allow_operation is None: #check if operator can see the page
+    allow_operation = (
+        db.session.query(Booking)
+        .join(Table)
+        .join(Restaurant)
+        .join(Operator)
+        .filter(
+            Booking.booking_number == booking_number, Operator.id == current_user.id
+        )
+        .first()
+    )
+    if allow_operation is None:  # check if operator can see the page
         flash("Operation denied ")
-        return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
-    
-    if request.method == 'POST':
+        return redirect(
+            url_for(".operator_reservations_list", restaurant_id=restaurant_id)
+        )
+
+    if request.method == "POST":
         print(request.form.getlist("people"))
         print()
         for user_id in request.form.getlist("people"):
-            aux = db.session.query(Booking).filter(Booking.user_id == user_id, Booking.booking_number == booking_number).first()
+            aux = (
+                db.session.query(Booking)
+                .filter(
+                    Booking.user_id == user_id, Booking.booking_number == booking_number
+                )
+                .first()
+            )
             aux.checkin = True
             db.session.commit()
 
-    confirmed_booking = db.session.query(Booking.confirmed_booking).filter_by(booking_number=booking_number).first()[0]
-    checkin_done = db.session.query(Booking.checkin).filter_by(booking_number=booking_number).order_by(Booking.checkin.desc()).first()[0]
+    confirmed_booking = (
+        db.session.query(Booking.confirmed_booking)
+        .filter_by(booking_number=booking_number)
+        .first()[0]
+    )
+    checkin_done = (
+        db.session.query(Booking.checkin)
+        .filter_by(booking_number=booking_number)
+        .order_by(Booking.checkin.desc())
+        .first()[0]
+    )
 
-    user_list = db.session.query(User).join(Booking).filter(Booking.booking_number == booking_number).all()
-    
+    user_list = (
+        db.session.query(User)
+        .join(Booking)
+        .filter(Booking.booking_number == booking_number)
+        .all()
+    )
+
     user_list_with_marks = []
-    someone_marked=False
+    someone_marked = False
 
     for user in user_list:
-        if user.is_marked(): someone_marked=True
-        user_list_with_marks.append((user,user.is_marked()))
+        if user.is_marked():
+            someone_marked = True
+        user_list_with_marks.append((user, user.is_marked()))
 
     if someone_marked:
-        flash('Attentions, people in red are marked as covid positive')
-    return render_template("reservation.html", user_list=user_list_with_marks, confirmed_booking=confirmed_booking, go_back='/restaurants/'+str(restaurant_id)+'/reservations', checkin=checkin_done)
+        flash("Attentions, people in red are marked as covid positive")
+    return render_template(
+        "reservation.html",
+        user_list=user_list_with_marks,
+        confirmed_booking=confirmed_booking,
+        go_back="/restaurants/" + str(restaurant_id) + "/reservations",
+        checkin=checkin_done,
+    )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/reservations/delete/<booking_number>", methods=["GET", "POST"])
+@restaurants.route(
+    "/restaurants/<restaurant_id>/reservations/delete/<booking_number>",
+    methods=["GET", "POST"],
+)
 @operator_required
 @login_required
-def operator_delete_reservation(restaurant_id,booking_number):
-     
-    allow_operation = db.session.query(Booking).join(Table).join(Restaurant).join(Operator).filter(Booking.booking_number==booking_number, Operator.id==current_user.id).first()
-    if allow_operation is None: #check if booking exisist
-        flash("Operation denied")
-        return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
+def operator_delete_reservation(restaurant_id, booking_number):
 
+    allow_operation = (
+        db.session.query(Booking)
+        .join(Table)
+        .join(Restaurant)
+        .join(Operator)
+        .filter(
+            Booking.booking_number == booking_number, Operator.id == current_user.id
+        )
+        .first()
+    )
+    if allow_operation is None:  # check if booking exisist
+        flash("Operation denied")
+        return redirect(
+            url_for(".operator_reservations_list", restaurant_id=restaurant_id)
+        )
 
     db.session.query(Booking).filter_by(booking_number=booking_number).delete()
     db.session.commit()
 
-    flash('Reservation deleted', category='success')
-    return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
-
+    flash("Reservation deleted", category="success")
+    return redirect(url_for(".operator_reservations_list", restaurant_id=restaurant_id))

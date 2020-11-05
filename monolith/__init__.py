@@ -10,7 +10,13 @@ from celery import Celery
 db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
-celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
+
+celery = Celery(
+    __name__,
+    broker=Config.CELERY_BROKER_URL,
+    include=["monolith.services.background.tasks"],
+)
+celery.autodiscover_tasks(["monolith.services.background.tasks"], force=True)
 
 
 def create_app(config_name):
@@ -54,8 +60,8 @@ def create_app(config_name):
 
     # msg = Message(
     #     "test subject",
-    #     sender="gooutsafe.squad2@1gmail.com",
-    #     recipients=["gooutsafe.squad2@1gmail.com"],
+    #     sender="gooutsafe.squad2@gmail.com",
+    #     recipients=["gooutsafe.squad2@gmail.com"],
     # )
     # msg.body = "text body"
     # msg.html = "<h1>HTML body</h1>"

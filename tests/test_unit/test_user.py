@@ -25,6 +25,14 @@ def test_is_marked_should_be_true(db):
     assert user.is_marked()
 
 
+def test_is_marked_should_be_false(db):
+    helpers.insert_health_authority(db)
+    user = helpers.insert_user(db)
+    db.session.commit()
+
+    assert not user.is_marked()
+
+
 def test_has_been_marked_should_be_false(db):
     helpers.insert_health_authority(db)
     user = helpers.insert_user(db)

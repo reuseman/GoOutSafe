@@ -6,7 +6,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "monolith:create_app('development')",
+                "FLASK_APP": "gooutsafe",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "0"
             },
@@ -22,7 +22,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "monolith:create_app('development')",
+                "FLASK_APP": "gooutsafe",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "1"
             },

@@ -1,9 +1,12 @@
+from flask import current_app
 from flask_mail import Message
 from os import environ
-from monolith import celery
-from monolith import mail
+from monolith import celery as app
+from monolith import mail, db
 from typing import List
 from config import Config
+from celery.schedules import crontab
+from monolith.models import User
 
 """
     Just as a reference 
@@ -21,24 +24,47 @@ from config import Config
 """
 
 
-@celery.task
+@app.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # # Calls test('hello') every 10 seconds.
+    # sender.add_periodic_task(10.0, test.s("hello"), name="add every 10")
+
+    # # Calls test('world') every 30 seconds
+    # sender.add_periodic_task(30.0, test.s("world"), expires=10)
+
+    # Executes every Monday morning at 7:30 a.m.
+    sender.add_periodic_task(
+        crontab(hour=7, minute=30, day_of_week=1),
+        test.s("Happy Mondays!"),
+    )
+
+
+@app.task
+def test(arg):
+    flask_app = current_app._get_current_object()
+    q = db.session.query(User).filter(User.id == 1).first()
+    print(q.firstname)
+    print(arg)
+
+
+@app.task
 def add(x, y):
     return x + y
 
 
-@celery.task
+@app.task
 def mul(x, y):
     return x * y
 
 
-@celery.task
+@app.task
 def xsum(numbers):
     return sum(numbers)
 
 
 # send_email("GoOutSafe - Notificaton", ["gooutsafe.squad2@gmail.com"],
 # "Not a good news", "Not a good news (when you can render html)")
-@celery.task
+@app.task
 def send_email(
     subject,
     recipients: List[str],
@@ -47,7 +73,8 @@ def send_email(
     sender=Config.MAIL_SENDER,
     attachments=None,
 ):
-
+    print(f"SENDING TO -> {recipients[0]}")
+    print(f"sender: {sender}")
     msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body
     msg.html = html_body

@@ -1,6 +1,7 @@
 import os
 from logging import FileHandler, Formatter
 from logging.config import dictConfig
+from celery.schedules import crontab
 
 fileHandler = FileHandler("monolith/monolith.log", encoding="utf-8")
 fileHandler.setFormatter(
@@ -16,11 +17,14 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.environ.get("MAIL_SERVER") or "localhost"
-    MAIL_PORT = os.environ.get("MAIL_SERVER") or 8025
+    MAIL_PORT = os.environ.get("MAIL_PORT") or 8025
     MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS") or False
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME") or None
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") or None
     MAIL_SENDER = os.environ.get("MAIL_SENDER") or "no-reply@gooutsafe.com"
+
+    # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
+    AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
 
     CELERY_BROKER_URL = (
         os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6379/0"
@@ -28,9 +32,7 @@ class Config:
     CELERY_RESULT_BACKEND = (
         os.environ.get("CELERY_RESULT_BACKEND") or "redis://localhost:6379/0"
     )
-
-    # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
-    AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
+    CELERY_TASKS = ["monolith.services.background.tasks"]
 
     @staticmethod
     def init_app(app):

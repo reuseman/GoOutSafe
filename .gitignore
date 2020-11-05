@@ -112,10 +112,10 @@ map.html
 
 # personal
 .idea
-./monolith/gooutsafe.db
 variables.sh
 .vscode/settings.json
 
+celerybeat-schedule.db
 monolith/gooutsafe.db
 monolith/tests/gooutsafe_test.db
 monolith/gooutsafe_test.db

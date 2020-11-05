@@ -34,6 +34,7 @@ class Restaurant(db.Model):
     opening_hours = db.Column(db.Integer)
     closing_hours = db.Column(db.Integer)
     operator_id = db.Column(db.Integer, db.ForeignKey("operator.id"))
+    average_rating = db.Column(db.Integer, default=0)
 
     # precautions = db.relationship("Precaution", secondary=precautions, backref="restaurants")
     tables = db.relationship("Table", back_populates="restaurant")
