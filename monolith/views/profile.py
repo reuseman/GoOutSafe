@@ -51,10 +51,7 @@ def change_anagraphic():
 
     if form.validate_on_submit():
         if current_user.verify_password(form.password.data):
-            if session["role"] == "user":
-                current_user.firstname = form.firstname.data
-            else:
-                current_user.name = form.firstname.data
+            current_user.firstname = form.firstname.data
             current_user.lastname = form.lastname.data
             current_user.dateofbirth = form.dateofbirth.data
             current_user.fiscal_code = form.fiscal_code.data

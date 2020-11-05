@@ -102,7 +102,8 @@ def test_create_restaurant_bad_data(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_restaurant = db.session.query(Restaurant).filter_by(operator_id=1).first()
+    fetched_restaurant = db.session.query(
+        Restaurant).filter_by(operator_id=1).first()
 
     assert fetched_restaurant is None
     assert res.status_code == 400
@@ -123,7 +124,8 @@ def test_create_duplicate_restaurant(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_dup_restaurant = db.session.query(Restaurant).filter_by(id=2).first()
+    fetched_dup_restaurant = db.session.query(
+        Restaurant).filter_by(id=2).first()
 
     assert res.status_code == 400
     assert fetched_dup_restaurant is None
@@ -232,7 +234,7 @@ def test_create_table_not_owned_restaurant(client, db):
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.login_operator(client, data)
     res = helpers.create_table(client)
@@ -283,7 +285,7 @@ def test_delete_table_not_owned_restaurant(client, db):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.login_operator(client, data)
     res = helpers.delete_table(client)
@@ -380,7 +382,7 @@ def test_edit_table_not_owned_restaurant(client, db):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
     helpers.create_table(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.login_operator(client, op_data)
 
@@ -484,7 +486,7 @@ def test_operator_restaurant_empty(client, db):
     helpers.create_operator(client, op_data)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.login_operator(client, op_data)
     res = helpers.operator_restaurants(client)
@@ -541,7 +543,7 @@ def test_restaurants_notlogged(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     res = client.get("/restaurants")
     q_rest = db.session.query(Restaurant)
@@ -557,7 +559,7 @@ def test_tables_notavailable_user(client):
 
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.login_user(client)
 
@@ -569,7 +571,7 @@ def test_tables_notavailable_anonymous(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     res = client.get("/restaurants/1/tables")
     assert res.status_code == 401
@@ -588,7 +590,7 @@ def test_tables_notavailable_ha(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -615,7 +617,7 @@ def test_create_menu_isnotavailable_anonymous(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     res = client.get("/operator/restaurants/1/create_menu")
 
@@ -626,7 +628,7 @@ def test_create_menu_isnotavailable_user(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_user(client)
     helpers.login_user(client)
@@ -650,7 +652,7 @@ def test_create_menu_isnotavailable_ha(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
-    helpers.logout_operator(client)
+    helpers.logout(client)
 
     helpers.create_health_authority(client)
     helpers.login_authority(client)
@@ -732,7 +734,8 @@ def test_show_menu(client, db):
     helpers.create_menu(client)
 
     res = helpers.show_menu(client)
-    menu = db.session.query(Menu).filter(Menu.restaurant_id == 1, Menu.id == 1).first()
+    menu = db.session.query(Menu).filter(
+        Menu.restaurant_id == 1, Menu.id == 1).first()
 
     assert res.status_code == 200
     assert bytes(menu.name, "utf-8") in res.data

@@ -257,7 +257,7 @@ def login_operator(client, data=operator):
     )
 
 
-def logout_operator(client):
+def logout(client):
     return client.get(
         "/logout",
         follow_redirects=False,
