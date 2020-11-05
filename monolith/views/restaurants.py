@@ -10,7 +10,8 @@ from monolith.models import (
     Table,
     User,
     Booking,
-    Mark
+    Mark,
+    Operator
 )
 from monolith.models.menu import Menu, Food, FoodCategory
 from monolith.models.table import Table
@@ -560,12 +561,11 @@ def delete_table(restaurant_id, table_id):
 @login_required
 @operator_required
 def operator_reservations_list(restaurant_id):
-    operator_id = db.session.query(Restaurant.operator_id).filter_by(
-        id=restaurant_id).first()[0]
+    operator_id = db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
 
     if operator_id != current_user.id:
         flash("Access denied")
-        return redirect("/operator/restaurants")
+        return redirect("/restaurants")
 
     form = ChooseReservationData()
     date_show = date.today()
@@ -582,7 +582,6 @@ def operator_reservations_list(restaurant_id):
 
     if request.method == "POST":
         if form.validate_on_submit():
-            print(request.form['date'])
             chosen_date = datetime.strptime(request.form['date'], "%Y-%m-%d")
             tomorrow = chosen_date + timedelta(days=1)
             date_show = request.form['date']
@@ -603,13 +602,55 @@ def operator_reservations_list(restaurant_id):
     return render_template("reservations.html", form=form, booking_list=booking_list, date=date_show, total_people=total_people, base_url=request.base_url)
 
 
-@restaurants.route("/operator/restaurants/<restaurant_id>/reservations/delete/<booking_number>", methods=["GET", "POST"])
+
+@restaurants.route("/restaurants/<restaurant_id>/reservations/<booking_number>", methods=["GET", "POST"])
 @operator_required
 @login_required
-def operator_delete_reservation(restaurant_id, booking_number):
-    prova = db.session.query(Booking).filter_by(
-        booking_number=booking_number).delete()
+def operator_checkin_reservation(restaurant_id, booking_number):
+    allow_operation = db.session.query(Booking).join(Table).join(Restaurant).join(Operator).filter(Booking.booking_number==booking_number, Operator.id==current_user.id).first()
+    if allow_operation is None: #check if operator can see the page
+        flash("Operation denied ")
+        return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
+    
+    if request.method == 'POST':
+        print(request.form.getlist("people"))
+        print()
+        for user_id in request.form.getlist("people"):
+            aux = db.session.query(Booking).filter(Booking.user_id == user_id, Booking.booking_number == booking_number).first()
+            aux.checkin = True
+            db.session.commit()
+
+    confirmed_booking = db.session.query(Booking.confirmed_booking).filter_by(booking_number=booking_number).first()[0]
+    checkin_done = db.session.query(Booking.checkin).filter_by(booking_number=booking_number).order_by(Booking.checkin.desc()).first()[0]
+
+    user_list = db.session.query(User).join(Booking).filter(Booking.booking_number == booking_number).all()
+    
+    user_list_with_marks = []
+    someone_marked=False
+
+    for user in user_list:
+        if user.is_marked(): someone_marked=True
+        user_list_with_marks.append((user,user.is_marked()))
+
+    if someone_marked:
+        flash('Attentions, people in red are marked as covid positive')
+    return render_template("reservation.html", user_list=user_list_with_marks, confirmed_booking=confirmed_booking, go_back='/restaurants/'+str(restaurant_id)+'/reservations', checkin=checkin_done)
+
+
+@restaurants.route("/restaurants/<restaurant_id>/reservations/delete/<booking_number>", methods=["GET", "POST"])
+@operator_required
+@login_required
+def operator_delete_reservation(restaurant_id,booking_number):
+     
+    allow_operation = db.session.query(Booking).join(Table).join(Restaurant).join(Operator).filter(Booking.booking_number==booking_number, Operator.id==current_user.id).first()
+    if allow_operation is None: #check if booking exisist
+        flash("Operation denied")
+        return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
+
+
+    db.session.query(Booking).filter_by(booking_number=booking_number).delete()
     db.session.commit()
 
     flash('Reservation deleted', category='success')
-    return redirect("/operator/restaurants")
+    return redirect(url_for(".operator_reservations_list",restaurant_id=restaurant_id))
+

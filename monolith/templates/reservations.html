@@ -20,13 +20,23 @@
     }
     </style>
 
-    <h3>Choose date</h3>
+    <h3 class="ui header">
+      <i class="calendar outline icon"></i>
+      <div class="content">
+          Choose date
+      </div>
+    </h3>
     <form method="POST" action="">
       <dd>{{ form.date }}</dd><br/>
-      <dd>{{form.submit}}</dd>
+      <dd>{{ form.submit }}</dd>
     </form>
 
-    <h3>Booking: {{date}}</h3>
+    <h3 class="ui header">
+      <i class="calendar check outline icon"></i>
+      <div class="content">
+        Booking: {{date}}
+      </div>
+    </h3>
     <table>
         <tr>
             <th>Reservation id</th>
@@ -69,5 +79,5 @@
     </table>
 
     <br/>
-    <div></th>Total number of people in the restaurant: {{total_people}}</div>
+    <h3><u>Total number of people in the restaurant</u>: {{total_people}}</h3>
 {% endblock %}
