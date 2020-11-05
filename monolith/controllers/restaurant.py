@@ -66,10 +66,10 @@ def check_table_existence(table):
 
 def edit_table(table):
     table_to_edit = Table.query.filter_by(id=table.id).first()
-    q = Table.query.filter(Table.name == table.name, Table.id !=
+    existing_table = Table.query.filter(Table.name == table.name, Table.id !=
                            table.id, Table.restaurant_id == table.restaurant_id).first()
 
-    if q is None:
+    if existing_table is None:
         table_to_edit.name = table.name
         table_to_edit.seats = table.seats
         db.session.commit()

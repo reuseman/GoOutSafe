@@ -153,7 +153,7 @@ def test_edit_table_successful(client, db):
     new_table = Table(**helpers.table)
     restaurant.add_new_table(new_table)
 
-    res = restaurant.edit_table(Table(id=1, name="A10", seats=3))
+    res = restaurant.edit_table(Table(id=1, name="A10", seats=3, restaurant_id=1))
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res == True
@@ -172,7 +172,7 @@ def test_edit_table_unsuccessful(client, db):
     restaurant.add_new_table(new_table)
     restaurant.add_new_table(Table(name="A8", seats=5, restaurant_id=1))
 
-    res = restaurant.edit_table(Table(id=1, name="A8", seats=1))
+    res = restaurant.edit_table(Table(id=1, name="A8", seats=1, restaurant_id=1))
     fetched_table = db.session.query(Table).filter_by(id=1).first()
 
     assert res == False
