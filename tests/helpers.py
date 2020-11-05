@@ -106,12 +106,23 @@ restaurant = dict(
 )
 
 
-menu = dict(
-    menu_name="Trial menu", 
-    name="Pepperoni pizza", 
-    price=5.0,
-    category="PIZZAS"
-)
+menu = MultiDict([
+    ("menu_name", "Trial menu"), 
+    ("name", "Pepperoni pizza"), 
+    ("price", 5.0),
+    ("category", "PIZZAS")
+])
+
+
+menu_dup_food = MultiDict([
+    ("menu_name", "Trial menu"), 
+    ("name", "Pepperoni pizza"), 
+    ("price", 5.0),
+    ("category", "PIZZAS"),
+    ("name", "Pepperoni pizza"), 
+    ("price", 10),
+    ("category", "DRINKS")
+])
 
 
 table = dict(name="A10", seats=10, restaurant_id=1)
