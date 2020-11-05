@@ -354,65 +354,66 @@ def create_restaurant():
 @operator_required
 def create_menu(restaurant_id):
     status = 200
+    
+    if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+        zipped = None
+        name = ""
+        if request.method == "POST":
+            menu = Menu()
+            menu.name = request.form["menu_name"]
+            name = request.form["menu_name"]
 
-    zipped = None
-    name = ""
-    if request.method == "POST":
-        menu = Menu()
-        menu.name = request.form["menu_name"]
-        name = request.form["menu_name"]
+            if menu.name == "":
+                flash("No empty menu name!", category="error")
+                status = 400
 
-        if menu.name == "":
-            flash("No empty menu name!", category="error")
-            status = 400
+            q = db.session.query(Menu).filter_by(name=menu.name).first()
+            if q is None and status == 200:
+                menu.restaurant_id = int(restaurant_id)
 
-        q = db.session.query(Menu).filter_by(name=menu.name).first()
-        if q is None and status == 200:
-            menu.restaurant_id = int(restaurant_id)
+                food_names = set()
+                zipped = zip(request.form.getlist('name'), 
+                            request.form.getlist('price'), 
+                            request.form.getlist('category'))
+                for name, price, category in zipped:
+                    food = Food()
+                    food.name = name
+                    food.category = category
+                    choices = [i[0] for i in FoodCategory.choices()]
+                    try:
+                        food.price = float(price)
+                        is_float = True
+                    except ValueError:
+                        is_float = False
+                    
+                    if not is_float:
+                        flash("Not a valid price number", category="error")
+                        status = 400
+                    elif food.price < 0:
+                        flash("No negative values!", category="error")
+                        status = 400
+                    elif food.name == "":
+                        flash("No empty food name!", category="error")
+                        status = 400
+                    elif food.category not in choices:
+                        flash("Wrong category selected!", category="error")
+                        status = 400
+                    elif food.name in food_names:
+                        flash("No duplicate food name!", category="error")
+                        status = 400
+                    else:
+                        menu.foods.append(food)
+                        food_names.add(food.name)
 
-            food_names = set()
-            zipped = zip(
-                request.form.getlist("name"),
-                request.form.getlist("price"),
-                request.form.getlist("category"),
-            )
-            for name, price, category in zipped:
-                food = Food()
-                food.name = name
-                food.category = category
-                choices = [i[0] for i in FoodCategory.choices()]
-                try:
-                    food.price = float(price)
-                    is_float = True
-                except ValueError:
-                    is_float = False
-
-                if not is_float:
-                    flash("Not a valid price number", category="error")
-                    status = 400
-                elif food.price < 0:
-                    flash("No negative values!", category="error")
-                    status = 400
-                elif food.name == "":
-                    flash("No empty food name!", category="error")
-                    status = 400
-                elif food.category not in choices:
-                    flash("Wrong category selected!", category="error")
-                    status = 400
-                elif food.name in food_names:
-                    flash("No duplicate food name!", category="error")
-                    status = 400
-                else:
-                    menu.foods.append(food)
-                    food_names.add(food.name)
-
-            if status == 200:
-                db.session.add(menu)
-                db.session.commit()
-                return redirect("/operator/restaurants")
-        else:
-            status = 400
-            flash("There is already a menu with the same name!", category="error")
+                if status == 200:
+                    db.session.add(menu)
+                    db.session.commit()
+                    return redirect("/restaurants/" + str(restaurant_id))
+            else:
+                status = 400
+                flash("There is already a menu with the same name!", category="error")
+    else:
+        status = 401
 
     if zipped or name:
         zip_to_send = zip(
@@ -478,10 +479,10 @@ def _tables(restaurant_id):
 @operator_required
 def create_table(restaurant_id):
     status = 200
-    form = CreateTableForm()
-    if request.method == "POST":
 
-        if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+    form = CreateTableForm()
+    if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+        if request.method == "POST":
             if form.validate_on_submit():
                 new_table = Table()
                 form.populate_obj(new_table)
@@ -494,10 +495,10 @@ def create_table(restaurant_id):
                     flash("Table already added", category="error")
             else:
                 status = 400
-        else:
-            status = 400
-            flash("Can't add a table to a not owned restaurant", category="error")
-
+    else:
+        status = 401
+        flash("Can't add a table to a not owned restaurant", category="error")
+    
     return render_template("create_table.html", form=form), status
 
 
@@ -508,28 +509,33 @@ def create_table(restaurant_id):
 @login_required
 @operator_required
 def edit_table(restaurant_id, table_id):
-    status = 400
+    status = 200
     form = CreateTableForm()
-    if request.method == "POST":
-
-        if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+    if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
+        if request.method == "POST":
             if form.validate_on_submit():
                 new_table = Table()
                 form.populate_obj(new_table)
                 new_table.restaurant_id = restaurant_id
                 new_table.id = table_id
-
+                
                 if restaurant.check_table_existence(new_table):
                     if restaurant.edit_table(new_table):
-                        status = 200
                         return redirect("/restaurants/" + restaurant_id + "/tables")
                     else:
+                        status = 400
                         flash(
                             "There is already a table with the same name!",
                             category="error",
                         )
-        else:
-            flash("Can't edit a table of a not owned restaurant", category="error")
+                else:
+                    status = 400
+                    flash("Specified table does not exist!", category="error")
+            else:
+                status = 400
+    else:
+        status=401
+        flash("Can't edit a table of a not owned restaurant", category="error")
 
     return render_template("create_table.html", form=form), status
 
@@ -541,16 +547,18 @@ def edit_table(restaurant_id, table_id):
 @login_required
 @operator_required
 def delete_table(restaurant_id, table_id):
-    status = 400
+    status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         table = Table(id=table_id)
 
         if restaurant.delete_table(table):
-            status = 200
-            return redirect("/restaurants/" + restaurant_id + "/tables")
+            return redirect("/restaurants/" + restaurant_id + "/tables"), status
         else:
+            status=400
             flash("The table to be deleted does not exist!", category="error")
     else:
+        status=401
         flash("Can't delete a table of a not owned restaurant", category="error")
+        return redirect("/"), status
 
     return redirect("/restaurants/" + restaurant_id + "/tables"), status
