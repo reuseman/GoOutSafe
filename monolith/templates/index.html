@@ -17,11 +17,11 @@ Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
             </div>
         {% endfor %} -->
 
-    {% elif current_user.is_authenticated and session['role'] == "operator" %}
-        Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-       
-        <h2>Restaurants</h2>
-        <a href="/restaurants">See restaurants list</a>
+{% elif current_user.is_authenticated and session['role'] == "operator" %}
+Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+
+<h2>Restaurants</h2>
+<a href="/restaurants">See restaurants list</a>
 
 {% elif current_user.is_authenticated and session['role'] == "authority" %}
 Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
@@ -48,7 +48,8 @@ Below you can mark users as positive, have fun!.
 </section>
 
 {% else %}
-Hi Anonymous, <a href="/login/user">Log in</a>
+<p>Hi Anonymous, <a href="/login/user">Log in</a> or <a href="/register/user">Sign Up</a></p>
 {{ session["role"] }}
 {% endif %}
+
 {% endblock %}
