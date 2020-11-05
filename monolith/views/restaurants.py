@@ -451,10 +451,7 @@ def _tables(restaurant_id):
     status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
-    else:
-        status = 401
-
-    return (
+        return (
         render_template(
             "tables.html",
             tables=alltables,
@@ -463,6 +460,18 @@ def _tables(restaurant_id):
         ),
         status,
     )
+    else:
+        status = 401
+        return (
+            render_template(
+                "tables.html",
+                # base_url="http://127.0.0.1:5000/restaurants",
+                base_url=request.base_url,
+            ),
+            status,
+        )
+
+    
 
 
 @restaurants.route(
