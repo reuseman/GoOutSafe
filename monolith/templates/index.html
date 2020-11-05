@@ -7,8 +7,12 @@
 {% if current_user.is_authenticated and session['role'] == "user" %}
 Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
 
-<h2>Restaurants</h2>
-<a href="/restaurants">See restaurants list</a>
+<div class="ui divider"></div>
+
+<div class="row">
+    <h2 class="ui dividing header">Restaurants</h2>
+    <a href="/restaurants">See restaurants list</a>
+</div>
 <!-- {% for restaurant in restaurants %}
             <div>
                 <li>
@@ -20,12 +24,16 @@ Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
 {% elif current_user.is_authenticated and session['role'] == "operator" %}
 Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
 
-<h2>Restaurants</h2>
-<a href="/restaurants">See restaurants list</a>
+<div class="ui divider"></div>
 
-{% elif current_user.is_authenticated and session['role'] == "authority" %}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-Below you can mark users as positive, have fun!.
+<div class="row">
+    <h2 class="ui dividing header">Restaurants</h2>
+    <a href="/restaurants">See restaurants list</a>
+
+    {% elif current_user.is_authenticated and session['role'] == "authority" %}
+    Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+    Below you can mark users as positive.
+</div>
 
 <!--TODO refactor all the custom sub-views in an external file-->
 <section>
@@ -48,13 +56,16 @@ Below you can mark users as positive, have fun!.
 </section>
 
 {% else %}
-<p>Hello Stranger! you can either <a href="/login/user">Log in</a> or <a href="/register/user">Sign Up</a></p>
-{{ session["role"] }}
+<div class="row">
+    <p>Hello Stranger! you can either <a href="/login/user">Log in</a> or <a href="/register/user">Sign Up</a></p>
+    {{ session["role"] }}
+</div>
 {% endif %}
 
-<a href="/restaurants_map" class="ui primary button">
-    <i class="map icon"></i>
-    Map of our restaurants
-</a>
-
+<div class="row">
+    <a href="/restaurants_map" class="ui primary button">
+        <i class="map icon"></i>
+        Map of our restaurants
+    </a>
+</div>
 {% endblock %}
