@@ -44,6 +44,7 @@ operator = dict(
     password="5678",
     dateofbirth="01/01/1963",
     fiscal_code="YLLGPP63A01B519O",
+    phone_number="+39331303313094",
 )
 
 operator2 = dict(
@@ -53,6 +54,7 @@ operator2 = dict(
     password="5678",
     dateofbirth="1963-01-01",
     fiscal_code="YLLGPP63A01B519O",
+    phone_number="+39331303313094",
 )
 
 health_authority = dict(
@@ -155,6 +157,13 @@ def insert_complete_restaurant(db):
 
 
 def create_operator(client, data=operator2):
+    return client.post(
+        "/register/operator",
+        data=data,
+        follow_redirects=False,
+    )
+
+def create_operator2(client, data=operator):
     return client.post(
         "/register/operator",
         data=data,

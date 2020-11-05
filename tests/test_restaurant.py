@@ -236,6 +236,7 @@ def test_create_table_not_owned_restaurant(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331303313094",
     )
 
     helpers.create_operator(client, data)
@@ -335,6 +336,7 @@ def test_delete_table_not_owned_restaurant(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331303313094",
     )
 
     helpers.create_operator(client, data)
@@ -481,6 +483,7 @@ def test_edit_table_not_owned_restaurant(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331303313094",
     )
 
     helpers.create_operator(client, op_data)
@@ -588,6 +591,7 @@ def test_operator_restaurant_empty(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331343313094",
     )
     helpers.create_operator(client, op_data)
     helpers.login_operator(client)
@@ -729,6 +733,7 @@ def test_tables_not_owned_restaurant(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331303313094",
     )
 
     helpers.create_operator(client, data)
@@ -838,6 +843,7 @@ def test_create_menu_not_owned_restaurant(client, db):
         password="5678",
         dateofbirth="1963-01-01",
         fiscal_code="UIBCAIUBBVX",
+        phone_number="+39331303313094",
     )
 
     helpers.create_operator(client, data)

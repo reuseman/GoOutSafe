@@ -37,6 +37,7 @@ def add_operator(client):
             lastname="operator",
             dateofbirth="2020-12-05",
             password="1233454",
+            phone_number="+39331303313094",
             fiscal_code="123123123123",
         ),
         follow_redirects=False,
