@@ -30,7 +30,11 @@
                     {% if not (current_user.is_authenticated and current_user.is_active) %}
                     <a href="/login/user" class="item">Login</a>
                     {% else %}
-                    <div class="item"></i>Hi, {{ session["name"] }}! </div>
+                    {% if session["role"] == "user" or "operator" %}
+                    <a href="/me" class="item">{{ session["name"] }}</a>
+                    {% else %}
+                    {{ session["name"] }}
+                    {% endif %}
                     <a href="/logout" class="item">Logout</a>
                     {% endif %}
                 </div>
