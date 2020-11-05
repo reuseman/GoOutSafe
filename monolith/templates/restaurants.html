@@ -16,7 +16,7 @@
       {% if role == 'operator' and current_user.id == restaurant.operator_id %}
         <a href="/restaurants/{{restaurant.id}}/tables">Show tables</a>
         <a href="/restaurants/{{restaurant.id}}/tables/new">Add new table</a>
-        <a href="/operator/restaurants/{{restaurant.id}}/reservations">See reservations</a>
+        <a href="/restaurants/{{restaurant.id}}/reservations">See reservations</a>
       {% endif %}
     {% endif %}
   </li>
