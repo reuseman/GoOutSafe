@@ -55,9 +55,26 @@
         {% endfor %}
     </ul>
 </section>
+
+<section>
+    <h3 class="ui dividing header">
+        <i class="book icon"></i>
+        <div class="content">
+            Menus
+        </div>
+    </h3>
+    <ul>
+        {% for menu in menus: %}
+        <li>
+            <a href="{{base_url}}/menus/show/{{menu.id}}">{{menu.name}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
 <div class="ui divider"></div>
 <article>
-    <h3 class="ui  header">
+    <h3 class="ui dividing header">
         <i class="star outline icon"></i>
         <div class="content">
             Reviews
@@ -116,17 +133,4 @@
         </form>
         {% endif %}
     </section>
-
-    <h3>Menus:</h3>
-    <ul>
-        {% for menu in menus: %}
-        <li>
-            {{menu.name}}
-            <a href="{{base_url}}/menus/show/{{menu.id}}">Show details</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% if session['role'] == 'operator' and current_user.id == operator_id %}
-    <a href="/restaurants/{{id}}/menus/new">Create new menu</a>
-    {% endif %}
     {% endblock %}
