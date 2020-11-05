@@ -45,14 +45,14 @@
                     <td align="center">{{table.name}}</td>
                     <td align="center">{{table.seats}}</td>
                     <td>
-                        <a href="/operator/restaurants/{{ table.restaurant_id }}/tables/{{ table.id }}/edit_table">
+                        <a href="/restaurants/{{ table.restaurant_id }}/tables/edit/{{ table.id }}">
                             <button>
                                 Edit table
                             </button>
                         </a>
                     </td>
                     <td>
-                        <a href="/operator/restaurants/{{ table.restaurant_id }}/tables/{{ table.id }}/delete_table">
+                        <a href="/restaurants/{{ table.restaurant_id }}/tables/delete/{{ table.id }}">
                             <button>
                                 Delete table
                             </button>

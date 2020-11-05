@@ -172,7 +172,7 @@ def create_health_authority(client, data=health_authority):
 
 def create_restaurant(client, data=restaurant):
     return client.post(
-        "/create_restaurant",
+        "/restaurants/new",
         data=data,
         follow_redirects=False,
     )
@@ -180,7 +180,7 @@ def create_restaurant(client, data=restaurant):
 
 def create_menu(client, data=menu):
     return client.post(
-        "/operator/restaurants/1/create_menu",
+        "/restaurants/1/menus/new",
         data=data,
         follow_redirects=False,
     )
@@ -188,7 +188,7 @@ def create_menu(client, data=menu):
 
 def show_menu(client, restaurant_id=1, menu_id=1):
     return client.get(
-        "/restaurants/" + str(restaurant_id) + "/show_menu/" + str(menu_id),
+        "/restaurants/" + str(restaurant_id) + "/menus/show/" + str(menu_id),
         follow_redirects=False,
     )
 
@@ -198,12 +198,12 @@ def restaurant_sheet(client, restaurant_id=1):
 
 
 def operator_restaurants(client):
-    return client.get("/operator/restaurants", follow_redirects=False)
+    return client.get("/restaurants/mine", follow_redirects=False)
 
 
 def create_table(client, restaurant_id=1, data=table):
     return client.post(
-        "/operator/restaurants/" + str(restaurant_id) + "/create_table",
+        "/restaurants/" + str(restaurant_id) + "/tables/new",
         data=data,
         follow_redirects=False,
     )
@@ -211,11 +211,10 @@ def create_table(client, restaurant_id=1, data=table):
 
 def edit_table(client, restaurant_id=1, table_id=1, data=table):
     return client.post(
-        "/operator/restaurants/"
+        "/restaurants/"
         + str(restaurant_id)
-        + "/tables/"
-        + str(table_id)
-        + "/edit_table",
+        + "/tables/edit/"
+        + str(table_id),
         data=data,
         follow_redirects=False,
     )
@@ -223,11 +222,10 @@ def edit_table(client, restaurant_id=1, table_id=1, data=table):
 
 def delete_table(client, restaurant_id=1, table_id=1, data=table):
     return client.post(
-        "/operator/restaurants/"
+        "/restaurants/"
         + str(restaurant_id)
-        + "/tables/"
-        + str(table_id)
-        + "/delete_table",
+        + "/tables/delete/"
+        + str(table_id),
         data=data,
         follow_redirects=False,
     )

@@ -93,11 +93,11 @@
         {% for menu in menus: %}
         <li>
             {{menu.name}}
-            <a href="{{base_url}}/show_menu/{{menu.id}}">Show details</a>
+            <a href="{{base_url}}/menus/show/{{menu.id}}">Show details</a>
         </li>
         {% endfor %}
     </ul>
     {% if session['role'] == 'operator' and current_user.id == operator_id %}
-        <a href="/operator/restaurants/{{id}}/create_menu">Create new menu</a>
+        <a href="/restaurants/{{id}}/menus/new">Create new menu</a>
     {% endif %}
     {% endblock %}
