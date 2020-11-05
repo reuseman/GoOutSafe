@@ -32,4 +32,13 @@
 {% if title != "Authority Login" %}
 <h5><a href="/login/authority">Login as an Health Authority</a></h5>
 {% endif %}
+
+{% if title == "User Login" %}
+<h5><a href="/register/user">User Sign Up</a></h5>
+{% elif title == "Operator Login" %}
+<h5><a href="/register/operator">Operator Sign Up</a></h5>
+{% elif title == "Authority Login" %}
+<h5><a href="/register/authority">Authority Sign Up</a></h5>
+{% endif %}
+
 {% endblock %}
