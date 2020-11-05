@@ -2,23 +2,21 @@
 {% block title %}Restaurant profile{% endblock %}
 
 {% block main %}
-<h1>{{ name }} -- Likes: {{ likes }}</h1>
+<h1>{{ name }}</h1>
 <h2>Phone: {{ phone }}</h2>
 <h3>Opening hours: {{ open }} Closing hours: {{ close}}</h3>
 <h3>Cuisine type: {{ cuisine }} </h3>
+{% if current_user.is_authenticated %}
+{% if session["role"] != "operator" and session["role"] != "authority" %}
+<a href="{{base_url}}/book_table" class="positive ui button">Book a table!</a>
+{% endif %}
+{% endif %}
 <ul>
-    {% if current_user.is_authenticated %}
     <iframe width="600" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
         src="https://www.openstreetmap.org/export/embed.html?bbox={{ lon - 0.001 }}%2C{{ lat - 0.001 }}%2C{{ lon + 0.001 }}%2C{{ lat + 0.001 }}&amp;layer=mapnik&amp;marker={{ lat }}%2C{{ lon }}"
         style="border: 1px solid black"></iframe><br /><small><a
             href="https://www.openstreetmap.org/#map=17/{{ lat }}/{{ lon }}">See it Larger</a></small>
-            
-            {% if session["role"] != "operator" and session["role"] != "authority" %}
-            <form action="{{base_url}}/book_table">
-                <button type="submit">Book!</button>
-            </form>
-        {% endif %}
-    {% endif %}
+
 </ul>
 
 <section>
@@ -98,6 +96,6 @@
         {% endfor %}
     </ul>
     {% if session['role'] == 'operator' and current_user.id == operator_id %}
-        <a href="/restaurants/{{id}}/menus/new">Create new menu</a>
+    <a href="/restaurants/{{id}}/menus/new">Create new menu</a>
     {% endif %}
     {% endblock %}

@@ -78,7 +78,8 @@ def operator_restaurants(message=""):
 
 @restaurants.route("/restaurants/<restaurant_id>", methods=["GET", "POST"])
 def restaurant_sheet(restaurant_id):
-    q_restaurant = db.session.query(Restaurant).filter_by(id=int(restaurant_id)).first()
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
     q_restaurant_precautions = (
         db.session.query(Precautions.name)
         .filter(
@@ -119,7 +120,6 @@ def restaurant_sheet(restaurant_id):
         "restaurantsheet.html",
         id=q_restaurant.id,
         name=q_restaurant.name,
-        likes=q_restaurant.likes,
         lat=q_restaurant.lat,
         lon=q_restaurant.lon,
         phone=q_restaurant.phone,
@@ -144,15 +144,21 @@ def book_table_form(restaurant_id):
         return redirect("/restaurants/"+str(restaurant_id))
 
     form = CreateBookingDateHourForm()
-    max_table_seats = db.session.query(func.max(Table.seats)).filter(Table.restaurant_id==restaurant_id).first()[0] #Take max seats from tables of restaurant_ud
-    time =[]
-    range_hour = db.session.query(Restaurant.time_of_stay).filter_by(id=restaurant_id).first()[0]
-    opening_hour = int(db.session.query(Restaurant.opening_hours).filter_by(id=restaurant_id).first()[0] * 60)
-    closing_hour = int(db.session.query(Restaurant.closing_hours).filter_by(id=restaurant_id).first()[0] * 60)
-    if(closing_hour < opening_hour): closing_hour = closing_hour + (24*60)
-    for i in range(opening_hour,closing_hour,range_hour):
-        time.append(str(timedelta(minutes=i))[:-3]+" - "+str(timedelta(minutes=i+range_hour))[:-3])
-    
+    max_table_seats = db.session.query(func.max(Table.seats)).filter(
+        Table.restaurant_id == restaurant_id).first()[0]  # Take max seats from tables of restaurant_ud
+    time = []
+    range_hour = db.session.query(Restaurant.time_of_stay).filter_by(
+        id=restaurant_id).first()[0]
+    opening_hour = int(db.session.query(Restaurant.opening_hours).filter_by(
+        id=restaurant_id).first()[0] * 60)
+    closing_hour = int(db.session.query(Restaurant.closing_hours).filter_by(
+        id=restaurant_id).first()[0] * 60)
+    if(closing_hour < opening_hour):
+        closing_hour = closing_hour + (24*60)
+    for i in range(opening_hour, closing_hour, range_hour):
+        time.append(str(timedelta(minutes=i))[
+                    :-3]+" - "+str(timedelta(minutes=i+range_hour))[:-3])
+
     if request.method == "POST":
         if form.validate_on_submit():
             number_persons = int(request.form["number_persons"])
@@ -171,7 +177,8 @@ def book_table_form(restaurant_id):
                 .filter(Restaurant.id == restaurant_id)
                 .first()
             )
-            table = restaurant.get_free_table(number_persons, booking_date_start)
+            table = restaurant.get_free_table(
+                number_persons, booking_date_start)
 
             if table is None:
                 flash(
@@ -182,14 +189,16 @@ def book_table_form(restaurant_id):
             else:
                 global booking_number
                 if booking_number == -1:
-                    booking_number = db.session.query(func.max(Booking.booking_number)).first()[0]
+                    booking_number = db.session.query(
+                        func.max(Booking.booking_number)).first()[0]
                     if booking_number is None:
-                        booking_number=1
+                        booking_number = 1
                     else:
-                        booking_number+=1
+                        booking_number += 1
 
-                confirmed_bookign = True if number_persons==1 else False                    
-                db.session.add(Booking(user_id=current_user.id, table_id=table, booking_number=booking_number, start_booking=booking_date_start, end_booking=booking_date_end, confirmed_booking=confirmed_bookign))
+                confirmed_bookign = True if number_persons == 1 else False
+                db.session.add(Booking(user_id=current_user.id, table_id=table, booking_number=booking_number,
+                                       start_booking=booking_date_start, end_booking=booking_date_end, confirmed_booking=confirmed_bookign))
                 db.session.commit()
 
                 old_booking_number = booking_number
@@ -202,7 +211,8 @@ def book_table_form(restaurant_id):
                     session["booking_number"] = old_booking_number
                     session["number_persons"] = number_persons
                     return redirect(
-                        url_for(".confirm_booking", restaurant_id=restaurant_id)
+                        url_for(".confirm_booking",
+                                restaurant_id=restaurant_id)
                     )
         else:
             flash("Are you really able to go back to the past?")
@@ -225,7 +235,8 @@ def confirm_booking(restaurant_id):
 
     if form.validate_on_submit():
         booking = (
-            db.session.query(Booking).filter_by(booking_number=booking_number).first()
+            db.session.query(Booking).filter_by(
+                booking_number=booking_number).first()
         )
 
         for i, field in enumerate(form.people):
@@ -236,7 +247,8 @@ def confirm_booking(restaurant_id):
             )
             if user is None:
                 if (
-                    db.session.query(User).filter_by(email=field.email.data).first()
+                    db.session.query(User).filter_by(
+                        email=field.email.data).first()
                     is None
                 ):  # check if email is already in the db or not
                     user = User(
@@ -300,7 +312,8 @@ def confirm_booking(restaurant_id):
 @restaurants.route("/restaurants/like/<restaurant_id>")
 @login_required
 def _like(restaurant_id):
-    q = Like.query.filter_by(liker_id=current_user.id, restaurant_id=restaurant_id)
+    q = Like.query.filter_by(liker_id=current_user.id,
+                             restaurant_id=restaurant_id)
     if q.first() is not None:
         new_like = Like()
         new_like.liker_id = current_user.id
@@ -348,7 +361,7 @@ def create_restaurant():
 @operator_required
 def create_menu(restaurant_id):
     status = 200
-    
+
     zipped = None
     name = ""
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
@@ -366,9 +379,9 @@ def create_menu(restaurant_id):
                 menu.restaurant_id = int(restaurant_id)
 
                 food_names = set()
-                zipped = zip(request.form.getlist('name'), 
-                            request.form.getlist('price'), 
-                            request.form.getlist('category'))
+                zipped = zip(request.form.getlist('name'),
+                             request.form.getlist('price'),
+                             request.form.getlist('category'))
                 for name, price, category in zipped:
                     food = Food()
                     food.name = name
@@ -379,7 +392,7 @@ def create_menu(restaurant_id):
                         is_float = True
                     except ValueError:
                         is_float = False
-                    
+
                     if not is_float:
                         flash("Not a valid price number", category="error")
                         status = 400
@@ -405,7 +418,8 @@ def create_menu(restaurant_id):
                     return redirect("/restaurants/" + str(restaurant_id))
             else:
                 status = 400
-                flash("There is already a menu with the same name!", category="error")
+                flash("There is already a menu with the same name!",
+                      category="error")
     else:
         status = 401
 
@@ -427,7 +441,8 @@ def create_menu(restaurant_id):
         )
     else:
         return (
-            render_template("create_menu.html", choices=FoodCategory.choices()),
+            render_template("create_menu.html",
+                            choices=FoodCategory.choices()),
             status,
         )
 
@@ -451,15 +466,16 @@ def show_menu(restaurant_id, menu_id):
 def _tables(restaurant_id):
     status = 200
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
-        alltables = db.session.query(Table).filter_by(restaurant_id=restaurant_id)
+        alltables = db.session.query(Table).filter_by(
+            restaurant_id=restaurant_id)
         return (
-        render_template(
-            "tables.html",
-            tables=alltables,
-            base_url=request.base_url,
-        ),
-        status,
-    )
+            render_template(
+                "tables.html",
+                tables=alltables,
+                base_url=request.base_url,
+            ),
+            status,
+        )
     else:
         status = 401
         return (
@@ -497,7 +513,7 @@ def create_table(restaurant_id):
     else:
         status = 401
         flash("Can't add a table to a not owned restaurant", category="error")
-    
+
     return render_template("create_table.html", form=form), status
 
 
@@ -517,7 +533,7 @@ def edit_table(restaurant_id, table_id):
                 form.populate_obj(new_table)
                 new_table.restaurant_id = restaurant_id
                 new_table.id = table_id
-                
+
                 if restaurant.check_table_existence(new_table):
                     if restaurant.edit_table(new_table):
                         return redirect("/restaurants/" + restaurant_id + "/tables")
@@ -533,7 +549,7 @@ def edit_table(restaurant_id, table_id):
             else:
                 status = 400
     else:
-        status=401
+        status = 401
         flash("Can't edit a table of a not owned restaurant", category="error")
 
     return render_template("create_table.html", form=form), status
@@ -553,10 +569,10 @@ def delete_table(restaurant_id, table_id):
         if restaurant.delete_table(table):
             return redirect("/restaurants/" + restaurant_id + "/tables"), status
         else:
-            status=400
+            status = 400
             flash("The table to be deleted does not exist!", category="error")
     else:
-        status=401
+        status = 401
         flash("Can't delete a table of a not owned restaurant", category="error")
         return redirect("/"), status
 
@@ -567,52 +583,55 @@ def delete_table(restaurant_id, table_id):
 @login_required
 @operator_required
 def operator_reservations_list(restaurant_id):
-    operator_id = db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
+    operator_id = db.session.query(Restaurant.operator_id).filter_by(
+        id=restaurant_id).first()[0]
 
     if operator_id != current_user.id:
         flash("Access denied")
         return redirect("/operator/restaurants")
 
-    form=ChooseReservationData()
+    form = ChooseReservationData()
     date_show = date.today()
     tomorrow = date_show + timedelta(days=1)
 
     booking_list = db.session\
-        .query(Booking,Table,func.count())\
-            .join(Table)\
-            .join(Restaurant)\
-            .filter(Restaurant.id==restaurant_id, Booking.start_booking>=date.today(), Booking.start_booking<tomorrow)\
-            .group_by(Booking.booking_number)\
-            .order_by(Booking.start_booking.asc()
-        ).all()
+        .query(Booking, Table, func.count())\
+        .join(Table)\
+        .join(Restaurant)\
+        .filter(Restaurant.id == restaurant_id, Booking.start_booking >= date.today(), Booking.start_booking < tomorrow)\
+        .group_by(Booking.booking_number)\
+        .order_by(Booking.start_booking.asc()
+                  ).all()
 
     if request.method == "POST":
         if form.validate_on_submit():
             print(request.form['date'])
             chosen_date = datetime.strptime(request.form['date'], "%Y-%m-%d")
             tomorrow = chosen_date + timedelta(days=1)
-            date_show=request.form['date']
+            date_show = request.form['date']
 
             booking_list = db.session\
-                .query(Booking,Table,func.count())\
-                    .join(Table)\
-                    .join(Restaurant)\
-                    .filter(Restaurant.id==restaurant_id, Booking.start_booking>=chosen_date, Booking.start_booking<tomorrow)\
-                    .group_by(Booking.booking_number)\
-                    .order_by(Booking.start_booking.asc()
-                ).all()
-            
+                .query(Booking, Table, func.count())\
+                .join(Table)\
+                .join(Restaurant)\
+                .filter(Restaurant.id == restaurant_id, Booking.start_booking >= chosen_date, Booking.start_booking < tomorrow)\
+                .group_by(Booking.booking_number)\
+                .order_by(Booking.start_booking.asc()
+                          ).all()
+
     total_people = 0
     for booking in booking_list:
-        total_people+=booking[2]
+        total_people += booking[2]
 
-    return render_template("reservations.html",form=form, booking_list=booking_list, date=date_show, total_people=total_people, base_url=request.base_url)
+    return render_template("reservations.html", form=form, booking_list=booking_list, date=date_show, total_people=total_people, base_url=request.base_url)
+
 
 @restaurants.route("/operator/restaurants/<restaurant_id>/reservations/delete/<booking_number>", methods=["GET", "POST"])
 @operator_required
 @login_required
-def operator_delete_reservation(restaurant_id,booking_number):
-    prova = db.session.query(Booking).filter_by(booking_number=booking_number).delete()
+def operator_delete_reservation(restaurant_id, booking_number):
+    prova = db.session.query(Booking).filter_by(
+        booking_number=booking_number).delete()
     db.session.commit()
 
     flash('Reservation deleted', category='success')
