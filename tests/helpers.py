@@ -279,3 +279,9 @@ def booking(client, data=booking[0]):
         data=data,
         follow_redirects=False,
     )
+
+def unsubscribe(client):
+    return client.get(
+        "/unsubscribe",
+        follow_redirects=False,
+    )
