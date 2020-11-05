@@ -317,3 +317,11 @@ class ChangeContactForm(FlaskForm):
         label="Type your password here to confirm", validators=[DataRequired()]
     )
     display = ["email", "phone", "password"]
+
+
+class ChooseReservationData(FlaskForm):
+    date = DateField("Date", default=date.today())
+    submit = SubmitField("Submit")
+
+    def validate(self):
+        return True

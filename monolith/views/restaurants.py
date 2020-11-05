@@ -28,6 +28,7 @@ from monolith.services.forms import (
     UserForm,
     CreateBookingDateHourForm,
     ConfirmBookingForm,
+    ChooseReservationData
 )
 from ..controllers import restaurant
 from datetime import date, timedelta, datetime
@@ -195,7 +196,7 @@ def book_table_form(restaurant_id):
                 booking_number += 1
 
                 if confirmed_bookign:
-                    flash("Booking confirmed")
+                    flash("Booking confirmed", category='success')
                     return redirect("/restaurants")
                 else:
                     session["booking_number"] = old_booking_number
@@ -250,7 +251,7 @@ def confirm_booking(restaurant_id):
                     flash(
                         "Person "
                         + str(i + 1)
-                        + ", mail already used from another from a registered user"
+                        + ", mail already used from another user"
                     )
                     error = True
                     break
@@ -288,7 +289,7 @@ def confirm_booking(restaurant_id):
 
             session.pop("booking_number", None)
             session.pop("number_persons", None)
-            flash("Booking confirmed")
+            flash("Booking confirmed", category='success')
             return redirect("/restaurants")
 
     return render_template(
@@ -565,14 +566,16 @@ def delete_table(restaurant_id, table_id):
 @restaurants.route("/restaurants/<restaurant_id>/reservations", methods=["GET", "POST"])
 @login_required
 @operator_required
-def see_reservations(restaurant_id):
+def operator_reservations_list(restaurant_id):
     operator_id = db.session.query(Restaurant.operator_id).filter_by(id=restaurant_id).first()[0]
 
     if operator_id != current_user.id:
         flash("Access denied")
         return redirect("/operator/restaurants")
 
-    tomorrow = date.today()+ timedelta(days=1)
+    form=ChooseReservationData()
+    date_show = date.today()
+    tomorrow = date_show + timedelta(days=1)
 
     booking_list = db.session\
         .query(Booking,Table,func.count())\
@@ -583,4 +586,34 @@ def see_reservations(restaurant_id):
             .order_by(Booking.start_booking.asc()
         ).all()
 
-    return render_template("reservations.html", booking_list=booking_list)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            print(request.form['date'])
+            chosen_date = datetime.strptime(request.form['date'], "%Y-%m-%d")
+            tomorrow = chosen_date + timedelta(days=1)
+            date_show=request.form['date']
+
+            booking_list = db.session\
+                .query(Booking,Table,func.count())\
+                    .join(Table)\
+                    .join(Restaurant)\
+                    .filter(Restaurant.id==restaurant_id, Booking.start_booking>=chosen_date, Booking.start_booking<tomorrow)\
+                    .group_by(Booking.booking_number)\
+                    .order_by(Booking.start_booking.asc()
+                ).all()
+            
+    total_people = 0
+    for booking in booking_list:
+        total_people+=booking[2]
+
+    return render_template("reservations.html",form=form, booking_list=booking_list, date=date_show, total_people=total_people, base_url=request.base_url)
+
+@restaurants.route("/operator/restaurants/<restaurant_id>/reservations/delete/<booking_number>", methods=["GET", "POST"])
+@operator_required
+@login_required
+def operator_delete_reservation(restaurant_id,booking_number):
+    prova = db.session.query(Booking).filter_by(booking_number=booking_number).delete()
+    db.session.commit()
+
+    flash('Reservation deleted', category='success')
+    return redirect("/operator/restaurants")

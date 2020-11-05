@@ -11,7 +11,7 @@
     
     td, th {
       border: 1px solid #dddddd;
-      text-align: left;
+      text-align: center;
       padding: 8px;
     }
     
@@ -19,22 +19,55 @@
       background-color: #dddddd;
     }
     </style>
+
+    <h3>Choose date</h3>
+    <form method="POST" action="">
+      <dd>{{ form.date }}</dd><br/>
+      <dd>{{form.submit}}</dd>
+    </form>
+
+    <h3>Booking: {{date}}</h3>
     <table>
         <tr>
-            <th>Booking id</th>
+            <th>Reservation id</th>
             <th>Table</th>
-            <th>Booking people</th>
+            <th>People number</th>
             <th>Date</th>
+            <th>Details</th>
+            <th>Delete</th>
         </tr>
-            {% for book in booking_list %}
-                <tr>
-                    <td>{{book[0].booking_number}}</td>
-                    <td>{{book[1].name}}</td>
-                    <td>{{book[2]}}</td>
-                    {% set date = (book[0].start_booking) | string%}
-                    {% set hour = date.split(' ')[1]%}
-                    <td>{{hour[:-3]}}</td>  <!-- print only HH:MM -->
-                </tr>
-            {% endfor %}
+        {% if booking_list|length == 0 %}
+          <tr>
+            <td colspan="6">No reservations</td>
+          </tr>
+        {%else%}
+          {% for book in booking_list %}
+            <tr>
+                <td>{{book[0].booking_number}}</td>
+                <td>{{book[1].name}}</td>
+                <td>{{book[2]}}</td>
+                {% set date_hour = (book[0].start_booking) | string%}
+                {% set hour = date_hour.split(' ')[1]%}
+                <td>{{hour[:-3]}}</td>  <!-- print only HH:MM -->
+                <td>
+                  <form action="{{base_url}}/{{book[0].booking_number}}">
+                    <button>
+                        More details
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <form action="{{base_url}}/delete/{{book[0].booking_number}}">
+                    <button>
+                        Remove
+                    </button>
+                  </form>
+                </td>
+            </tr>
+          {% endfor %}
+        {% endif%}
     </table>
+
+    <br/>
+    <div></th>Total number of people in the restaurant: {{total_people}}</div>
 {% endblock %}

@@ -46,19 +46,32 @@
     <main>
         <section style="margin-top:80px; margin-bottom:30px" class="ui text container">
             <!--ADD css to close the message-->
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-            <div id="popup" class="ui error message close transition" onclick="closePopup()">
-                <i class="close icon"></i>
-                <div class="header">
-                    There were some errors with your submission
-                </div>
-                <ul class="list">
-                    {% for message in get_flashed_messages() %}
-                    <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                {% for category, message in messages %}
+                    <div>{{category}}</div>
+                    {% if category == "success" %}
+                        <div class="ui success message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Success!
+                            </div>
+                            <ul class="list">
+                                <li>{{ message }}</li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div id="popup" class="ui error message close transition" onclick="closePopup()">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                There were some errors with your submission
+                            </div>
+                            <ul class="list">
+                                <li>{{ message }}</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
             {% endwith %}
         </section>
