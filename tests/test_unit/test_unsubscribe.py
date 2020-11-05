@@ -31,6 +31,8 @@ def test_marked_user_cannot_be_deleted_should_be_true(client, db):
     ha.mark(user, duration=18)
     db.session.commit()
 
+    helpers.unsubscribe(client)
+
     user = db.session.query(User).filter(User.email == "mariobrown@gmail.com").first()
 
     assert user.firstname == "mario"
