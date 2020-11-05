@@ -6,7 +6,7 @@ import datetime
 
 
 def test_create_operator_view_is_available(client):
-    res = client.get("/create_operator")
+    res = client.get("/register/operator")
     assert res.status_code == 200
 
 
@@ -30,7 +30,7 @@ def test_create_operator_view(client, db):
 
 def add_operator(client):
     return client.post(
-        "/create_operator",
+        "/register/operator",
         data=dict(
             email="operator@mail.com",
             firstname="operator",

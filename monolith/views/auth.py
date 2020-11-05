@@ -10,7 +10,7 @@ from monolith.services.forms import LoginForm
 auth = Blueprint("auth", __name__)
 
 
-@auth.route("/login", methods=["GET", "POST"])
+@auth.route("/login/user", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -26,7 +26,7 @@ def login():
     return render_template("login.html", form=form, title="User Login")
 
 
-@auth.route("/operator_login", methods=["GET", "POST"])
+@auth.route("/login/operator", methods=["GET", "POST"])
 def operator_login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -42,7 +42,7 @@ def operator_login():
     return render_template("login.html", form=form, title="Operator Login")
 
 
-@auth.route("/authority_login", methods=["GET", "POST"])
+@auth.route("/login/authority", methods=["GET", "POST"])
 def authority_login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -73,7 +73,7 @@ def logout():
 def unsubscribe():
 
     if current_user == None or not session.get("role"):
-        return redirect("/login")
+        return redirect("/login/user")
 
     if session["role"] == "user":
         user = db.session.query(User).filter(User.email == current_user.email).first()

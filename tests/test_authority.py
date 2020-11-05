@@ -6,7 +6,7 @@ import datetime
 
 
 def test_create_operator_view_is_available(client):
-    res = client.get("/create_authority")
+    res = client.get("/register/authority")
     assert res.status_code == 200
 
 
@@ -35,7 +35,7 @@ def test_correct_login(client):
     add_authority(client)
 
     res = client.post(
-        "/authority_login",
+        "/login/authority",
         data=dict(
             email="aslpisa@mail.com",
             password="1233454",
@@ -51,7 +51,7 @@ def test_correct_login(client):
 
 def add_authority(client):
     return client.post(
-        "/create_authority",
+        "/register/authority",
         data=dict(
             name="asl Pisa",
             email="aslpisa@mail.com",

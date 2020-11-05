@@ -31,19 +31,21 @@ class UserForm(FlaskForm):
     )
     password = f.PasswordField("Password", validators=[DataRequired()])
     dateofbirth = DateField("Date of birth", validators=[DataRequired()])
-    display = ["email", "firstname", "lastname", "password", "dateofbirth"]
+    phone = f.IntegerField("Phone", validators=[DataRequired()])
+    fiscal_code = f.StringField("Fiscal Code", validators=[DataRequired()])
+    display = ["email", "firstname", "lastname", "password", "dateofbirth", "phone", "fiscal_code"]
 
 
 # TODO Validators are missing?
 class OperatorForm(UserForm):
     # TODO validate fiscal code in a good proper way
-    fiscal_code = f.StringField("Fiscal Code", validators=[DataRequired()])
     display = [
         "email",
         "firstname",
         "lastname",
         "password",
         "dateofbirth",
+        "phone"
         "fiscal_code",
     ]
 

@@ -14,7 +14,7 @@ def _users():
     return render_template("users.html", users=users)
 
 
-@users.route("/create_user", methods=["GET", "POST"])
+@users.route("/register/user", methods=["GET", "POST"])
 def create_user():
     form = UserForm()
     if request.method == "POST":

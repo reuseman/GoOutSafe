@@ -166,7 +166,7 @@ def test_anonymous_user_should_be_redirected_on_login_page_when_create_review(
     res = create_review(client, redirect=False)
 
     assert res.status_code == 302
-    assert urlparse(res.location).path == "/login"
+    assert urlparse(res.location).path == "/login/user"
 
 
 # Helpers methods

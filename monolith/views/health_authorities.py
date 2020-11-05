@@ -6,7 +6,7 @@ from monolith.services.forms import AuthorityForm
 authorities = Blueprint("authorities", __name__)
 
 
-@authorities.route("/create_authority", methods=["GET", "POST"])
+@authorities.route("/register/authority", methods=["GET", "POST"])
 def create_authority():
     form = AuthorityForm()
     if request.method == "POST":

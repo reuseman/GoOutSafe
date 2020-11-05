@@ -24,7 +24,7 @@ def authority_required(f):
     def decorated_function(*args, **kwargs):
         authenticated = current_user.is_authenticated
         if not authenticated:
-            return redirect("/authority_login")
+            return redirect("/login/authority")
         elif session["role"] != "authority":
             return login_manager.unauthorized()
             # need to implement logic for logout maybe? or templated error page

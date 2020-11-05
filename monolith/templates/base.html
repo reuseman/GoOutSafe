@@ -28,7 +28,7 @@
                 <div class="ui red compact menu center primary">
                     <a href="/" class="item" title="Home Page">Home</a>
                     {% if not (current_user.is_authenticated and current_user.is_active) %}
-                    <a href="/login" class="item">Login</a>
+                    <a href="/login/user" class="item">Login</a>
                     {% else %}
                     <div class="item"></i>Hi, {{ session["name"] }}! </div>
                     <a href="/logout" class="item">Logout</a>

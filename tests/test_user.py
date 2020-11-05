@@ -7,7 +7,7 @@ from monolith.models import User
 
 
 def test_create_user_view_is_available(client):
-    res = client.get("/create_user")
+    res = client.get("/register/user")
 
     assert res.status_code == 200
 

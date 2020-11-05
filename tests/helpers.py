@@ -106,7 +106,7 @@ table = dict(name="A10", seats=10, restaurant_id=1)
 
 def create_user(client, data=user2):
     return client.post(
-        "/create_user",
+        "/register/user",
         data=data,
         follow_redirects=False,
     )
@@ -156,7 +156,7 @@ def insert_complete_restaurant(db):
 
 def create_operator(client, data=operator2):
     return client.post(
-        "/create_operator",
+        "/register/operator",
         data=data,
         follow_redirects=False,
     )
@@ -164,7 +164,7 @@ def create_operator(client, data=operator2):
 
 def create_health_authority(client, data=health_authority):
     return client.post(
-        "/create_authority",
+        "/register/authority",
         data=data,
         follow_redirects=False,
     )
@@ -243,7 +243,7 @@ def insert_health_authority(db, data=health_authority) -> HealthAuthority:
 
 def login_user(client, data=user):
     return client.post(
-        "/login",
+        "/login/user",
         data=data,
         follow_redirects=False,
     )
@@ -251,7 +251,7 @@ def login_user(client, data=user):
 
 def login_operator(client, data=operator):
     return client.post(
-        "/operator_login",
+        "/login/operator",
         data=data,
         follow_redirects=False,
     )
@@ -266,7 +266,7 @@ def logout(client):
 
 def login_authority(client, data=health_authority):
     return client.post(
-        "/authority_login",
+        "/login/authority",
         data=data,
         follow_redirects=False,
     )

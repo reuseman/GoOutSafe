@@ -6,7 +6,7 @@ from monolith.services.forms import OperatorForm
 operators = Blueprint("operators", __name__)
 
 
-@operators.route("/create_operator", methods=["GET", "POST"])
+@operators.route("/register/operator", methods=["GET", "POST"])
 def create_operator():
     form = OperatorForm()
     if request.method == "POST":

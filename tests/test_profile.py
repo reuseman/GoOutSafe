@@ -92,7 +92,7 @@ def test_password_form(client):
     helpers.logout
 
     res = client.post(
-        "/login",
+        "/login/user",
         data=dict(
             email="mariobrown@gmail.com",
             password="5678",
