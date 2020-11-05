@@ -2,6 +2,11 @@
 {% block title %}Index{% endblock %}
 
 {% block main %}
-    <h2>Check out our restaurants!</h2>
-    <iframe id="restaurants_map" src="{{ url_for('restaurants_map.send_map') }} " width="400" height="300"></iframe>
+<section>
+    <h2 class?="ui dividing header">Check out our restaurants!</h2>
+    <p>Below you can see a map of all the restaurants registered in our app! Use it to find the ones nearest to your
+        position!</p>
+</section>
+
+<iframe id="restaurants_map" src="{{ url_for('restaurants_map.send_map') }} " width="700" height="400"></iframe>
 {% endblock %}
