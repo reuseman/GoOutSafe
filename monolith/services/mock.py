@@ -3,7 +3,6 @@ from codicefiscale import codicefiscale as cf
 import datetime
 
 from monolith import db
-from monolith.views.health_authorities import _authorities
 from monolith.models import (
     User,
     Operator,
@@ -97,7 +96,8 @@ def default_user():
 
 
 def operator():
-    q = db.session.query(Operator).filter(Operator.email == "operator@example.com")
+    q = db.session.query(Operator).filter(
+        Operator.email == "operator@example.com")
     user = q.first()
     if user is None:
         example = Operator()
@@ -109,7 +109,7 @@ def operator():
         example.password = "admin"
         example.fiscal_code = "my_fiscal_code"
         db.session.add(example)
-        
+
         example = Operator()
         example.firstname = "OperatorAdmin"
         example.lastname = "OperatorAdmin"
@@ -195,9 +195,12 @@ def precautions():
         db.session.add(Precautions(name="Amuchina"))
         db.session.add(Precautions(name="Social distancing"))
         db.session.add(Precautions(name="Disposable menu"))
-        db.session.add(Precautions(name="Personnel required to wash hands regularly"))
-        db.session.add(Precautions(name="Obligatory masks for staff in public areas"))
-        db.session.add(Precautions(name="Tables sanitized at the end of each meal"))
+        db.session.add(Precautions(
+            name="Personnel required to wash hands regularly"))
+        db.session.add(Precautions(
+            name="Obligatory masks for staff in public areas"))
+        db.session.add(Precautions(
+            name="Tables sanitized at the end of each meal"))
 
         db.session.commit()
 
@@ -208,10 +211,14 @@ def restaurants_precautions():
     )
     restaurant_precautions = q.first()
     if restaurant_precautions is None:
-        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
-        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
-        db.session.add(RestaurantsPrecautions(restaurant_id=2, precautions_id=1))
-        db.session.add(RestaurantsPrecautions(restaurant_id=3, precautions_id=2))
+        db.session.add(RestaurantsPrecautions(
+            restaurant_id=1, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(
+            restaurant_id=1, precautions_id=2))
+        db.session.add(RestaurantsPrecautions(
+            restaurant_id=2, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(
+            restaurant_id=3, precautions_id=2))
         db.session.commit()
 
 
@@ -221,7 +228,8 @@ def mark_three_users():
         user2 = db.session.query(User).filter(User.id == 7).first()
         user3 = db.session.query(User).filter(User.id == 8).first()
 
-        ha = db.session.query(HealthAuthority).filter(HealthAuthority.id == 1).first()
+        ha = db.session.query(HealthAuthority).filter(
+            HealthAuthority.id == 1).first()
         ha.mark(user1)
         ha.mark(user2)
         ha.mark(user3)
@@ -297,8 +305,10 @@ def menu():
     menu = q.first()
     if menu is None:
         menu = Menu(name="Trial Menu", restaurant_id=1)
-        menu.foods.append(Food(name="Pepperoni pizza", price=5, category="PIZZAS"))
-        menu.foods.append(Food(name="Water bottle", price=2, category="DRINKS"))
+        menu.foods.append(Food(name="Pepperoni pizza",
+                               price=5, category="PIZZAS"))
+        menu.foods.append(
+            Food(name="Water bottle", price=2, category="DRINKS"))
 
         db.session.add(menu)
         db.session.commit()
