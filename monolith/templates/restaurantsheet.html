@@ -70,6 +70,12 @@
         </li>
         {% endfor %}
     </ul>
+    {% if session['role'] == 'operator' and current_user.id == operator_id %}
+    <a href="/restaurants/{{id}}/menus/new" class="ui primary button">
+        <i class="plus icon"></i>
+        Add a menu
+    </a>
+    {% endif %}
 </section>
 
 <div class="ui divider"></div>
