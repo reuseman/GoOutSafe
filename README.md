@@ -40,7 +40,19 @@ If you want to see an interactive report run:
 ## Production (beta)
 ### Docker
     docker build -t gooutsafe:latest . 
+
+To run with settings
+
+    docker run --name gooutsafe -d -p 8000:5000 --rm -e SECRET_KEY=my-secret-key \
+        -e MAIL_SERVER=smtp.gmail.com -e MAIL_PORT=587 -e MAIL_USE_TLS=1 \
+        -e MAIL_USERNAME=<your-gmail-username> -e MAIL_PASSWORD=<your-gmail-password> \ gooutsafe:latest
+
+To run without settings
+
     docker run --name gooutsafe -d -p 8000:5000 --rm gooutsafe:latest
+
+Go to
+
     http://127.0.0.1:5000
 
 

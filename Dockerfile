@@ -11,6 +11,11 @@ ENV PYTHONUNBUFFERED=1
 RUN adduser -D gooutsafe
 WORKDIR /home/gooutsafe
 
+# FIX for Numpy dependencies
+# RuntimeError: Broken toolchain: cannot link a simple C program
+RUN apk update
+RUN apk add make automake gcc g++ subversion python3-dev
+
 # Install dependencies
 COPY requirements/ requirements/
 RUN python -m venv venv
@@ -21,7 +26,7 @@ COPY monolith/ monolith/
 COPY gooutsafe.py config.py boot.sh ./
 
 # Permissions
-# RUN chown -R gooutsafe:gooutsafe ./
+RUN chown -R gooutsafe:gooutsafe ./
 RUN chmod a+x boot.sh
 
 EXPOSE 5000
