@@ -20,9 +20,19 @@
 </ul>
 {% if role == "operator" %}
 {% if operator_restaurants == True%}
-<a href="/restaurants">See all restaurants</a>
+<!-- <a href="/restaurants">See all restaurants</a> -->
+<div class="row">
+  <a href="/restaurants" class="ui primary button">
+      See restaurants list
+  </a>
+</div><br/>
 {% else %}
-<a href="/restaurants/mine">See your restaurants</a>
+<div class="row">
+  <a href="/restaurants/mine" class="ui primary button">
+    See your restaurants
+  </a>
+</div><br/>
+
 {% endif %}
 <div class="ui row">
   <a href="{{base_url}}/new" class="positive ui button">Register a new restaurant</a>

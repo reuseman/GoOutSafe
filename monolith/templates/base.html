@@ -35,6 +35,9 @@
                     {% else %}
                     {{ session["name"] }}
                     {% endif %}
+                    {% if session["role"] == 'user' %}
+                    <a href="/bookings" class="item">Booking</a>
+                    {% endif %}
                     <a href="/logout" class="item">Logout</a>
                     {% endif %}
                 </div>

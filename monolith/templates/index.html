@@ -11,7 +11,12 @@ Hi {{ current_user.firstname }}!
 
 <div class="row">
     <h2 class="ui dividing header">Restaurants</h2>
-    <a href="/restaurants">See restaurants list</a>
+    <div class="row">
+        <a href="/restaurants" class="ui primary button">
+            <i class="utensil spoon icon"></i>
+            See restaurants list
+        </a>
+    </div><br/>
 </div>
 <!-- {% for restaurant in restaurants %}
             <div>
@@ -27,7 +32,12 @@ Hi {{ current_user.firstname }}!
 
 <div class="row">
     <h2 class="ui dividing header">Restaurants</h2>
-    <a href="/restaurants">See restaurants list</a>
+    <div class="row">
+        <a href="/restaurants" class="ui primary button">
+            <i class="utensil spoon icon"></i>
+            See restaurants list
+        </a>
+    </div><br/>
 
     {% elif current_user.is_authenticated and session['role'] == "authority" %}
     Hi {{ current_user.firstname }}! 
