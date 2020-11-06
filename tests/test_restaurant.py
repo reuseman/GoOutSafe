@@ -6,6 +6,7 @@ from monolith.models.menu import Menu, Food, MenuItems
 from urllib.parse import urlparse
 
 
+
 def test_create_restaurant_view_is_available_operator(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -939,3 +940,18 @@ def test_restaurant_all_tables_booked(client):
     res = helpers.booking(client)
 
     assert res.status_code == 500
+
+def test_multiple_booking(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client)
+
+    assert res.status_code == 302

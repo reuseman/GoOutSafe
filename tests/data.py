@@ -92,5 +92,20 @@ table = dict(name="A10", seats=10, restaurant_id=1)
 
 
 booking1 = dict(number_persons=1, booking_hour="8:00 - 8:30", booking_date=date.today(),)
-booking1 = dict(number_persons=10, booking_hour="8:00 - 8:30", booking_date=date.today(),)
-booking = [booking1]
+booking2 = dict(number_persons=4, booking_hour="8:00 - 8:30", booking_date=date.today(),)
+booking = [booking1, booking2]
+
+booking_people = { 
+    "people-0-email":"tommaso@tommaso.com", 
+    "people-0-firstname":"tommaso",
+    "people-0-lastname": "tommaso",
+    "people-0-fiscal_code": "123",
+    "people-1-email":"simone@simone.com", 
+    "people-1-firstname":"simone",
+    "people-1-lastname": "simone",
+    "people-1-fiscal_code": "456",
+    "people-2-email":"alessandro@alessandro.com", 
+    "people-2-firstname":"alessandro",
+    "people-2-lastname": "alessandro",
+    "people-2-fiscal_code": "789"
+ }

@@ -9,7 +9,7 @@ from monolith.models import (
     Precautions,
 )
 from monolith.services import mock
-from tests.data import precautions, booking
+from tests.data import precautions, booking, booking_people, booking1, booking2
 from werkzeug.datastructures import MultiDict
 
 
@@ -306,7 +306,21 @@ def login_authority(client, data=health_authority):
         follow_redirects=False,
     )
 
-def booking(client, data=booking[0]):
+def booking(client, data=booking1):
+    return client.post(
+        "/restaurants/1/book_table",
+        data=data,
+        follow_redirects=False,
+    )
+
+def booking_confirm(client, data=booking_people):
+    return client.post(
+        "/restaurants/1/book_table/confirm",
+        data=data,
+        follow_redirects=False,
+    )
+
+def booking_multiple_user(client, data=booking2):
     return client.post(
         "/restaurants/1/book_table",
         data=data,
