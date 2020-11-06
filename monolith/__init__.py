@@ -45,7 +45,7 @@ def create_app(config_name):
     # from .services import mock
 
     # mock.users(10)
-    # mock.operator()
+    # mock.operators()
     # mock.restaurant()
     # mock.health_authority()
     # mock.menu()
