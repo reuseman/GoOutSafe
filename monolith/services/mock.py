@@ -423,8 +423,22 @@ def booking():
         )
         db.session.add(
             Booking(
+                user_id=4,
+                table_id=1,
+                booking_number=3,
+                start_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
                 user_id=1,
-                table_id=3,
+                table_id=1,
                 booking_number=4,
                 start_booking=datetime.datetime.strptime(
                     "2020-12-01 8:00", "%Y-%m-%d %H:%M"
@@ -439,6 +453,48 @@ def booking():
             Booking(
                 user_id=1,
                 table_id=2,
+                booking_number=5,
+                start_booking=datetime.datetime.strptime(
+                    "2020-11-06 7:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-11-06 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=6,
+                table_id=2,
+                booking_number=5,
+                start_booking=datetime.datetime.strptime(
+                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=5,
+                table_id=2,
+                booking_number=5,
+                start_booking=datetime.datetime.strptime(
+                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=3,
+                table_id=5,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
                     "2020-10-01 7:00", "%Y-%m-%d %H:%M"
