@@ -4,6 +4,14 @@
 {% block main %}
 <h1>{{ name }}</h1>
 
+
+<h3 class="ui header">
+    <i class="star icon"></i>
+    <div class="content">
+        {{ average_rating }}
+    </div>
+</h3>
+
 <h3 class="ui header">
     <i class="phone icon"></i>
     <div class="content">
@@ -30,11 +38,11 @@
 {% if current_user.is_authenticated %}
 
 {% if session["role"] == "operator" %}
-    <a href="{{base_url}}/reservations" class="positive ui button">See reservations</a>
+<a href="{{base_url}}/reservations" class="positive ui button">See reservations</a>
 {% endif %}
 
 {% if session["role"] != "operator" and session["role"] != "authority" %}
-    <a href="{{base_url}}/book_table" class="positive ui button">Book a table!</a>
+<a href="{{base_url}}/book_table" class="positive ui button">Book a table!</a>
 {% endif %}
 {% endif %}
 <ul>
