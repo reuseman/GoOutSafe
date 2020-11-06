@@ -5,7 +5,7 @@
 <h1>GoOutSafe</h1>
 
 {% if current_user.is_authenticated and session['role'] == "user" %}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+Hi {{ current_user.firstname }}! 
 
 <div class="ui divider"></div>
 
@@ -22,8 +22,7 @@ Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
         {% endfor %} -->
 
 {% elif current_user.is_authenticated and session['role'] == "operator" %}
-Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-
+Hi {{ current_user.firstname }}! 
 <div class="ui divider"></div>
 
 <div class="row">
@@ -31,7 +30,7 @@ Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
     <a href="/restaurants">See restaurants list</a>
 
     {% elif current_user.is_authenticated and session['role'] == "authority" %}
-    Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
+    Hi {{ current_user.firstname }}! 
     Below you can mark users as positive.
 </div>
 
