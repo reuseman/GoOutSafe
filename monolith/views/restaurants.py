@@ -783,3 +783,12 @@ def operator_delete_reservation(restaurant_id, booking_number):
 
     flash("Reservation deleted", category="success")
     return redirect(url_for(".operator_reservations_list", restaurant_id=restaurant_id))
+
+
+@restaurants.route("/bookings", methods=["GET", "POST"])
+@login_required
+@user_required
+def user_booking_list():
+    list_booking = db.session.query(Booking).filter(
+        Booking.user_id == current_user.id, Booking.start_booking >= date.today())
+    return render_template("user_list_bookings.html", list_booking=list_booking)
