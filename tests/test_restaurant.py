@@ -936,7 +936,9 @@ def test_restaurant_all_tables_booked(client):
     helpers.create_user(client)
     helpers.login_user(client)
 
-    res = helpers.booking(client)
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client)
+
     res = helpers.booking(client)
 
     assert res.status_code == 500
@@ -955,3 +957,25 @@ def test_multiple_booking(client):
     res = helpers.booking_confirm(client)
 
     assert res.status_code == 302
+
+
+
+def test_list_reservation(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client)
+    helpers.logout(client)
+
+    helpers.login_operator(client)
+    res = helpers.reservation_list(client)
+
+    assert res.status_code == 200
+
+

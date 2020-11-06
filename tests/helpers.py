@@ -332,3 +332,10 @@ def unsubscribe(client):
         "/unsubscribe",
         follow_redirects=False,
     )
+
+def reservation_list(client):
+    return client.post(
+        "/restaurants/1/reservations",
+        data= {"date":date.today()},
+        follow_redirects=False,
+    )
