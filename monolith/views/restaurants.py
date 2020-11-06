@@ -789,6 +789,31 @@ def operator_delete_reservation(restaurant_id, booking_number):
 @login_required
 @user_required
 def user_booking_list():
-    list_booking = db.session.query(Booking).filter(
-        Booking.user_id == current_user.id, Booking.start_booking >= date.today())
-    return render_template("user_list_bookings.html", list_booking=list_booking)
+    list_booking = db.session.query(Booking).filter(    Booking.user_id == current_user.id, Booking.start_booking >= date.today()).all()
+    
+    list_booking_with_restaurant=[]
+    for booking in list_booking:
+        restaurant = db.session.query(Restaurant).join(Table).filter(Table.id==booking.table_id).first()
+        list_booking_with_restaurant.append((booking,restaurant))
+    return render_template(
+            "user_list_bookings.html",
+            list_booking=list_booking_with_restaurant,
+            base_url=request.base_url,
+            go_back="/"
+    )
+
+
+@restaurants.route("/bookings/delete/<booking_number>", methods=["GET", "POST"])
+@login_required
+@user_required
+def user_delete_booking(booking_number):
+    booking = db.session.query(Booking).filter_by(booking_number=booking_number, user_id=current_user.id).first()
+    if booking is None:
+        flash("Operation denied")
+        return redirect(url_for('.user_booking_list'))
+
+    db.session.query(Booking).filter_by(booking_number=booking_number).delete()
+    db.session.commit()
+
+    flash('Booking deleted', category='success')
+    return redirect(url_for('.user_booking_list'))
