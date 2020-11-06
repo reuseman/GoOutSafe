@@ -13,6 +13,7 @@ from monolith.models import (
     Mark,
     Table,
     Booking,
+    Review
 )
 from monolith.models.menu import Menu, Food
 
@@ -95,7 +96,57 @@ def default_user():
         db.session.commit()
 
 
-def operator():
+def operators(n=50):
+    """
+    Add a random number of operators in the database, together with the default operators.
+    This method is not stable yet. Avoid using big numbers.
+
+    Args:
+        n (int, optional): Number of operators to generate. Defaults to 50.
+    """
+    operators_number = db.session.query(Operator).count()
+    if operators_number == 0:
+        default_operator()
+
+        operators = list()
+        for i in range(0, n - 1):
+            profile = fake.profile(["mail", "birthdate", "sex"])
+            profile["first_name"] = fake.first_name()
+            profile["last_name"] = fake.last_name()
+
+            # Generate fiscal code
+            # ! This is not a nice solution
+            # TODO should be refactored
+            fiscal_code = None
+            while fiscal_code is None:
+                try:
+                    fiscal_code = cf.encode(
+                        name=profile["first_name"],
+                        surname=profile["last_name"],
+                        sex=profile["sex"],
+                        birthdate=profile["birthdate"].strftime("%d/%m/%Y"),
+                        birthplace=fake.city(),
+                    )
+                except ValueError:
+                    pass
+
+            operators.append(
+                Operator(
+                    email=profile["mail"],
+                    firstname=profile["first_name"],
+                    lastname=profile["last_name"],
+                    phone_number=fake.phone_number().replace(" ", ""),
+                    password=fake.password(length=fake.pyint(8, 24)),
+                    dateofbirth=profile["birthdate"],
+                    fiscal_code=fiscal_code,
+                )
+            )
+
+        db.session.add_all(operators)
+        db.session.commit()
+
+
+def default_operator():
     q = db.session.query(Operator).filter(
         Operator.email == "operator@example.com")
     user = q.first()
@@ -145,7 +196,7 @@ def restaurant():
     if restaurant is None:
         db.session.add(
             Restaurant(
-                name="Trial Restaurant",
+                name="Spaghetteria L'Archetto",
                 phone=555123456,
                 lat=43.720586,
                 lon=10.408347,
@@ -158,7 +209,7 @@ def restaurant():
         )
         db.session.add(
             Restaurant(
-                name="Trial Restaurant1",
+                name="Pizzeria Italia dal 1987",
                 phone=555123456,
                 lat=44.720586,
                 lon=10.408347,
@@ -171,7 +222,7 @@ def restaurant():
         )
         db.session.add(
             Restaurant(
-                name="Trial Restaurant2",
+                name="Ristorante Pizzeria Golfo di Napoli",
                 phone=555123456,
                 lat=43.720586,
                 lon=9.408347,
@@ -248,6 +299,82 @@ def table():
         db.session.add(Table(name="2", seats=2, restaurant_id=3))
         db.session.commit()
 
+def review():
+    review = db.session.query(Review).first()
+    if review is None:
+        db.session.add(
+            Review(
+                user_id=1,
+                restaurant_id=1,
+                rating=5,
+                message="Ottimo Ristorante, il prezzo è gisto e i piatti sono gustosi. Ci tornerò sicuramente con la mia famiglia!"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=2,
+                restaurant_id=1,
+                rating=1,
+                message="Pessimo ristorante, il servizio è lento e i prezzo è eccessivo!"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=3,
+                restaurant_id=1,
+                rating=5,
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=1,
+                restaurant_id=2,
+                rating=5,
+                message="Primi sempre eccellenti, qualità prezzo imbattibile in zona. I tavoli solo esterni con un servizio sempre all’altezza"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=2,
+                restaurant_id=2,
+                rating=3,
+                message="Questo ristorante era proprio sotto il nostro appartamento, abbiamo sia pranzato che cenato. La pasta fatta molto bene e anche la pizza romana buona, personale molto gentile, prezzi nella media."
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=3,
+                restaurant_id=2,
+                rating=5,
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=1,
+                restaurant_id=3,
+                rating=4,
+                message="a me non piace la pizza a taglio (preferisco quella tonda) ma qui la fanno veramente buona gustosa e facile da digerire"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=2,
+                restaurant_id=3,
+                rating=5,
+                message="Situato in pieno centro storico di Roma. Personale molto gentile e simpatico, pizza buonissima, consiglio assolutamente"
+            )
+        )
+        db.session.add(
+            Review(
+                user_id=3,
+                restaurant_id=3,
+                rating=5,
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+            )
+        )                
+        db.session.commit()  
 
 def booking():
     booking = db.session.query(Booking).first()
@@ -287,6 +414,34 @@ def booking():
                 booking_number=3,
                 start_booking=datetime.datetime.strptime(
                     "2020-10-01 8:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=1,
+                table_id=3,
+                booking_number=4,
+                start_booking=datetime.datetime.strptime(
+                    "2020-12-01 8:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    "2020-12-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=1,
+                table_id=2,
+                booking_number=5,
+                start_booking=datetime.datetime.strptime(
+                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
                     "2020-10-01 8:30", "%Y-%m-%d %H:%M"
