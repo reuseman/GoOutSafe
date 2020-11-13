@@ -5,4 +5,3 @@ addopts = "--workers auto --cov-report term --cov-report xml:cov.xml --cov monol
 testpaths = [
     "tests",
 ]
-
