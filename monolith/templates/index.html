@@ -71,14 +71,13 @@ Hi {{ current_user.firstname }}!
 </div>
 {% endif %}
 
-<div class="row">
+<div style="margin-top: 20px;" class="row">
     <a href="/restaurants_map" class="ui primary button">
         <i class="map icon"></i>
         Map of our restaurants
     </a>
 </div>
 
-<hr>
 <div style="margin-top: 30px;" class="row">
     <div class="ui four doubling stackable cards">
         {% for restaurant in restaurants %}
