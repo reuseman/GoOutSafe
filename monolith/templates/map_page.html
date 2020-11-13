@@ -1,4 +1,33 @@
 {% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    function createMap(restaurants) {
+        var map = L.map('map').setView([restaurants[0][2], restaurants[0][3]], 13);
+        //const restaurants_json = JSON.parse(restaurants)
+
+        // load a tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 17,
+                minZoom: 4
+            }).addTo(map);
+        restaurants.forEach(restaurant => {
+            var marker = L.marker([restaurant[2], restaurant[3]]);
+            let link = '<a href="' + {{ url_for("restaurants._restaurants")
+                | tojson
+        }} + '/' + restaurant[4] + '"> Restaurant Details </a>'
+    marker.bindPopup(link).openPopup();
+    marker.bindTooltip(restaurant[0])
+    marker.addTo(map)
+
+        });
+    }
+</script>
+{% endblock%}
 {% block title %}Index{% endblock %}
 
 {% block main %}
@@ -8,5 +37,11 @@
         position!</p>
 </section>
 
-<iframe id="restaurants_map" src="{{ url_for('restaurants_map.send_map') }} " width="700" height="400"></iframe>
+<section>
+    <div id="map" style="height: 400px;"></div>
+    <script>
+        createMap({{ restaurant_list | tojson}})
+    </script>
+</section>
+
 {% endblock %}

@@ -8,4 +8,3 @@ python-codicefiscale
 email_validator
 python-dotenv
 celery[redis]
-folium
