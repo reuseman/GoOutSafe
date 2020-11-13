@@ -385,10 +385,10 @@ def booking():
                 table_id=1,
                 booking_number=1,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today()) + " 8:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today()) + " 12:00", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today()) + " 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today()) + " 12:30", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
@@ -413,10 +413,10 @@ def booking():
                 table_id=1,
                 booking_number=3,
                 start_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() -  datetime.timedelta(days=3)) + " 13:30", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
@@ -427,10 +427,11 @@ def booking():
                 table_id=1,
                 booking_number=3,
                 start_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00", "%Y-%m-%d %H:%M"
+
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:30", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
@@ -441,24 +442,25 @@ def booking():
                 table_id=1,
                 booking_number=4,
                 start_booking=datetime.datetime.strptime(
-                    "2020-12-01 8:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 15:30", "%Y-%m-%d %H:%M"
+
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-12-01 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 16:00", "%Y-%m-%d %H:%M"                                        
                 ),
                 confirmed_booking=True,
             )
         )
         db.session.add(
             Booking(
-                user_id=1,
+                user_id=2,
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    "2020-11-06 7:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-11-06 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
@@ -469,10 +471,11 @@ def booking():
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
+
                 ),
                 confirmed_booking=True,
             )
@@ -483,10 +486,10 @@ def booking():
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
@@ -495,12 +498,12 @@ def booking():
             Booking(
                 user_id=3,
                 table_id=5,
-                booking_number=5,
+                booking_number=6,
                 start_booking=datetime.datetime.strptime(
-                    "2020-10-01 7:00", "%Y-%m-%d %H:%M"
+                    "2020-12-01 7:00", "%Y-%m-%d %H:%M"
                 ),
                 end_booking=datetime.datetime.strptime(
-                    "2020-10-01 8:30", "%Y-%m-%d %H:%M"
+                    "2020-12-01 8:30", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
