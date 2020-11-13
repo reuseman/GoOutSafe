@@ -82,6 +82,7 @@ def default_user():
             firstname="Admin",
             lastname="Admin",
             password="admin",
+            phone_number = 3330049382,
             dateofbirth=datetime.datetime(2020, 10, 5),
         )
         db.session.add(example)
@@ -90,6 +91,7 @@ def default_user():
             firstname="Admin",
             lastname="Admin",
             password="admin",
+            phone_number = 3330049381,
             dateofbirth=datetime.datetime(2020, 10, 5),
         )
         db.session.add(example)
@@ -504,6 +506,20 @@ def booking():
                 ),
                 end_booking=datetime.datetime.strptime(
                     "2020-12-01 8:30", "%Y-%m-%d %H:%M"
+                ),
+                confirmed_booking=True,
+            )
+        )
+        db.session.add(
+            Booking(
+                user_id=2,
+                table_id=2,
+                booking_number=7,
+                start_booking=datetime.datetime.strptime(
+                    str(datetime.date.today()) + " 12:00", "%Y-%m-%d %H:%M"
+                ),
+                end_booking=datetime.datetime.strptime(
+                    str(datetime.date.today()) + " 12:30", "%Y-%m-%d %H:%M"
                 ),
                 confirmed_booking=True,
             )
