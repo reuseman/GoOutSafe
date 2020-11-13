@@ -5,7 +5,7 @@
 <h1>GoOutSafe</h1>
 
 {% if current_user.is_authenticated and session['role'] == "user" %}
-Hi {{ current_user.firstname }}! 
+Hi {{ current_user.firstname }}!
 
 <div class="ui divider"></div>
 
@@ -16,7 +16,7 @@ Hi {{ current_user.firstname }}!
             <i class="utensil spoon icon"></i>
             See restaurants list
         </a>
-    </div><br/>
+    </div><br />
 </div>
 <!-- {% for restaurant in restaurants %}
             <div>
@@ -27,7 +27,7 @@ Hi {{ current_user.firstname }}!
         {% endfor %} -->
 
 {% elif current_user.is_authenticated and session['role'] == "operator" %}
-Hi {{ current_user.firstname }}! 
+Hi {{ current_user.firstname }}!
 <div class="ui divider"></div>
 
 <div class="row">
@@ -37,10 +37,10 @@ Hi {{ current_user.firstname }}!
             <i class="utensil spoon icon"></i>
             See restaurants list
         </a>
-    </div><br/>
+    </div><br />
 
     {% elif current_user.is_authenticated and session['role'] == "authority" %}
-    Hi {{ current_user.firstname }}! 
+    Hi {{ current_user.firstname }}!
     Below you can mark users as positive.
 </div>
 
@@ -78,8 +78,8 @@ Hi {{ current_user.firstname }}!
     </a>
 </div>
 
-
-<div  class="row">
+<hr>
+<div style="margin-top: 30px;" class="row">
     <div class="ui four doubling stackable cards">
         {% for restaurant in restaurants %}
         <div class="ui card">
@@ -88,17 +88,18 @@ Hi {{ current_user.firstname }}!
                     <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }} ">
                         {{ restaurant.name }}
                     </a>
-                  </span>
-              <div class="right floated meta">
-                  {{ restaurant.average_rating }}
-                  <i class="star outline icon"></i>
-              </div>
+                </span>
+                <div class="right floated meta">
+                    {{ restaurant.average_rating }}
+                    <i class="star outline icon"></i>
+                </div>
             </div>
             <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
-              <img src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
+                <img
+                    src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
             </a>
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 </div>
 
