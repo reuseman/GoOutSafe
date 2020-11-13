@@ -4,5 +4,6 @@ black==20.8b1
 coveralls
 pytest
 pytest-cov
+pytest-parallel
 faker==4.14.0 
 flask-debugtoolbar

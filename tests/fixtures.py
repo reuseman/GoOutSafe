@@ -6,15 +6,16 @@ from monolith.views import blueprints
 from monolith.services.auth import login_manager
 from monolith import db as dba
 
-from config import config
+from config import config, TestingConfig
 
 from monolith import create_app
 
-
 @pytest.yield_fixture
-def app():
-    app = create_app(config_name="testing")
-    db_path = os.path.join(app.root_path, "gooutsafe_test.db")
+def app(testrun_uid):
+    app = create_app(config_name="testing", updated_variables={
+        "SQLALCHEMY_DATABASE_URI" : f"sqlite:///gooutsafe_test_{testrun_uid}.db"
+        })
+    db_path = os.path.join(app.root_path, f"gooutsafe_test_{testrun_uid}.db")
 
     # app = Flask(__name__, template_folder="../monolith/templates")
     # app.config.from_object(config["testing"])

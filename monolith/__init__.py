@@ -19,9 +19,12 @@ celery = Celery(
 celery.autodiscover_tasks(["monolith.services.background.tasks"], force=True)
 
 
-def create_app(config_name):
+def create_app(config_name, updated_variables=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    if updated_variables:
+        app.config.update(updated_variables)
+
     config[config_name].init_app(app)
 
     context = app.app_context()
