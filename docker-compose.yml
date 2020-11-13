@@ -1,5 +1,7 @@
 version: "3.4"
 
+ 
+
 services:
   gooutsafe:
     image: gooutsafe:latest
@@ -8,5 +10,9 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 5000:5000
+    env_file:
+      - .env
   redis:
     image: "redis:6.0.8-alpine"
+    ports:
+      - 6379:6379
