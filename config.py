@@ -27,10 +27,10 @@ class Config:
     AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
 
     CELERY_BROKER_URL = (
-        os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6379/0"
+        os.environ.get("CELERY_BROKER_URL") or "redis://redis:6379/0"
     )
     CELERY_RESULT_BACKEND = (
-        os.environ.get("CELERY_RESULT_BACKEND") or "redis://localhost:6379/0"
+        os.environ.get("CELERY_RESULT_BACKEND") or "redis://redis:6379/0"
     )
     CELERY_TASKS = ["monolith.services.background.tasks"]
 
@@ -64,6 +64,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         os.environ.get("TEST_DATABASE_URL") or "sqlite:///gooutsafe_test.db"
     )
+
 
 
 class DockerConfig(ProductionConfig):
