@@ -1,3 +1,4 @@
+from monolith.models import restaurant
 from flask import Blueprint, render_template, session, redirect, request
 from flask_login import login_required
 from flask.helpers import flash
@@ -17,4 +18,5 @@ home = Blueprint("home", __name__)
 
 @home.route("/")
 def index():
-    return render_template("index.html")
+    restaurants = db.session.query(Restaurant).all()
+    return render_template("index.html", restaurants=restaurants)

@@ -77,4 +77,28 @@ Hi {{ current_user.firstname }}!
         Map of our restaurants
     </a>
 </div>
+
+
+<div  class="row">
+    <div class="ui four doubling stackable cards">
+        {% for restaurant in restaurants %}
+        <div class="ui card">
+            <div class="content">
+                <span class="ui avatar">
+                    {{ restaurant.name }}
+                  </span>
+              <div class="right floated meta">
+                  {{ restaurant.average_rating }}
+                  <i class="star outline icon"></i>
+              </div>
+            </div>
+            <div class="image">
+              <img src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+
 {% endblock %}
