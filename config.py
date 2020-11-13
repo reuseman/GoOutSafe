@@ -66,6 +66,7 @@ class TestingConfig(Config):
     )
 
 
+
 class DockerConfig(ProductionConfig):
     @classmethod
     def init_app(cls, app):
