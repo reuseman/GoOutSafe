@@ -64,9 +64,9 @@ class DevelopmentConfig(Config):
     def init_app(app):
         from flask_debugtoolbar import DebugToolbarExtension
 
-        app.debug = True
+        #app.debug = True
         app.logger.addHandler(fileHandler)
-        DebugToolbarExtension(app)
+        # DebugToolbarExtension(app)
 
 
 class TestingConfig(Config):

@@ -65,7 +65,7 @@ class User(AbstractUser):
         Returns:
             bool: boolean value
         """
-        return (self.has_been_marked() and self.get_remaining_mark_days() > 0)
+        return self.has_been_marked() and self.get_remaining_mark_days() > 0
 
     def get_last_mark(self) -> Mark:
         """
@@ -95,6 +95,22 @@ class User(AbstractUser):
             bool: boolean value
         """
         return self.email == "deleted@deleted.it"
+
+    def get_bookings(self, from_date=datetime.utcnow(), range_duration=14):
+        """
+            It returns a list of bookings that the user made in a range from a starting date.
+        Args:
+            from_date (datetime, optional): is the date from which to start searching. Defaults to datetime.utcnow().
+            range_duration (int, optional): it's the range of days. Defaults to 14.
+
+        Returns:
+            [type]: [description]
+        """
+        return [
+            b
+            for b in self.booking
+            if b.start_booking >= (from_date - timedelta(days=range_duration))
+        ]
 
     def check_equality_for_booking(self, firstname, lastname, email):
         return (

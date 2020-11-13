@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Trace Phone Number{% endblock %}
+
+{% block main %}
+
+<section>
+    <form action="" method="POST" class="ui form">
+        {{ form.hidden_tag() }}
+        {% for field in form.display %}
+        <div class="field">
+            <label>{{ form[field].label }}</label>
+            {{ form[field]() }}
+        </div>
+        {% if form[field].errors %}
+        {% for e in form[field].errors %}
+        <p class="help-block">{{ e }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        <p>
+            <input type=submit value="Trace" class="ui button primary">
+    </form>
+
+    {% if contacts %}
+    <h1>Traced contacts</h1>
+    {% for contact in contacts %}
+    <h2>{{ contact.date }}</h2>
+    {% for person in contact.people %}
+    person
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+</section>
+
+{% endblock %}

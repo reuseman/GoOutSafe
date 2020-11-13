@@ -60,6 +60,16 @@
                     <li>{{ message }}</li>
                 </ul>
             </div>
+            {% elif category == "info" %}
+            <div class="ui info message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Info
+                </div>
+                <ul class="list">
+                    <li>{{ message }}</li>
+                </ul>
+            </div>
             {% else %}
             <div id="popup" class="ui error message close transition" onclick="closePopup()">
                 <i class="close icon"></i>

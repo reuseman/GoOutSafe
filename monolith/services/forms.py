@@ -33,7 +33,15 @@ class UserForm(FlaskForm):
     dateofbirth = DateField("Date of birth", validators=[DataRequired()])
     phone_number = f.IntegerField("Phone", validators=[DataRequired()])
     fiscal_code = f.StringField("Fiscal Code", validators=[DataRequired()])
-    display = ["email", "firstname", "lastname", "password", "dateofbirth", "phone_number", "fiscal_code"]
+    display = [
+        "email",
+        "firstname",
+        "lastname",
+        "password",
+        "dateofbirth",
+        "phone_number",
+        "fiscal_code",
+    ]
 
 
 # TODO Validators are missing?
@@ -62,8 +70,17 @@ class AuthorityForm(FlaskForm):
     lat = f.DecimalField("Latitude", validators=[DataRequired()])
     lon = f.DecimalField("Longitude", validators=[DataRequired()])
 
-    display = ["email", "name", "password",
-               "country", "state", "city", "lat", "lon", "phone"]
+    display = [
+        "email",
+        "name",
+        "password",
+        "country",
+        "state",
+        "city",
+        "lat",
+        "lon",
+        "phone",
+    ]
 
 
 def precautions_choices():
@@ -94,8 +111,7 @@ class CreateRestaurantForm(FlaskForm):
     phone = f.IntegerField("Phone", validators=[DataRequired()])
     time_of_stay = f.RadioField(
         "Time of stay",
-        choices=[("30", "30 minutes"),
-                 ("90", "1:30 hour"), ("180", "3 hours")],
+        choices=[("30", "30 minutes"), ("90", "1:30 hour"), ("180", "3 hours")],
         validators=[DataRequired()],
     )
     opening_hours = f.IntegerField(
@@ -173,8 +189,7 @@ class MarkEmailForm(FlaskForm):
     )
     email = f.StringField(
         "Email",
-        validators=[DataRequired(), Email(
-            message="Insert a valid email address.")],
+        validators=[DataRequired(), Email(message="Insert a valid email address.")],
         render_kw={"placeholder": "example@mail.com"},
     )
     submit = f.SubmitField("Mark")
@@ -198,6 +213,24 @@ class MarkPhoneNumberForm(FlaskForm):
     )
     submit = f.SubmitField("Mark")
     display = ["duration", "phone_number", "submit"]
+
+
+class ContactTracingPhoneNumberForm(FlaskForm):
+    interval = IntegerField(
+        "Interval",
+        validators=[
+            DataRequired(message="This field must be a number."),
+            NumberRange(
+                min=1, max=60, message="The duration must be between 1 and 60."
+            ),
+        ],
+    )
+    phone_number = f.StringField(
+        "Phone number",
+        validators=[DataRequired("This field must be a valid phone number")],
+        render_kw={"placeholder": "333 3339999"},
+    )
+    display = ["interval", "phone_number"]
 
 
 class ReviewForm(FlaskForm):
@@ -283,8 +316,7 @@ class ChangePasswordForm(FlaskForm):
         label="New password",
         validators=[
             DataRequired(),
-            validators.EqualTo("password_confirm",
-                               message="Passwords must match"),
+            validators.EqualTo("password_confirm", message="Passwords must match"),
         ],
     )
     password_confirm = f.PasswordField(
@@ -306,8 +338,7 @@ class ChangeAnagraphicForm(FlaskForm):
     password = f.PasswordField(
         label="Type your password here to confirm", validators=[DataRequired()]
     )
-    display = ["firstname", "lastname",
-               "fiscal_code", "dateofbirth", "password"]
+    display = ["firstname", "lastname", "fiscal_code", "dateofbirth", "password"]
 
 
 class ChangeContactForm(FlaskForm):

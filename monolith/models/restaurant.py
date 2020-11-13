@@ -1,7 +1,7 @@
 from monolith import db
 from .table import Table
 import enum
-
+import datetime
 
 # precautions = db.Table('precautions',
 #     db.Column('precaution_id', db.Integer, db.ForeignKey('precaution.id'), primary_key=True),
@@ -43,6 +43,23 @@ class Restaurant(db.Model):
 
     def sort_tables(table):
         return table.seats
+
+    def get_bookings(self, starting_booking_datetime: datetime):
+        """Get all the bookings that were confirmed starting from a specific time.
+
+        Args:
+            starting_booking_time (datetime): the starting time of the booking
+        """
+        total_real_bookings = []
+        for table in self.tables:
+            bookings = [
+                b
+                for b in table.booking
+                if b.checkin and b.start_booking == starting_booking_datetime
+            ]
+            total_real_bookings.extend(bookings)
+
+        return total_real_bookings
 
     def get_free_table(self, seats, date_hour):
         filtered_tables = []
