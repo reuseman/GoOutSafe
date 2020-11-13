@@ -1,7 +1,5 @@
 version: "3.4"
 
- 
-
 services:
   gooutsafe:
     image: gooutsafe:latest

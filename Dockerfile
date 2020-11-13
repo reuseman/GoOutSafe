@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.6-alpine
+FROM python:3.8.5-alpine
 
 # Environment variables for the configuration
 ENV FLASK_APP gooutsafe.py
@@ -10,11 +10,6 @@ ENV PYTHONUNBUFFERED=1
 # Create non-root user and home folder
 RUN adduser -D gooutsafe
 WORKDIR /home/gooutsafe
-
-# FIX for Numpy dependencies
-# RuntimeError: Broken toolchain: cannot link a simple C program
-RUN apk update
-RUN apk add make automake gcc g++ subversion python3-dev
 
 # Install dependencies
 COPY requirements/ requirements/
