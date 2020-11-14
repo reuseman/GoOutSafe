@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_dropzone import Dropzone
 
 # from flask_celeryext import FlaskCeleryExt
 from config import config, Config
@@ -10,6 +11,7 @@ from celery import Celery
 db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
+dropzone = Dropzone()
 
 celery = Celery(
     __name__,
@@ -22,6 +24,7 @@ celery.autodiscover_tasks(["monolith.services.background.tasks"], force=True)
 def create_app(config_name, updated_variables=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    dropzone.init_app(app)
     if updated_variables:
         app.config.update(updated_variables)
 

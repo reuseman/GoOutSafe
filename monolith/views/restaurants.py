@@ -2,7 +2,7 @@ from flask.globals import session
 from sqlalchemy.sql.functions import user
 from monolith.models import precautions
 from flask.helpers import flash
-from flask import Blueprint, redirect, render_template, request, url_for, make_response
+from flask import Blueprint, redirect, render_template, request, url_for, make_response, abort
 from monolith import db
 from monolith.models import (
     Restaurant,
@@ -36,6 +36,10 @@ from datetime import date, timedelta, datetime
 from sqlalchemy import func
 from flask_login import current_user
 from monolith.services.background.tasks import send_email
+from werkzeug.utils import secure_filename
+
+import os
+import imghdr
 
 restaurants = Blueprint("restaurants", __name__)
 
@@ -368,14 +372,40 @@ def send_booking_confirmation_mail(booking_number):
         )
 
 
-@restaurants.route("/restaurants/new", methods=["GET", "POST"])
+def validate_image(stream):
+    header = stream.read(512)
+    stream.seek(0)
+    format = imghdr.what(None, header)
+    if not format:
+        return None
+    return '.' + format
+
+
+@restaurants.route('/restaurants/<restaurant_id>/upload', methods=['GET', 'POST'])
+@login_required
+@operator_required
+def handle_upload(restaurant_id):
+    if request.method == "POST":
+        for key, uploaded_file in request.files.items():
+            filename = secure_filename(uploaded_file.filename)
+            if filename != '':
+                file_ext = os.path.splitext(filename)[1]
+                if file_ext not in [".png", ".jpg", ".jpeg"] or \
+                    file_ext != validate_image(uploaded_file.stream):
+                    return '', 400
+                uploaded_file.save(os.path.join("./uploads/" + str(restaurant_id), filename))
+        return redirect("/restaurants/mine")
+
+    return render_template("upload_photos.html", id=restaurant_id)
+
+
+@restaurants.route("/restaurants/new", methods=["POST", "GET"])
 @login_required
 @operator_required
 def create_restaurant():
     status = 200
     form = CreateRestaurantForm()
     if request.method == "POST":
-
         if form.validate_on_submit():
             new_restaurant = Restaurant()
             form.populate_obj(new_restaurant)
@@ -385,6 +415,8 @@ def create_restaurant():
             if restaurant.add_new_restaurant(
                 new_restaurant, request.form.getlist("prec_measures")
             ):
+                os.makedirs("./uploads/" + str(new_restaurant.id), exist_ok=True)
+
                 return redirect("/restaurants/mine")
             else:
                 flash("Restaurant already added", category="error")

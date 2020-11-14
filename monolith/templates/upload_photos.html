@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Upload photos{% endblock %}
+
+{% block main %}
+
+    {{ dropzone.create('/upload/' + id) }}
+
+    <button class="ui button primary" id="upload">Upload</button>
+    {{ dropzone.load_js() }}
+    {{ dropzone.config("/restaurants/" + id) }}
+
+{% endblock %}

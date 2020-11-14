@@ -5,6 +5,7 @@ from monolith.models.menu import Menu, Food, MenuItems
 
 from urllib.parse import urlparse
 
+import io
 
 
 def test_create_restaurant_view_is_available_operator(client):
@@ -87,6 +88,41 @@ def test_create_restaurant(client, db):
     assert fetched_restaurant.cuisine_type.name == "ETHNIC"
     assert fetched_restaurant.operator.id == 1
     assert urlparse(res.location).path == "/restaurants/mine"
+
+
+def test_upload_view_available(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    res = client.get('/restaurants/1/upload')
+    assert res.status_code == 200
+
+
+def test_upload(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    file_name = "uploads/1/pizza.jpeg"
+    data = {
+        'file': open(file_name, 'rb')
+    }
+    res = client.post('/restaurants/1/upload', data=data)
+    assert res.status_code == 302
+
+
+def test_bad_upload(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+
+    file_name = "uploads/1/yolo.txt"
+    data = {
+        'file': (io.BytesIO(b"bad stuff"), file_name)
+    }
+    res = client.post('/restaurants/1/upload', data=data)
+    assert res.status_code == 400
 
 
 def test_create_restaurant_bad_data(client, db):

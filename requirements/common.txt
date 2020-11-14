@@ -3,6 +3,7 @@ Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
+Flask-dropzone
 celery[redis]==5.0.2
 python-dotenv==0.15.0
 python-codicefiscale==0.3.7
