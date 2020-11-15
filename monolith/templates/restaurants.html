@@ -4,38 +4,49 @@
 {% block main %}
 <h1>Restaurant List</h1>
 <h5>{{message}}</h5>
-<ul>
-  {% for restaurant in restaurants: %}
-  <li>
-    <a href="/restaurants/{{restaurant.id}}">"{{restaurant.name}}"</a> 
-    {% if current_user.is_authenticated %}
-    {% if role == 'operator' and current_user.id == restaurant.operator_id %}
-     | <a href="/restaurants/{{restaurant.id}}/tables">Show tables</a>
-     | <a href="/restaurants/{{restaurant.id}}/tables/new">Add new table</a>
-     | <a href="/restaurants/{{restaurant.id}}/reservations">See reservations</a>
-    {% endif %}
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% if role == "operator" %}
-{% if operator_restaurants == True%}
-<!-- <a href="/restaurants">See all restaurants</a> -->
 <div class="row">
-  <a href="/restaurants" class="ui primary button">
-      See restaurants list
+  {% if role == "operator" %}
+    {% if operator_restaurants == True%}
+        <a href="/restaurants" class="ui primary button">
+            See restaurants list
+        </a>
+      {% else %}
+        <a href="/restaurants/mine" class="ui primary button">
+          See your restaurants
+        </a>
+        {% endif %}
+      <a href="{{base_url}}/new" class="positive ui button">Register a new restaurant</a>
+  {% endif %}
+  <a href="/restaurants_map" class="ui primary button">
+    <i class="map icon"></i>
+    Map of restaurants
   </a>
-</div><br/>
-{% else %}
-<div class="row">
-  <a href="/restaurants/mine" class="ui primary button">
-    See your restaurants
-  </a>
-</div><br/>
-
-{% endif %}
-<div class="ui row">
-  <a href="{{base_url}}/new" class="positive ui button">Register a new restaurant</a>
 </div>
-{% endif %}
+
+<div class="ui divider"></div>
+
+
+<div style="margin-top: 30px;" class="row">
+  <div class="ui four doubling stackable cards">
+      {% for restaurant in restaurants %}
+      <div class="ui link card" width="10%">
+          <div class="content">
+              <span class="ui avatar">
+                  <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }} ">
+                      {{ restaurant.name }}
+                  </a>
+              </span>
+              <div class="right floated meta">
+                  {{ restaurant.average_rating }}
+                  <i class="star outline icon"></i>
+              </div>
+          </div>
+          <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
+              <img
+                  src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
+          </a>
+      </div>
+      {% endfor %}
+  </div>
+</div>
 {% endblock %}

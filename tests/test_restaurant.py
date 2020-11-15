@@ -914,7 +914,7 @@ def test_restaurant_booking_is_avaible_logged_user(client,):
     helpers.create_user(client)
     helpers.login_user(client)
 
-    res = client.get("/restaurants/1/book_table")
+    res = client.get("/restaurants/1/booking")
     assert res.status_code == 200
 
 
@@ -928,7 +928,7 @@ def test_restaurant_booking_not_avaible_ha(client):
     helpers.create_health_authority(client)
     helpers.login_authority(client)
 
-    res = client.get("/restaurants/1/book_table")
+    res = client.get("/restaurants/1/booking")
     assert res.status_code == 401
 
 
@@ -938,12 +938,12 @@ def test_restaurant_booking_not_avaible_operator(client):
     helpers.create_restaurant(client)
     helpers.create_table(client)
 
-    res = client.get("/restaurants/1/book_table")
+    res = client.get("/restaurants/1/booking")
     assert res.status_code == 401
 
 
 def test_restaurant_booking_not_avaible_anonymous(client):
-    res = client.get("/restaurants/1/book_table")
+    res = client.get("/restaurants/1/booking")
     assert res.status_code == 401
 
 

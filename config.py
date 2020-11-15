@@ -42,6 +42,8 @@ class Config:
     )
     CELERY_TASKS = ["monolith.services.background.tasks"]
 
+    DEBUG_TB_INTERCEPT_REDIRECTS=False
+
     @staticmethod
     def init_app(app):
         pass

@@ -61,7 +61,7 @@ Hi {{ current_user.firstname }}!
 <div style="margin-top: 30px;" class="row">
     <div class="ui four doubling stackable cards">
         {% for restaurant in restaurants %}
-        <div class="ui card">
+        <div class="ui link card" width="10%">
             <div class="content">
                 <span class="ui avatar">
                     <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }} ">
@@ -81,6 +81,7 @@ Hi {{ current_user.firstname }}!
         {% endfor %}
     </div>
 </div>
+
 
 
 {% endblock %}

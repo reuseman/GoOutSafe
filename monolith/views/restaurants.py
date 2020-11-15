@@ -143,7 +143,7 @@ def restaurant_sheet(restaurant_id):
     )
 
 
-@restaurants.route("/restaurants/<restaurant_id>/book_table", methods=["GET", "POST"])
+@restaurants.route("/restaurants/<restaurant_id>/booking", methods=["GET", "POST"])
 @login_required
 @user_required
 def book_table_form(restaurant_id):
@@ -256,7 +256,7 @@ def book_table_form(restaurant_id):
 
 
 @restaurants.route(
-    "/restaurants/<restaurant_id>/book_table/confirm", methods=["GET", "POST"]
+    "/restaurants/<restaurant_id>/booking/confirm", methods=["GET", "POST"]
 )
 @login_required
 @user_required
