@@ -48,18 +48,18 @@ def create_app(config_name, updated_variables=None):
     # TODO move this out
     # ! WHEN YOU NEED UNCOMMENT, RUN AND COMMENT AGAIN
     # ! OTHERWISE TESTS WILL NOT WORK
-    from .services import mock
+    # from .services import mock
 
-    mock.users(10)
-    mock.operators()
-    mock.restaurant()
-    mock.health_authority()
-    mock.menu()
-    mock.table()
-    mock.precautions()
-    mock.restaurants_precautions()
-    mock.mark_three_users()
-    mock.booking()
+    # mock.users(10)
+    # mock.operators()
+    # mock.restaurant()
+    # mock.health_authority()
+    # mock.menu()
+    # mock.table()
+    # mock.precautions()
+    # mock.restaurants_precautions()
+    # mock.mark_three_users()
+    # mock.booking()
 
     # # Prova mail
     # from flask_mail import Message

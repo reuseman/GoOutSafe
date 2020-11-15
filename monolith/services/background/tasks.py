@@ -62,28 +62,28 @@ def compute_restaurants_rating_average():
     for restaurant in restaurants:
         reviews = restaurant.reviews
         average_rating = sum(review.rating for review in reviews)
+        average_rating /= len(reviews)
 
         restaurant.average_rating = average_rating
 
     db.session.commit()
 
 
-# send_email("GoOutSafe - Notificaton", ["gooutsafe.squad2@gmail.com"],
+# send_email("GoOutSafe - Notification", ["gooutsafe.squad2@gmail.com"],
 # "Not a good news", "Not a good news (when you can render html)")
 @app.task
 def send_email(
     subject,
     recipients: List[str],
     text_body,
-    html_body,
+    html_body=None,
     sender=Config.MAIL_SENDER,
     attachments=None,
 ):
     print(f"SENDING TO -> {recipients[0]}")
-    print(f"sender: {sender}")
     msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body
-    msg.html = html_body
+    msg.html = html_body if html_body else text_body
     if attachments:
         for attachment in attachments:
             msg.attach(*attachment)

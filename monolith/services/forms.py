@@ -157,8 +157,7 @@ class CreateTableForm(FlaskForm):
     display = ["name", "seats"]
 
 
-class MarkSsnForm(FlaskForm):
-    # TODO Custom validator to check if ssn is valid
+class AuthorityIdentifyForm(FlaskForm):
     duration = IntegerField(
         "Duration",
         validators=[
@@ -168,69 +167,12 @@ class MarkSsnForm(FlaskForm):
             ),
         ],
     )
-    ssn = f.StringField(
-        "SSN",
+    identifier = f.StringField(
+        "Identifier",
         validators=[DataRequired()],
-        render_kw={"placeholder": "RSSMRA00A01H501C"},
+        render_kw={"placeholder": "Use SSN, email or phone number"},
     )
-    submit = f.SubmitField("Mark")
-    display = ["duration", "ssn", "submit"]
-
-
-class MarkEmailForm(FlaskForm):
-    duration = IntegerField(
-        "Duration",
-        validators=[
-            DataRequired(message="This field must be a number."),
-            NumberRange(
-                min=1, max=60, message="The duration must be between 1 and 60."
-            ),
-        ],
-    )
-    email = f.StringField(
-        "Email",
-        validators=[DataRequired(), Email(message="Insert a valid email address.")],
-        render_kw={"placeholder": "example@mail.com"},
-    )
-    submit = f.SubmitField("Mark")
-    display = ["duration", "email", "submit"]
-
-
-class MarkPhoneNumberForm(FlaskForm):
-    duration = IntegerField(
-        "Duration",
-        validators=[
-            DataRequired(message="This field must be a number."),
-            NumberRange(
-                min=1, max=60, message="The duration must be between 1 and 60."
-            ),
-        ],
-    )
-    phone_number = f.StringField(
-        "Phone number",
-        validators=[DataRequired("This field must be a valid phone number")],
-        render_kw={"placeholder": "333 3339999"},
-    )
-    submit = f.SubmitField("Mark")
-    display = ["duration", "phone_number", "submit"]
-
-
-class ContactTracingPhoneNumberForm(FlaskForm):
-    interval = IntegerField(
-        "Interval",
-        validators=[
-            DataRequired(message="This field must be a number."),
-            NumberRange(
-                min=1, max=60, message="The duration must be between 1 and 60."
-            ),
-        ],
-    )
-    phone_number = f.StringField(
-        "Phone number",
-        validators=[DataRequired("This field must be a valid phone number")],
-        render_kw={"placeholder": "333 3339999"},
-    )
-    display = ["interval", "phone_number"]
+    display = ["duration", "identifier"]
 
 
 class ReviewForm(FlaskForm):

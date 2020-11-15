@@ -1,7 +1,6 @@
 import os
 from logging import FileHandler, Formatter
 from logging.config import dictConfig
-from celery.schedules import crontab
 
 fileHandler = FileHandler("monolith/monolith.log", encoding="utf-8")
 fileHandler.setFormatter(
@@ -37,9 +36,7 @@ class Config:
     # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
     AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
 
-    CELERY_BROKER_URL = (
-        os.environ.get("CELERY_BROKER_URL") or "redis://redis:6379/0"
-    )
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or "redis://redis:6379/0"
     CELERY_RESULT_BACKEND = (
         os.environ.get("CELERY_RESULT_BACKEND") or "redis://redis:6379/0"
     )
@@ -64,9 +61,9 @@ class DevelopmentConfig(Config):
     def init_app(app):
         from flask_debugtoolbar import DebugToolbarExtension
 
-        #app.debug = True
+        app.debug = True
         app.logger.addHandler(fileHandler)
-        # DebugToolbarExtension(app)
+        DebugToolbarExtension(app)
 
 
 class TestingConfig(Config):
@@ -75,7 +72,6 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         os.environ.get("TEST_DATABASE_URL") or "sqlite:///gooutsafe_test.db"
     )
-
 
 
 class DockerConfig(ProductionConfig):
@@ -99,3 +95,8 @@ config = {
     "docker": DockerConfig,
     "default": DevelopmentConfig,
 }
+
+mail_body_covid_19_mark = "Hey {},\nIn date {}, the health authority {} marked you positive to Covid-19. Contact your personal doctor to protect your health and that of others."
+mail_body_covid_19_contact = "Hey {},\nIn date {}, while you were at restaurant {}, you could have been in contact with a Covid-19 case. Contact your personal doctor to protect your health and that of others."
+mail_body_covid_19_operator_alert = "Hey {},\nIn date {}, at your restaurant {}, a Covid-19 case had a booking. Execute as soon as possible the health protocols."
+mail_body_covid_19_operator_booking_alert = "Hey {},\nYou have a booking of a Covid-19 positive case, at your restaurant {}. The reservation ID is {} at table {}."

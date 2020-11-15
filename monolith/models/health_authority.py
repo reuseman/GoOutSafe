@@ -3,6 +3,7 @@ from monolith import db
 from .abstract_user import AbstractUser
 from . import Mark, User
 from monolith.services.background import tasks
+from config import mail_body_covid_19_mark
 
 import logging
 
@@ -34,11 +35,4 @@ class HealthAuthority(AbstractUser):
         )
         self.marks.append(
             Mark(user=user, authority=self, duration=duration, created=starting_date)
-        )
-        covid_19_positive_text = f"Hey {user.firstname},\nIn date {starting_date.strftime('%A %d. %B %Y')}, the health authority {self.name} marked you positive to Covid-19. Contact your personal doctor to protect your health and that of others."
-        tasks.send_email(
-            "You are positive to COVID-19",
-            [user.email],
-            covid_19_positive_text,
-            covid_19_positive_text,
         )

@@ -41,28 +41,8 @@ Hi {{ current_user.firstname }}!
 
     {% elif current_user.is_authenticated and session['role'] == "authority" %}
     Hi {{ current_user.firstname }}!
-    Below you can mark users as positive.
+    In the menu you have the button to mark users as positive.
 </div>
-
-<!--TODO refactor all the custom sub-views in an external file-->
-<section>
-    <h2>Add new Mark</h2>
-    <p>
-    <form method="POST" action="/marks/new/ssn">
-        <input type="submit" value="SSN" />
-    </form>
-    </p>
-    <p>
-    <form method="POST" action="/marks/new/email">
-        <input type="submit" value="Email" />
-    </form>
-    </p>
-    <p>
-    <form method="POST" action="/marks/new/phonenumber">
-        <input type="submit" value="Phone number" />
-    </form>
-    </p>
-</section>
 
 {% else %}
 <div class="row">

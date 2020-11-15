@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Trace Phone Number{% endblock %}
+{% block title %}Mark user{% endblock %}
 
 {% block main %}
 
 <section>
+    <h2 class="ui header">Mark by using an identifier</h2>
     <form action="" method="POST" class="ui form">
         {{ form.hidden_tag() }}
         {% for field in form.display %}
@@ -18,18 +19,8 @@
         {% endif %}
         {% endfor %}
         <p>
-            <input type=submit value="Trace" class="ui button primary">
+            <input type=submit value="Mark" class="ui button primary">
     </form>
-
-    {% if contacts %}
-    <h1>Traced contacts</h1>
-    {% for contact in contacts %}
-    <h2>{{ contact.date }}</h2>
-    {% for person in contact.people %}
-    person
-    {% endfor %}
-    {% endfor %}
-    {% endif %}
 </section>
 
 {% endblock %}
