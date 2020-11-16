@@ -1,6 +1,12 @@
 from .fixtures import app, client, db
 from . import helpers
-from monolith.models import Restaurant, Table, RestaurantsPrecautions, Precautions
+from monolith.models import (
+    Restaurant,
+    Table,
+    RestaurantsPrecautions,
+    Precautions,
+    Booking,
+)
 from monolith.models.menu import Menu, Food, MenuItems
 
 from urllib.parse import urlparse
@@ -101,7 +107,7 @@ def test_upload_view_available(client):
     helpers.login_operator(client)
     helpers.create_restaurant(client)
 
-    res = client.get('/restaurants/1/upload')
+    res = client.get("/restaurants/1/upload")
     assert res.status_code == 200
 
 
@@ -111,10 +117,8 @@ def test_upload(client):
     helpers.create_restaurant(client)
 
     file_path = "./monolith/static/uploads/1/pizza.jpeg"
-    data = {
-        'file': open(file_path, 'rb')
-    }
-    res = client.post('/restaurants/1/upload', data=data)
+    data = {"file": open(file_path, "rb")}
+    res = client.post("/restaurants/1/upload", data=data)
     assert res.status_code == 302
 
 
@@ -122,7 +126,7 @@ def test_upload_restaurant_not_exists(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
 
-    res = client.get('/restaurants/1/upload')
+    res = client.get("/restaurants/1/upload")
     assert res.status_code == 404
 
 
@@ -132,10 +136,8 @@ def test_bad_upload(client):
     helpers.create_restaurant(client)
 
     file_name = "uploads/1/yolo.txt"
-    data = {
-        'file': (io.BytesIO(b"bad stuff"), file_name)
-    }
-    res = client.post('/restaurants/1/upload', data=data)
+    data = {"file": (io.BytesIO(b"bad stuff"), file_name)}
+    res = client.post("/restaurants/1/upload", data=data)
     assert res.status_code == 400
 
 
@@ -156,8 +158,7 @@ def test_create_restaurant_bad_data(client, db):
     )
 
     res = helpers.create_restaurant(client, data)
-    fetched_restaurant = db.session.query(
-        Restaurant).filter_by(operator_id=1).first()
+    fetched_restaurant = db.session.query(Restaurant).filter_by(operator_id=1).first()
 
     assert fetched_restaurant is None
     assert res.status_code == 400
@@ -181,8 +182,7 @@ def test_create_duplicate_restaurant(client, db):
     )
 
     res = helpers.create_restaurant(client, restaurant)
-    fetched_dup_restaurant = db.session.query(
-        Restaurant).filter_by(id=2).first()
+    fetched_dup_restaurant = db.session.query(Restaurant).filter_by(id=2).first()
 
     assert res.status_code == 400
     assert fetched_dup_restaurant is None
@@ -917,8 +917,7 @@ def test_show_menu(client, db):
     helpers.create_menu(client)
 
     res = helpers.show_menu(client)
-    menu = db.session.query(Menu).filter(
-        Menu.restaurant_id == 1, Menu.id == 1).first()
+    menu = db.session.query(Menu).filter(Menu.restaurant_id == 1, Menu.id == 1).first()
 
     assert res.status_code == 200
     assert bytes(menu.name, "utf-8") in res.data
@@ -930,7 +929,7 @@ def test_show_menu(client, db):
 
 def test_show_menu_not_exists(client):
     res = helpers.show_menu(client)
-    
+
     assert res.status_code == 404
 
 
@@ -940,7 +939,9 @@ def test_restaurants(client, db):
     assert len(allrestaurants) == 1
 
 
-def test_restaurant_booking_is_avaible_logged_user(client,):
+def test_restaurant_booking_is_avaible_logged_user(
+    client,
+):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
@@ -1015,6 +1016,7 @@ def test_restaurant_all_tables_booked(client):
 
     assert res.status_code == 200
 
+
 def test_multiple_booking(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -1029,7 +1031,6 @@ def test_multiple_booking(client):
     res = helpers.booking_confirm(client)
 
     assert res.status_code == 302
-
 
 
 def test_list_reservation(client):
@@ -1051,3 +1052,55 @@ def test_list_reservation(client):
     assert res.status_code == 200
 
 
+def test_user_bookings(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking(client)
+
+    res = helpers.bookings(client)
+
+    assert res.status_code == 200
+    assert b"Trattoria da Fabio" in res.data
+    assert b"8:00" in res.data
+
+
+def test_user_delete_booking(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking(client)
+
+    res = helpers.delete_booking_by_user(client)
+
+    assert res.status_code == 302
+
+
+def test_operator_delete_booking(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking(client)
+
+    helpers.logout(client)
+
+    helpers.login_operator(client)
+    res = helpers.delete_booking_by_operator(client)
+
+    assert res.status_code == 302
+    assert db.session.query(Booking).filter_by(id=1).first() is None

@@ -313,6 +313,21 @@ def booking(client, data=booking1):
         follow_redirects=False,
     )
 
+
+def delete_booking_by_user(client, book_number=1):
+    return client.get(
+        "/bookings/delete/" + str(book_number),
+        follow_redirects=False
+    )
+
+
+def delete_booking_by_operator(client, restaurant_id=1, book_number=1):
+    return client.get(
+        "/restaurants/" + str(restaurant_id) + "/reservations/delete/" + str(book_number),
+        follow_redirects=False
+    )
+
+
 def booking_confirm(client, data=booking_people):
     return client.post(
         "/restaurants/1/booking/confirm",
@@ -326,6 +341,14 @@ def booking_multiple_user(client, data=booking2):
         data=data,
         follow_redirects=False,
     )
+
+
+def bookings(client):
+    return client.get(
+        "/bookings",
+        follow_redirects=False,
+    )
+
 
 def unsubscribe(client):
     return client.get(
