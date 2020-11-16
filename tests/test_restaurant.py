@@ -139,6 +139,36 @@ def test_bad_upload(client):
     assert res.status_code == 400
 
 
+def test_get_photo_names_restaurant_not_exists(client):
+    res = client.get('/uploads/1/pizza.jpeg')
+    assert res.status_code == 404
+
+
+def test_get_photo_names(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    res = client.get('/uploads/1')
+    assert res.status_code == 200
+
+    assert "pizza.jpeg" in res.json
+    assert "pizza2.jpeg" in res.json
+    assert "uploads_1_pizza.jpeg" in res.json
+
+
+def test_get_photo_restaurant_not_exists(client):
+    res = client.get('/uploads/1/blabla')
+    assert res.status_code == 404
+
+
+def test_get_photo(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    res = client.get('/uploads/1/pizza.jpeg')
+    assert res.status_code == 200
+
+
 def test_create_restaurant_bad_data(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)

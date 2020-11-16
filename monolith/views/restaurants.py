@@ -2,7 +2,7 @@ from flask.globals import session
 from sqlalchemy.sql.functions import user
 from monolith.models import precautions
 from flask.helpers import flash
-from flask import Blueprint, redirect, render_template, request, url_for, make_response, abort
+from flask import Blueprint, redirect, render_template, request, url_for, make_response, abort, send_from_directory, jsonify
 from monolith import db
 from monolith.models import (
     Restaurant,
@@ -37,6 +37,7 @@ from sqlalchemy import func
 from flask_login import current_user
 from monolith.services.background.tasks import send_email
 from werkzeug.utils import secure_filename
+from pathlib import Path
 
 import os
 import imghdr
@@ -407,6 +408,37 @@ def handle_upload(restaurant_id):
         return redirect("/restaurants/mine")
 
     return render_template("upload_photos.html", id=restaurant_id)
+
+
+@restaurants.route('/uploads/<restaurant_id>/<file_name>', methods=['GET'])
+def get_photo(restaurant_id, file_name):
+    path = "./uploads/" + str(restaurant_id)
+    file = Path(os.path.join(path, file_name))
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+
+    if not file.is_file() or q_restaurant is None:
+        abort(404)
+    
+    return send_from_directory("../uploads/" + str(restaurant_id), file_name)
+
+
+@restaurants.route('/uploads/<restaurant_id>', methods=['GET'])
+def get_photos_names(restaurant_id):
+    path = "./uploads/" + str(restaurant_id)
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+
+    if q_restaurant is None:
+        abort(404)
+    
+    photos_paths = os.listdir(path)
+
+    names = []
+    for path in photos_paths:
+        names.append(os.path.basename(path))
+
+    return jsonify(names)
 
 
 @restaurants.route("/restaurants/new", methods=["POST", "GET"])
