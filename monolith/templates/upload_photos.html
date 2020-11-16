@@ -3,7 +3,7 @@
 
 {% block main %}
 
-    {{ dropzone.create('/upload/' + id) }}
+    {{ dropzone.create('/restaurants/' + id + '/upload') }}
 
     <button class="ui button primary" id="upload">Upload</button>
     {{ dropzone.load_js() }}

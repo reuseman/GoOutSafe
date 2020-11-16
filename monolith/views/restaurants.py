@@ -128,6 +128,13 @@ def restaurant_sheet(restaurant_id):
                     db.session.commit()
                     return redirect("/restaurants/" + restaurant_id)
 
+    path = "./monolith/static/uploads/" + str(restaurant_id)
+    photos_paths = os.listdir(path)
+
+    names = []
+    for path in photos_paths:
+        names.append(os.path.basename(path))
+
     return render_template(
         "restaurantsheet.html",
         id=q_restaurant.id,
@@ -145,6 +152,7 @@ def restaurant_sheet(restaurant_id):
         reviews=reviews,
         form=form,
         operator_id=q_restaurant.operator_id,
+        file_names=names
     )
 
 
@@ -404,41 +412,10 @@ def handle_upload(restaurant_id):
                 if file_ext not in [".png", ".jpg", ".jpeg"] or \
                     file_ext != validate_image(uploaded_file.stream):
                     return '', 400
-                uploaded_file.save(os.path.join("./uploads/" + str(restaurant_id), filename))
+                uploaded_file.save(os.path.join("./monolith/static/uploads/" + str(restaurant_id), filename))
         return redirect("/restaurants/mine")
 
     return render_template("upload_photos.html", id=restaurant_id)
-
-
-@restaurants.route('/uploads/<restaurant_id>/<file_name>', methods=['GET'])
-def get_photo(restaurant_id, file_name):
-    path = "./uploads/" + str(restaurant_id)
-    file = Path(os.path.join(path, file_name))
-    q_restaurant = db.session.query(Restaurant).filter_by(
-        id=int(restaurant_id)).first()
-
-    if not file.is_file() or q_restaurant is None:
-        abort(404)
-    
-    return send_from_directory("../uploads/" + str(restaurant_id), file_name)
-
-
-@restaurants.route('/uploads/<restaurant_id>', methods=['GET'])
-def get_photos_names(restaurant_id):
-    path = "./uploads/" + str(restaurant_id)
-    q_restaurant = db.session.query(Restaurant).filter_by(
-        id=int(restaurant_id)).first()
-
-    if q_restaurant is None:
-        abort(404)
-    
-    photos_paths = os.listdir(path)
-
-    names = []
-    for path in photos_paths:
-        names.append(os.path.basename(path))
-
-    return jsonify(names)
 
 
 @restaurants.route("/restaurants/new", methods=["POST", "GET"])
@@ -457,7 +434,7 @@ def create_restaurant():
             if restaurant.add_new_restaurant(
                 new_restaurant, request.form.getlist("prec_measures")
             ):
-                os.makedirs("./uploads/" + str(new_restaurant.id), exist_ok=True)
+                os.makedirs("./monolith/static/uploads/" + str(new_restaurant.id), exist_ok=True)
 
                 return redirect("/restaurants/mine")
             else:
