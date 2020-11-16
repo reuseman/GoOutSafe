@@ -127,7 +127,14 @@
         <i class="plus icon"></i>
         Upload photos
     </a>
-    {% endif %}
+    {% endif%}
+
+    <div class='fotorama' data-allowfullscreen="native" data-nav="thumbs" data-width="800" data-height="600">
+        {% for image in file_names%}
+            <img src="/static/uploads/{{id}}/{{image}}">
+        {% endfor%}
+    </div>
+    
     <div class="ui hidden divider"></div>
 </section>
 
