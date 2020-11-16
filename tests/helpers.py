@@ -315,14 +315,14 @@ def booking(client, data=booking1):
 
 def booking_confirm(client, data=booking_people):
     return client.post(
-        "/restaurants/1//booking/confirm",
+        "/restaurants/1/booking/confirm",
         data=data,
         follow_redirects=False,
     )
 
 def booking_multiple_user(client, data=booking2):
     return client.post(
-        "/restaurants/1//booking",
+        "/restaurants/1/booking",
         data=data,
         follow_redirects=False,
     )

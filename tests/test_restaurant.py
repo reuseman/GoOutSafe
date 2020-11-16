@@ -1013,7 +1013,7 @@ def test_restaurant_all_tables_booked(client):
 
     res = helpers.booking(client)
 
-    assert res.status_code == 500
+    assert res.status_code == 200
 
 def test_multiple_booking(client):
     helpers.create_operator(client)
