@@ -4,7 +4,6 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_dropzone import Dropzone
 
-# from flask_celeryext import FlaskCeleryExt
 from config import config, Config
 from celery import Celery
 
@@ -45,31 +44,4 @@ def create_app(config_name, updated_variables=None):
     mail.init_app(app)
     celery.conf.update(app.config)
 
-    # TODO move this out
-    # ! WHEN YOU NEED UNCOMMENT, RUN AND COMMENT AGAIN
-    # ! OTHERWISE TESTS WILL NOT WORK
-    # from .services import mock
-
-    # mock.users(10)
-    # mock.operators()
-    # mock.restaurant()
-    # mock.health_authority()
-    # mock.menu()
-    # mock.table()
-    # mock.precautions()
-    # mock.restaurants_precautions()
-    # mock.mark_three_users()
-    # mock.booking()
-
-    # # Prova mail
-    # from flask_mail import Message
-
-    # msg = Message(
-    #     "test subject",
-    #     sender="gooutsafe.squad2@gmail.com",
-    #     recipients=["gooutsafe.squad2@gmail.com"],
-    # )
-    # msg.body = "text body"
-    # msg.html = "<h1>HTML body</h1>"
-    # mail.send(msg)
     return app

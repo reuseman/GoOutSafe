@@ -22,6 +22,17 @@ from monolith.models.menu import Menu, Food
 
 fake = Faker("it_IT")
 
+def everything():
+    users(10)
+    operators()
+    restaurant()
+    health_authority()
+    menu()
+    table()
+    precautions()
+    restaurants_precautions()
+    mark_three_users()
+    booking()
 
 def users(n=50):
     """

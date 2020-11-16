@@ -27,6 +27,7 @@ from monolith.models import (
     Booking,
 )
 from monolith.services.background import tasks
+from monolith.services import mock
 
 
 @app.shell_context_processor
@@ -34,6 +35,7 @@ def make_shell_context():
     return {
         "db": db,
         "tasks": tasks,
+        "mock": mock,
         "User": User,
         "Review": Review,
         "Operator": Operator,

@@ -24,9 +24,7 @@
 
 ### Generate mock data
     flask shell
-    from monolith.services import mock
-    mock.restaurant()
-    mock.restaurant()
+    mock.everything()
 
 ### Tests with coverage
 Inside GoOutSafe run (it will automatically use the configuration in pyproject.toml):
