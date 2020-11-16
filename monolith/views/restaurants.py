@@ -776,8 +776,6 @@ def operator_checkin_reservation(restaurant_id, booking_number):
         )
 
     if request.method == "POST":
-        print(request.form.getlist("people"))
-        print()
         for user_id in request.form.getlist("people"):
             aux = (
                 db.session.query(Booking)

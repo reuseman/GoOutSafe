@@ -109,3 +109,33 @@ booking_people = {
     "people-2-lastname": "alessandro",
     "people-2-fiscal_code": "789"
  }
+
+booking_people_double_fiscal_code = { 
+    "people-0-email":"tommaso@tommaso.com",
+    "people-0-firstname":"tommaso",
+    "people-0-lastname": "tommaso",
+    "people-0-fiscal_code": "123",
+    "people-1-email":"simone@simone.com", 
+    "people-1-firstname":"simone",
+    "people-1-lastname": "simone",
+    "people-1-fiscal_code": "456",
+    "people-2-email":"tommaso@tommaso.com",
+    "people-2-firstname":"tommaso",
+    "people-2-lastname": "tommaso",
+    "people-2-fiscal_code": "123",
+}
+
+booking_people_double_email = { 
+    "people-0-email":"tommaso@tommaso.com", 
+    "people-0-firstname":"tommaso",
+    "people-0-lastname": "tommaso",
+    "people-0-fiscal_code": "123",
+    "people-1-email":"simone@simone.com", 
+    "people-1-firstname":"simone",
+    "people-1-lastname": "simone",
+    "people-1-fiscal_code": "456",
+    "people-2-email":"tommaso@tommaso.com", 
+    "people-2-firstname":"alessandro",
+    "people-2-lastname": "alessandro",
+    "people-2-fiscal_code": "789"
+ }

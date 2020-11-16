@@ -9,7 +9,7 @@ from monolith.models import (
     Precautions,
 )
 from monolith.services import mock
-from tests.data import precautions, booking, booking_people, booking1, booking2
+from tests.data import precautions, booking, booking_people, booking_people_double_fiscal_code, booking_people_double_email, booking1, booking2
 from werkzeug.datastructures import MultiDict
 
 
@@ -328,7 +328,10 @@ def delete_booking_by_operator(client, restaurant_id=1, book_number=1):
     )
 
 
-def booking_confirm(client, data=booking_people):
+def booking_confirm(client, double_fiscal_code_user=False, double_email_user=False, data=booking_people):
+    if double_fiscal_code_user: data = booking_people_double_fiscal_code
+    elif double_email_user: data = booking_people_double_email
+    
     return client.post(
         "/restaurants/1/booking/confirm",
         data=data,
@@ -360,5 +363,11 @@ def reservation_list(client):
     return client.post(
         "/restaurants/1/reservations",
         data= {"date":date.today()},
+        follow_redirects=False,
+    )
+
+def reservation(client):
+    return client.get(
+        "/restaurants/1/reservations/1",
         follow_redirects=False,
     )

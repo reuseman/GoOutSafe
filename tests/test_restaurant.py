@@ -1032,6 +1032,37 @@ def test_multiple_booking(client):
 
     assert res.status_code == 302
 
+def test_multiple_booking_double_user(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client, double_fiscal_code_user=True)
+
+    assert res.status_code == 200
+    
+
+def test_multiple_booking_double_user(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client, double_email_user=True)
+
+    assert res.status_code == 200
+
 
 def test_list_reservation(client):
     helpers.create_operator(client)
@@ -1048,6 +1079,25 @@ def test_list_reservation(client):
 
     helpers.login_operator(client)
     res = helpers.reservation_list(client)
+
+    assert res.status_code == 200
+
+
+def test_reservation(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+
+    helpers.create_user(client)
+    helpers.login_user(client)
+    res = helpers.booking_multiple_user(client)
+    res = helpers.booking_confirm(client)
+    helpers.logout(client)
+
+    helpers.login_operator(client)
+    res = helpers.reservation(client)
 
     assert res.status_code == 200
 
@@ -1084,7 +1134,24 @@ def test_user_delete_booking(client, db):
     res = helpers.delete_booking_by_user(client)
 
     assert res.status_code == 302
+    assert db.session.query(Booking).filter_by(booking_number=1).first() is None
 
+
+# def test_user_delete_booking(client, db):
+#     helpers.create_operator(client)
+#     helpers.login_operator(client)
+#     helpers.create_restaurant(client)
+#     helpers.create_table(client)
+#     helpers.logout(client)
+
+#     helpers.create_user(client)
+#     helpers.login_user(client)
+#     helpers.booking(client)
+
+#     res = helpers.delete_booking_by_user(client)
+
+#     assert res.status_code == 302
+#     assert db.session.query(Booking).filter_by(booking_number=1).first() is None
 
 def test_operator_delete_booking(client, db):
     helpers.create_operator(client)
@@ -1103,4 +1170,4 @@ def test_operator_delete_booking(client, db):
     res = helpers.delete_booking_by_operator(client)
 
     assert res.status_code == 302
-    assert db.session.query(Booking).filter_by(id=1).first() is None
+    assert db.session.query(Booking).filter_by(booking_number=1).first() is None
