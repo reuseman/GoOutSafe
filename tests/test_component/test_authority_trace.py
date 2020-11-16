@@ -30,7 +30,7 @@ def test_ha_should_trace_through_user_customer_same_time(client, db):
     helpers.login_user(client, data=user3)
     helpers.booking_multiple_user(client)
     helpers.booking_confirm(client)
-    helpers.checkin_booking_multiple_user(client)
+    helpers.checkin_booking_multiple_user(client,2)
     helpers.logout(client)
 
     res = client.post(

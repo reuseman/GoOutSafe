@@ -15,6 +15,8 @@ from tests.data import (
     booking_people_double_email,
     booking1,
     booking2,
+    checkin_people,
+    checkin_multiple_people
 )
 from werkzeug.datastructures import MultiDict
 
@@ -356,11 +358,11 @@ def booking_confirm(
     )
 
 
-def checkin_booking_multiple_user(client):
+def checkin_booking_multiple_user(client, reservation_id=1):
     return client.post(
-        "/restaurants/1/reservations/2",
-        data={"2": True, "3": True, "4": True, "5": True},
-        follow_redirects=False,
+        f"/restaurants/1/reservations/{reservation_id}",
+        data=checkin_multiple_people,
+        follow_redirects=True,
     )
 
 
@@ -374,7 +376,7 @@ def bookings(client):
 def checkin_booking(client):
     return client.post(
         "/restaurants/1/reservations/1",
-        data={"1": True},
+        data=checkin_people,
         follow_redirects=False,
     )
 

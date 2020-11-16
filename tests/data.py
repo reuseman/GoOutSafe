@@ -1,4 +1,6 @@
 from datetime import date
+from werkzeug.datastructures import MultiDict
+
 
 user = dict(
     email="mariobrown@gmail.com",
@@ -158,3 +160,19 @@ booking_people_double_email = {
     "people-2-lastname": "alessandro",
     "people-2-fiscal_code": "789",
 }
+
+
+checkin_people = {
+    "people": '1'
+}
+
+
+checkin_multiple_people = MultiDict(
+    [
+        ("people", '1'),
+        ("people", '2'),
+        ("people", '3'),
+        ("people", '4'),
+
+    ]
+)

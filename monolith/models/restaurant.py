@@ -41,9 +41,6 @@ class Restaurant(db.Model):
     reviews = db.relationship("Review", back_populates="restaurant")
     menus = db.relationship("Menu", back_populates="restaurant")
 
-    def sort_tables(table):
-        return table.seats
-
     def get_bookings(self, starting_booking_datetime: datetime):
         """Get all the bookings that were confirmed starting from a specific time.
 

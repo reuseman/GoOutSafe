@@ -1048,7 +1048,7 @@ def test_multiple_booking_double_user(client):
     assert res.status_code == 200
     
 
-def test_multiple_booking_double_user(client):
+def test_multiple_booking_double_email(client):
     helpers.create_operator(client)
     helpers.login_operator(client)
     helpers.create_restaurant(client)
@@ -1137,21 +1137,23 @@ def test_user_delete_booking(client, db):
     assert db.session.query(Booking).filter_by(booking_number=1).first() is None
 
 
-# def test_user_delete_booking(client, db):
-#     helpers.create_operator(client)
-#     helpers.login_operator(client)
-#     helpers.create_restaurant(client)
-#     helpers.create_table(client)
-#     helpers.logout(client)
+def test_user_delete_double_booking(client, db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
 
-#     helpers.create_user(client)
-#     helpers.login_user(client)
-#     helpers.booking(client)
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking(client)
 
-#     res = helpers.delete_booking_by_user(client)
+    res = helpers.delete_booking_by_user(client)
+    res = helpers.delete_booking_by_user(client)
 
-#     assert res.status_code == 302
-#     assert db.session.query(Booking).filter_by(booking_number=1).first() is None
+
+    assert res.status_code == 302
+    assert db.session.query(Booking).filter_by(booking_number=1).first() is None
 
 def test_operator_delete_booking(client, db):
     helpers.create_operator(client)
@@ -1171,3 +1173,43 @@ def test_operator_delete_booking(client, db):
 
     assert res.status_code == 302
     assert db.session.query(Booking).filter_by(booking_number=1).first() is None
+
+
+def test_checkin(client,db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+        
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking(client)
+    helpers.logout(client)
+
+    helpers.login_operator(client)
+    res = helpers.checkin_booking(client)
+
+    assert b'Check-in done' in res.data
+    assert res.status_code == 200
+
+    
+
+def test_checkin_multiple_people(client,db):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+    helpers.create_restaurant(client)
+    helpers.create_table(client)
+    helpers.logout(client)
+        
+    helpers.create_user(client)
+    helpers.login_user(client)
+    helpers.booking_multiple_user(client)
+    helpers.booking_confirm(client)
+    helpers.logout(client)
+
+    helpers.login_operator(client)
+    res = helpers.checkin_booking_multiple_user(client)
+
+    assert b'Check-in done' in res.data
+    assert res.status_code == 200
