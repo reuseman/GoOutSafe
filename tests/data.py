@@ -20,6 +20,17 @@ user2 = dict(
     phone_number="+39331303313094",
 )
 
+
+user3 = dict(
+    email="marioyellow@gmail.com",
+    firstname="mario",
+    lastname="yellow",
+    password="5678",
+    dateofbirth="1994-05-04",
+    fiscal_code="RSSMRA95T31J591K",
+    phone_number="+39334334683094",
+)
+
 operator = dict(
     email="giuseppebrown@lalocanda.com",
     firstname="giuseppe",
@@ -91,51 +102,59 @@ precautions = [
 table = dict(name="A10", seats=10, restaurant_id=1)
 
 
-booking1 = dict(number_persons=1, booking_hour="8:00 - 8:30", booking_date=date.today(),)
-booking2 = dict(number_persons=4, booking_hour="8:00 - 8:30", booking_date=date.today(),)
+booking1 = dict(
+    number_persons=1,
+    booking_hour="8:00 - 8:30",
+    booking_date=date.today(),
+)
+booking2 = dict(
+    number_persons=4,
+    booking_hour="8:00 - 8:30",
+    booking_date=date.today(),
+)
 booking = [booking1, booking2]
 
-booking_people = { 
-    "people-0-email":"tommaso@tommaso.com", 
-    "people-0-firstname":"tommaso",
+booking_people = {
+    "people-0-email": "tommaso@tommaso.com",
+    "people-0-firstname": "tommaso",
     "people-0-lastname": "tommaso",
     "people-0-fiscal_code": "123",
-    "people-1-email":"simone@simone.com", 
-    "people-1-firstname":"simone",
+    "people-1-email": "simone@simone.com",
+    "people-1-firstname": "simone",
     "people-1-lastname": "simone",
     "people-1-fiscal_code": "456",
-    "people-2-email":"alessandro@alessandro.com", 
-    "people-2-firstname":"alessandro",
+    "people-2-email": "alessandro@alessandro.com",
+    "people-2-firstname": "alessandro",
     "people-2-lastname": "alessandro",
-    "people-2-fiscal_code": "789"
- }
+    "people-2-fiscal_code": "789",
+}
 
-booking_people_double_fiscal_code = { 
-    "people-0-email":"tommaso@tommaso.com",
-    "people-0-firstname":"tommaso",
+booking_people_double_fiscal_code = {
+    "people-0-email": "tommaso@tommaso.com",
+    "people-0-firstname": "tommaso",
     "people-0-lastname": "tommaso",
     "people-0-fiscal_code": "123",
-    "people-1-email":"simone@simone.com", 
-    "people-1-firstname":"simone",
+    "people-1-email": "simone@simone.com",
+    "people-1-firstname": "simone",
     "people-1-lastname": "simone",
     "people-1-fiscal_code": "456",
-    "people-2-email":"tommaso@tommaso.com",
-    "people-2-firstname":"tommaso",
+    "people-2-email": "tommaso@tommaso.com",
+    "people-2-firstname": "tommaso",
     "people-2-lastname": "tommaso",
     "people-2-fiscal_code": "123",
 }
 
-booking_people_double_email = { 
-    "people-0-email":"tommaso@tommaso.com", 
-    "people-0-firstname":"tommaso",
+booking_people_double_email = {
+    "people-0-email": "tommaso@tommaso.com",
+    "people-0-firstname": "tommaso",
     "people-0-lastname": "tommaso",
     "people-0-fiscal_code": "123",
-    "people-1-email":"simone@simone.com", 
-    "people-1-firstname":"simone",
+    "people-1-email": "simone@simone.com",
+    "people-1-firstname": "simone",
     "people-1-lastname": "simone",
     "people-1-fiscal_code": "456",
-    "people-2-email":"tommaso@tommaso.com", 
-    "people-2-firstname":"alessandro",
+    "people-2-email": "tommaso@tommaso.com",
+    "people-2-firstname": "alessandro",
     "people-2-lastname": "alessandro",
-    "people-2-fiscal_code": "789"
- }
+    "people-2-fiscal_code": "789",
+}

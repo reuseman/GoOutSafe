@@ -1,5 +1,4 @@
 from datetime import date
-from monolith.models.health_authority import HealthAuthority
 from monolith.models.menu import Menu, Food
 from monolith.models import (
     User,
@@ -8,8 +7,15 @@ from monolith.models import (
     HealthAuthority,
     Precautions,
 )
-from monolith.services import mock
-from tests.data import precautions, booking, booking_people, booking_people_double_fiscal_code, booking_people_double_email, booking1, booking2
+from tests.data import (
+    precautions,
+    booking,
+    booking_people,
+    booking_people_double_fiscal_code,
+    booking_people_double_email,
+    booking1,
+    booking2,
+)
 from werkzeug.datastructures import MultiDict
 
 
@@ -106,27 +112,30 @@ restaurant = dict(
 )
 
 
-menu = MultiDict([
-    ("menu_name", "Trial menu"), 
-    ("name", "Pepperoni pizza"), 
-    ("price", 5.0),
-    ("category", "PIZZAS")
-])
+menu = MultiDict(
+    [
+        ("menu_name", "Trial menu"),
+        ("name", "Pepperoni pizza"),
+        ("price", 5.0),
+        ("category", "PIZZAS"),
+    ]
+)
 
 
-menu_dup_food = MultiDict([
-    ("menu_name", "Trial menu"), 
-    ("name", "Pepperoni pizza"), 
-    ("price", 5.0),
-    ("category", "PIZZAS"),
-    ("name", "Pepperoni pizza"), 
-    ("price", 10),
-    ("category", "DRINKS")
-])
+menu_dup_food = MultiDict(
+    [
+        ("menu_name", "Trial menu"),
+        ("name", "Pepperoni pizza"),
+        ("price", 5.0),
+        ("category", "PIZZAS"),
+        ("name", "Pepperoni pizza"),
+        ("price", 10),
+        ("category", "DRINKS"),
+    ]
+)
 
 
 table = dict(name="A10", seats=10, restaurant_id=1)
-
 
 
 # CREATION
@@ -189,6 +198,7 @@ def create_operator(client, data=operator2):
         follow_redirects=False,
     )
 
+
 def create_operator2(client, data=operator):
     return client.post(
         "/register/operator",
@@ -246,10 +256,7 @@ def create_table(client, restaurant_id=1, data=table):
 
 def edit_table(client, restaurant_id=1, table_id=1, data=table):
     return client.post(
-        "/restaurants/"
-        + str(restaurant_id)
-        + "/tables/edit/"
-        + str(table_id),
+        "/restaurants/" + str(restaurant_id) + "/tables/edit/" + str(table_id),
         data=data,
         follow_redirects=False,
     )
@@ -257,10 +264,7 @@ def edit_table(client, restaurant_id=1, table_id=1, data=table):
 
 def delete_table(client, restaurant_id=1, table_id=1, data=table):
     return client.post(
-        "/restaurants/"
-        + str(restaurant_id)
-        + "/tables/delete/"
-        + str(table_id),
+        "/restaurants/" + str(restaurant_id) + "/tables/delete/" + str(table_id),
         data=data,
         follow_redirects=False,
     )
@@ -306,6 +310,7 @@ def login_authority(client, data=health_authority):
         follow_redirects=False,
     )
 
+
 def booking(client, data=booking1):
     return client.post(
         "/restaurants/1/booking",
@@ -315,33 +320,46 @@ def booking(client, data=booking1):
 
 
 def delete_booking_by_user(client, book_number=1):
-    return client.get(
-        "/bookings/delete/" + str(book_number),
-        follow_redirects=False
-    )
+    return client.get("/bookings/delete/" + str(book_number), follow_redirects=False)
 
 
 def delete_booking_by_operator(client, restaurant_id=1, book_number=1):
     return client.get(
-        "/restaurants/" + str(restaurant_id) + "/reservations/delete/" + str(book_number),
-        follow_redirects=False
+        "/restaurants/"
+        + str(restaurant_id)
+        + "/reservations/delete/"
+        + str(book_number),
+        follow_redirects=False,
     )
 
 
-def booking_confirm(client, double_fiscal_code_user=False, double_email_user=False, data=booking_people):
-    if double_fiscal_code_user: data = booking_people_double_fiscal_code
-    elif double_email_user: data = booking_people_double_email
-    
+def booking_multiple_user(client, data=booking2):
+    return client.post(
+        "/restaurants/1/booking",
+        data=data,
+        follow_redirects=False,
+    )
+
+
+def booking_confirm(
+    client, double_fiscal_code_user=False, double_email_user=False, data=booking_people
+):
+    if double_fiscal_code_user:
+        data = booking_people_double_fiscal_code
+    elif double_email_user:
+        data = booking_people_double_email
+
     return client.post(
         "/restaurants/1/booking/confirm",
         data=data,
         follow_redirects=False,
     )
 
-def booking_multiple_user(client, data=booking2):
+
+def checkin_booking_multiple_user(client):
     return client.post(
-        "/restaurants/1/booking",
-        data=data,
+        "/restaurants/1/reservations/2",
+        data={"2": True, "3": True, "4": True, "5": True},
         follow_redirects=False,
     )
 
@@ -353,18 +371,28 @@ def bookings(client):
     )
 
 
+def checkin_booking(client):
+    return client.post(
+        "/restaurants/1/reservations/1",
+        data={"1": True},
+        follow_redirects=False,
+    )
+
+
 def unsubscribe(client):
     return client.get(
         "/unsubscribe",
         follow_redirects=False,
     )
 
+
 def reservation_list(client):
     return client.post(
         "/restaurants/1/reservations",
-        data= {"date":date.today()},
+        data={"date": date.today()},
         follow_redirects=False,
     )
+
 
 def reservation(client):
     return client.get(
