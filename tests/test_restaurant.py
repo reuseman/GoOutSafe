@@ -68,6 +68,12 @@ def test_restaurant_sheet(client, db):
         assert bytes(menu.name, "utf-8") in res.data
 
 
+def test_restaurant_sheet_not_existing_restaurant(client):
+    res = helpers.restaurant_sheet(client)
+
+    assert res.status_code == 404
+
+
 def test_create_restaurant(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -110,6 +116,14 @@ def test_upload(client):
     }
     res = client.post('/restaurants/1/upload', data=data)
     assert res.status_code == 302
+
+
+def test_upload_restaurant_not_exists(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+
+    res = client.get('/restaurants/1/upload')
+    assert res.status_code == 404
 
 
 def test_bad_upload(client):
@@ -237,6 +251,14 @@ def test_create_table(client, db):
     assert urlparse(res.location).path == "/restaurants/1/tables"
 
 
+def test_create_table_restaurant_not_exists(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+
+    res = helpers.create_table(client)
+    assert res.status_code == 404
+
+
 def test_create_table_bad_data(client, db):
     helpers.create_operator(client)
     helpers.login_operator(client)
@@ -353,7 +375,7 @@ def test_delete_table_not_exists(client, db):
 
     res = helpers.delete_table(client)
 
-    assert res.status_code == 400
+    assert res.status_code == 404
 
 
 def test_delete_table_not_owned_restaurant(client, db):
@@ -382,7 +404,7 @@ def test_delete_table_bad_table_id(client, db):
 
     res = helpers.delete_table(client, table_id=9)
 
-    assert res.status_code == 400
+    assert res.status_code == 404
 
 
 def test_delete_table_bad_restaurant_id(client, db):
@@ -490,7 +512,7 @@ def test_edit_table_not_exists(client, db):
 
     res = helpers.edit_table(client)
 
-    assert res.status_code == 400
+    assert res.status_code == 404
 
 
 def test_edit_table_not_owned_restaurant(client, db):
@@ -533,7 +555,7 @@ def test_edit_table_bad_table_id(client, db):
 
     res = helpers.edit_table(client, table_id=2)
 
-    assert res.status_code == 400
+    assert res.status_code == 404
 
 
 def test_edit_table_bad_data(client, db):
@@ -724,6 +746,14 @@ def test_tables(client, db):
         assert bytes(table.name, "utf-8") in res.data
 
 
+def test_tables_not_exists(client):
+    helpers.create_operator(client)
+    helpers.login_operator(client)
+
+    res = client.get("/restaurants/1/tables")
+    assert res.status_code == 404
+
+
 def test_tables_not_owned_restaurant(client, db):
     helpers.create_operator(client)
 
@@ -896,6 +926,12 @@ def test_show_menu(client, db):
         assert bytes(food.name, "utf-8") in res.data
         assert bytes(str(food.price), "utf-8") in res.data
         assert bytes(food.category.value, "utf-8") in res.data
+
+
+def test_show_menu_not_exists(client):
+    res = helpers.show_menu(client)
+    
+    assert res.status_code == 404
 
 
 def test_restaurants(client, db):

@@ -85,6 +85,10 @@ def operator_restaurants(message=""):
 def restaurant_sheet(restaurant_id):
     q_restaurant = db.session.query(Restaurant).filter_by(
         id=int(restaurant_id)).first()
+
+    if q_restaurant is None:
+        abort(404)
+
     q_restaurant_precautions = (
         db.session.query(Precautions.name)
         .filter(
@@ -385,6 +389,12 @@ def validate_image(stream):
 @login_required
 @operator_required
 def handle_upload(restaurant_id):
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+
+    if q_restaurant is None:
+        abort(404)
+
     if request.method == "POST":
         for key, uploaded_file in request.files.items():
             filename = secure_filename(uploaded_file.filename)
@@ -435,6 +445,12 @@ def create_menu(restaurant_id):
 
     zipped = None
     name = ""
+
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+    if q_restaurant is None:
+        abort(404)
+
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         if request.method == "POST":
             menu = Menu()
@@ -530,6 +546,9 @@ def show_menu(restaurant_id, menu_id):
         .first()
     )
 
+    if q_restaurant_menu is None:
+        abort(404)
+
     return render_template("show_menu.html", menu=q_restaurant_menu)
 
 
@@ -538,6 +557,12 @@ def show_menu(restaurant_id, menu_id):
 @operator_required
 def _tables(restaurant_id):
     status = 200
+
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+    if q_restaurant is None:
+        abort(404)
+
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         alltables = db.session.query(Table).filter_by(
             restaurant_id=restaurant_id)
@@ -565,6 +590,11 @@ def _tables(restaurant_id):
 @operator_required
 def create_table(restaurant_id):
     status = 200
+
+    q_restaurant = db.session.query(Restaurant).filter_by(
+        id=int(restaurant_id)).first()
+    if q_restaurant is None:
+        abort(404)
 
     form = CreateTableForm()
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
@@ -595,6 +625,7 @@ def create_table(restaurant_id):
 @operator_required
 def edit_table(restaurant_id, table_id):
     status = 200
+
     form = CreateTableForm()
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         if request.method == "POST":
@@ -614,7 +645,7 @@ def edit_table(restaurant_id, table_id):
                             category="error",
                         )
                 else:
-                    status = 400
+                    status = 404
                     flash("Specified table does not exist!", category="error")
             else:
                 status = 400
@@ -632,13 +663,14 @@ def edit_table(restaurant_id, table_id):
 @operator_required
 def delete_table(restaurant_id, table_id):
     status = 200
+
     if restaurant.check_restaurant_ownership(current_user.id, restaurant_id):
         table = Table(id=table_id)
 
         if restaurant.delete_table(table):
             return redirect("/restaurants/" + restaurant_id + "/tables"), status
         else:
-            status = 400
+            status = 404
             flash("The table to be deleted does not exist!", category="error")
     else:
         status = 401
