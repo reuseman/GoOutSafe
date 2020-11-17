@@ -751,7 +751,7 @@ def operator_reservations_list(restaurant_id):
 
 
 @restaurants.route(
-    "/restaurants/<restaurant_id>/reservations/<booking_number2>",
+    "/restaurants/<restaurant_id>/reservations/<booking_number>",
     methods=["GET", "POST"],
 )
 @operator_required

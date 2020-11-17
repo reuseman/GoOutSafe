@@ -4,6 +4,12 @@
 {% block main %}
 <h1>{{ name }}</h1>
 
+<div class="ui segment fotorama" data-allowfullscreen="native" data-width="400" data-height="400">
+    {% for image in file_names%}
+    <img style="left: 50%; transform: translateX(-50%, 0);" class="ui image" src="/static/uploads/{{id}}/{{image}}"
+        loading="lazy">
+    {% endfor%}
+</div>
 
 <h3 class="ui header">
     <i class="star icon"></i>
@@ -45,26 +51,17 @@
 <a href="{{base_url}}/booking" class="positive ui button">Book a table!</a>
 {% endif %}
 {% endif %}
-<ul>
-    <iframe width="600" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-        src="https://www.openstreetmap.org/export/embed.html?bbox={{ lon - 0.001 }}%2C{{ lat - 0.001 }}%2C{{ lon + 0.001 }}%2C{{ lat + 0.001 }}&amp;layer=mapnik&amp;marker={{ lat }}%2C{{ lon }}"
-        style="border: 1px solid black"></iframe><br /><small><a
-            href="https://www.openstreetmap.org/#map=17/{{ lat }}/{{ lon }}">See it Larger</a></small>
-
-</ul>
 
 <section>
     <h3 class="ui dividing header">
         <i class="heart outline icon"></i>
         <div class="content">
-            Anti Covid-19 Precautions
+            Covid-19 Precautions
         </div>
     </h3>
     <ul>
         {% for precaution in precautions %}
-        <li>
-            {{ precaution }}
-        </li>
+        <a class="ui primary label">{{ precaution }}</a>
         {% endfor %}
     </ul>
     <div class="ui hidden divider"></div>
@@ -94,24 +91,24 @@
 </section>
 
 {% if session['role'] == 'operator' and current_user.id == operator_id %}
-    <section>
-        <h3 class="ui dividing header">
-            <div class="content">
-                Tables
-            </div>
-        </h3>
-        <div class="row">
-            <a href="/restaurants/{{id}}/tables/new" class="ui primary button">
-                <i class="plus icon"></i>
-                Add new table
-            </a>
-            <a href="/restaurants/{{id}}/tables" class="ui positive button">
-                <!-- <i class="plus icon"></i> -->
-                Show tables
-            </a>
+<section>
+    <h3 class="ui dividing header">
+        <div class="content">
+            Tables
         </div>
-        <div class="ui hidden divider"></div>
-    </section>
+    </h3>
+    <div class="row">
+        <a href="/restaurants/{{id}}/tables/new" class="ui primary button">
+            <i class="plus icon"></i>
+            Add new table
+        </a>
+        <a href="/restaurants/{{id}}/tables" class="ui positive button">
+            <!-- <i class="plus icon"></i> -->
+            Show tables
+        </a>
+    </div>
+    <div class="ui hidden divider"></div>
+</section>
 {% endif %}
 
 
@@ -129,20 +126,30 @@
     </a>
     {% endif%}
 
-    <div class='fotorama' data-allowfullscreen="native" data-nav="thumbs" data-width="800" data-height="600">
-        {% for image in file_names%}
-            <img src="/static/uploads/{{id}}/{{image}}">
-        {% endfor%}
-    </div>
-    
+
+
     <div class="ui hidden divider"></div>
 </section>
+
+
+<div class="ui hidden divider"></div>
+
+<h3 class="ui dividing header">
+    <i class="map icon"></i>
+    <div class="content">
+        Map
+    </div>
+</h3>
+<iframe width="600" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+    src="https://www.openstreetmap.org/export/embed.html?bbox={{ lon - 0.001 }}%2C{{ lat - 0.001 }}%2C{{ lon + 0.001 }}%2C{{ lat + 0.001 }}&amp;layer=mapnik&amp;marker={{ lat }}%2C{{ lon }}"
+    style="border: 0px solid black"></iframe><br /><small><a
+        href="https://www.openstreetmap.org/#map=17/{{ lat }}/{{ lon }}">See it Larger</a></small>
 
 <div class="ui hidden divider"></div>
 
 <article>
     <h3 class="ui dividing header">
-        <i class="star outline icon"></i>
+        <i class="star icon"></i>
         <div class="content">
             Reviews
         </div>
@@ -186,15 +193,15 @@
             <h3 class="ui header">Add your review</h3>
             {{ form.hidden_tag() }}
             {% for field in form.display %}
-                <div class="field">
-                    <label>{{ form[field].label }}</label>
-                    {{ form[field]() }}
-                </div>
-                {% if form[field].errors %}
-                    {% for e in form[field].errors %}
-                        <p class="help-block">{{ e }}</p>
-                    {% endfor %}
-                {% endif %}
+            <div class="field">
+                <label>{{ form[field].label }}</label>
+                {{ form[field]() }}
+            </div>
+            {% if form[field].errors %}
+            {% for e in form[field].errors %}
+            <p class="help-block">{{ e }}</p>
+            {% endfor %}
+            {% endif %}
             {% endfor %}
             <button class="ui button primary labeled icon button" type="submit"><i class="icon edit"></i> Add
                 Review</button>
