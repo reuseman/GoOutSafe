@@ -13,7 +13,7 @@ from monolith.models import (
     Mark,
     Table,
     Booking,
-    Review
+    Review,
 )
 from monolith.models.menu import Menu, Food
 
@@ -21,6 +21,7 @@ from monolith.models.menu import Menu, Food
 # FROM NOW ON LET'S PUT THE DEFINITION OF THE DATA IN tests/data.py, NOT HERE. IN ORDER TO HAVE A SINGLE TRUTH
 
 fake = Faker("it_IT")
+
 
 def everything():
     users(10)
@@ -33,6 +34,7 @@ def everything():
     restaurants_precautions()
     mark_three_users()
     booking()
+
 
 def users(n=50):
     """
@@ -93,7 +95,7 @@ def default_user():
             firstname="Admin",
             lastname="Admin",
             password="admin",
-            phone_number = 3330049382,
+            phone_number=3330049382,
             dateofbirth=datetime.datetime(2020, 10, 5),
         )
         db.session.add(example)
@@ -102,7 +104,7 @@ def default_user():
             firstname="Admin",
             lastname="Admin",
             password="admin",
-            phone_number = 3330049381,
+            phone_number=3330049381,
             dateofbirth=datetime.datetime(2020, 10, 5),
         )
         db.session.add(example)
@@ -160,8 +162,7 @@ def operators(n=50):
 
 
 def default_operator():
-    q = db.session.query(Operator).filter(
-        Operator.email == "operator@example.com")
+    q = db.session.query(Operator).filter(Operator.email == "operator@example.com")
     user = q.first()
     if user is None:
         example = Operator()
@@ -256,12 +257,9 @@ def precautions():
         db.session.add(Precautions(name="Amuchina"))
         db.session.add(Precautions(name="Social distancing"))
         db.session.add(Precautions(name="Disposable menu"))
-        db.session.add(Precautions(
-            name="Personnel required to wash hands regularly"))
-        db.session.add(Precautions(
-            name="Obligatory masks for staff in public areas"))
-        db.session.add(Precautions(
-            name="Tables sanitized at the end of each meal"))
+        db.session.add(Precautions(name="Personnel required to wash hands regularly"))
+        db.session.add(Precautions(name="Obligatory masks for staff in public areas"))
+        db.session.add(Precautions(name="Tables sanitized at the end of each meal"))
 
         db.session.commit()
 
@@ -272,14 +270,10 @@ def restaurants_precautions():
     )
     restaurant_precautions = q.first()
     if restaurant_precautions is None:
-        db.session.add(RestaurantsPrecautions(
-            restaurant_id=1, precautions_id=1))
-        db.session.add(RestaurantsPrecautions(
-            restaurant_id=1, precautions_id=2))
-        db.session.add(RestaurantsPrecautions(
-            restaurant_id=2, precautions_id=1))
-        db.session.add(RestaurantsPrecautions(
-            restaurant_id=3, precautions_id=2))
+        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(restaurant_id=1, precautions_id=2))
+        db.session.add(RestaurantsPrecautions(restaurant_id=2, precautions_id=1))
+        db.session.add(RestaurantsPrecautions(restaurant_id=3, precautions_id=2))
         db.session.commit()
 
 
@@ -289,8 +283,7 @@ def mark_three_users():
         user2 = db.session.query(User).filter(User.id == 7).first()
         user3 = db.session.query(User).filter(User.id == 8).first()
 
-        ha = db.session.query(HealthAuthority).filter(
-            HealthAuthority.id == 1).first()
+        ha = db.session.query(HealthAuthority).filter(HealthAuthority.id == 1).first()
         ha.mark(user1)
         ha.mark(user2)
         ha.mark(user3)
@@ -312,6 +305,7 @@ def table():
         db.session.add(Table(name="2", seats=2, restaurant_id=3))
         db.session.commit()
 
+
 def review():
     review = db.session.query(Review).first()
     if review is None:
@@ -320,7 +314,7 @@ def review():
                 user_id=1,
                 restaurant_id=1,
                 rating=5,
-                message="Ottimo Ristorante, il prezzo è gisto e i piatti sono gustosi. Ci tornerò sicuramente con la mia famiglia!"
+                message="Ottimo Ristorante, il prezzo è gisto e i piatti sono gustosi. Ci tornerò sicuramente con la mia famiglia!",
             )
         )
         db.session.add(
@@ -328,7 +322,7 @@ def review():
                 user_id=2,
                 restaurant_id=1,
                 rating=1,
-                message="Pessimo ristorante, il servizio è lento e i prezzo è eccessivo!"
+                message="Pessimo ristorante, il servizio è lento e i prezzo è eccessivo!",
             )
         )
         db.session.add(
@@ -336,7 +330,7 @@ def review():
                 user_id=3,
                 restaurant_id=1,
                 rating=5,
-                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!",
             )
         )
         db.session.add(
@@ -344,7 +338,7 @@ def review():
                 user_id=1,
                 restaurant_id=2,
                 rating=5,
-                message="Primi sempre eccellenti, qualità prezzo imbattibile in zona. I tavoli solo esterni con un servizio sempre all’altezza"
+                message="Primi sempre eccellenti, qualità prezzo imbattibile in zona. I tavoli solo esterni con un servizio sempre all’altezza",
             )
         )
         db.session.add(
@@ -352,7 +346,7 @@ def review():
                 user_id=2,
                 restaurant_id=2,
                 rating=3,
-                message="Questo ristorante era proprio sotto il nostro appartamento, abbiamo sia pranzato che cenato. La pasta fatta molto bene e anche la pizza romana buona, personale molto gentile, prezzi nella media."
+                message="Questo ristorante era proprio sotto il nostro appartamento, abbiamo sia pranzato che cenato. La pasta fatta molto bene e anche la pizza romana buona, personale molto gentile, prezzi nella media.",
             )
         )
         db.session.add(
@@ -360,7 +354,7 @@ def review():
                 user_id=3,
                 restaurant_id=2,
                 rating=5,
-                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!",
             )
         )
         db.session.add(
@@ -368,7 +362,7 @@ def review():
                 user_id=1,
                 restaurant_id=3,
                 rating=4,
-                message="a me non piace la pizza a taglio (preferisco quella tonda) ma qui la fanno veramente buona gustosa e facile da digerire"
+                message="a me non piace la pizza a taglio (preferisco quella tonda) ma qui la fanno veramente buona gustosa e facile da digerire",
             )
         )
         db.session.add(
@@ -376,7 +370,7 @@ def review():
                 user_id=2,
                 restaurant_id=3,
                 rating=5,
-                message="Situato in pieno centro storico di Roma. Personale molto gentile e simpatico, pizza buonissima, consiglio assolutamente"
+                message="Situato in pieno centro storico di Roma. Personale molto gentile e simpatico, pizza buonissima, consiglio assolutamente",
             )
         )
         db.session.add(
@@ -384,10 +378,11 @@ def review():
                 user_id=3,
                 restaurant_id=3,
                 rating=5,
-                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!"
+                message="Cucina veramente ottima e personale super gentile, a breve ci tornerò sicuramente!",
             )
-        )                
-        db.session.commit()  
+        )
+        db.session.commit()
+
 
 def booking():
     booking = db.session.query(Booking).first()
@@ -426,10 +421,12 @@ def booking():
                 table_id=1,
                 booking_number=3,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() -  datetime.timedelta(days=3)) + " 13:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -440,11 +437,12 @@ def booking():
                 table_id=1,
                 booking_number=3,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00", "%Y-%m-%d %H:%M"
-
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=3)) + " 13:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -455,11 +453,12 @@ def booking():
                 table_id=1,
                 booking_number=4,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 15:30", "%Y-%m-%d %H:%M"
-
+                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 15:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 16:00", "%Y-%m-%d %H:%M"                                        
+                    str(datetime.date.today() - datetime.timedelta(days=1)) + " 16:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -470,10 +469,12 @@ def booking():
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -484,11 +485,12 @@ def booking():
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
-
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -499,10 +501,12 @@ def booking():
                 table_id=2,
                 booking_number=5,
                 start_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 10:30",
+                    "%Y-%m-%d %H:%M",
                 ),
                 end_booking=datetime.datetime.strptime(
-                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00", "%Y-%m-%d %H:%M"
+                    str(datetime.date.today() - datetime.timedelta(days=14)) + " 12:00",
+                    "%Y-%m-%d %H:%M",
                 ),
                 confirmed_booking=True,
             )
@@ -543,10 +547,8 @@ def menu():
     menu = q.first()
     if menu is None:
         menu = Menu(name="Trial Menu", restaurant_id=1)
-        menu.foods.append(Food(name="Pepperoni pizza",
-                               price=5, category="PIZZAS"))
-        menu.foods.append(
-            Food(name="Water bottle", price=2, category="DRINKS"))
+        menu.foods.append(Food(name="Pepperoni pizza", price=5, category="PIZZAS"))
+        menu.foods.append(Food(name="Water bottle", price=2, category="DRINKS"))
 
         db.session.add(menu)
         db.session.commit()

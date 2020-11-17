@@ -20,12 +20,10 @@ def profile():
     if session["role"] == "authority":
         return redirect("/")
     elif session["role"] == "user":
-        user = db.session.query(User).filter(
-            User.id == current_user.id).first()
+        user = db.session.query(User).filter(User.id == current_user.id).first()
         return render_template("profile.html", user=user)
     elif session["role"] == "operator":
-        user = db.session.query(Operator).filter(
-            Operator.id == current_user.id).first()
+        user = db.session.query(Operator).filter(Operator.id == current_user.id).first()
         return render_template("profile.html", user=user)
 
 
@@ -44,8 +42,8 @@ def change_password():
     return render_template("change_profile.html", form=form)
 
 
-@ me.route("/me/change_anagraphic", methods=["GET", "POST"])
-@ login_required
+@me.route("/me/change_anagraphic", methods=["GET", "POST"])
+@login_required
 def change_anagraphic():
     form = ChangeAnagraphicForm()
 
@@ -63,8 +61,8 @@ def change_anagraphic():
     return render_template("change_profile.html", form=form)
 
 
-@ me.route("/me/change_contacts", methods=["GET", "POST"])
-@ login_required
+@me.route("/me/change_contacts", methods=["GET", "POST"])
+@login_required
 def change_contacts():
     form = ChangeContactForm()
 

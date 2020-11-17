@@ -78,7 +78,7 @@ def unsubscribe():
     if session["role"] == "user":
         user = db.session.query(User).filter(User.email == current_user.email).first()
 
-        if(user.is_marked()):
+        if user.is_marked():
             flash("Positive users cannot be deleted")
             return redirect("/")
 
@@ -92,7 +92,9 @@ def unsubscribe():
 
     elif session["role"] == "operator":
         operator = (
-            db.session.query(Operator).filter(Operator.email == current_user.email).first()
+            db.session.query(Operator)
+            .filter(Operator.email == current_user.email)
+            .first()
         )
 
         operator.email = "deleted@deleted.it"

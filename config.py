@@ -16,15 +16,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAX_CONTENT_LENGTH = 1024 * 1024
-    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+    UPLOAD_EXTENSIONS = [".jpg", ".png", ".gif"]
     UPLOAD_PATH = "uploads"
 
-    DROPZONE_ALLOWED_FILE_CUSTOM= True
-    DROPZONE_ALLOWED_FILE_TYPE='.png, .jpg, .jpeg'
-    DROPZONE_MAX_FILE_SIZE=2
-    DROPZONE_MAX_FILES=30
-    DROPZONE_UPLOAD_MULTIPLE=True
-    DROPZONE_UPLOAD_ON_CLICK=True
+    DROPZONE_ALLOWED_FILE_CUSTOM = True
+    DROPZONE_ALLOWED_FILE_TYPE = ".png, .jpg, .jpeg"
+    DROPZONE_MAX_FILE_SIZE = 2
+    DROPZONE_MAX_FILES = 30
+    DROPZONE_UPLOAD_MULTIPLE = True
+    DROPZONE_UPLOAD_ON_CLICK = True
 
     MAIL_SERVER = os.environ.get("MAIL_SERVER") or "localhost"
     MAIL_PORT = os.environ.get("MAIL_PORT") or 8025
@@ -42,7 +42,7 @@ class Config:
     )
     CELERY_TASKS = ["monolith.services.background.tasks"]
 
-    DEBUG_TB_INTERCEPT_REDIRECTS=False
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     @staticmethod
     def init_app(app):

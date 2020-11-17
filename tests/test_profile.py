@@ -206,9 +206,9 @@ def test_wrong_password_in_forms(client):
         follow_redirects=False,
     )
 
-    assert (res1.status_code == 200)
-    assert (res2.status_code == 200)
-    assert (res3.status_code == 200)
+    assert res1.status_code == 200
+    assert res2.status_code == 200
+    assert res3.status_code == 200
 
 
 def test_form_iframes_in_view(client):

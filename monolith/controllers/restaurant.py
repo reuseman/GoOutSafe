@@ -66,8 +66,11 @@ def check_table_existence(table):
 
 def edit_table(table):
     table_to_edit = Table.query.filter_by(id=table.id).first()
-    existing_table = Table.query.filter(Table.name == table.name, Table.id !=
-                           table.id, Table.restaurant_id == table.restaurant_id).first()
+    existing_table = Table.query.filter(
+        Table.name == table.name,
+        Table.id != table.id,
+        Table.restaurant_id == table.restaurant_id,
+    ).first()
 
     if existing_table is None:
         table_to_edit.name = table.name

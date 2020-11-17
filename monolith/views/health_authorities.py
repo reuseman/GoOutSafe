@@ -11,7 +11,11 @@ def create_authority():
     form = AuthorityForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            authority = db.session.query(HealthAuthority.id).filter_by(email=form.email.data).scalar()
+            authority = (
+                db.session.query(HealthAuthority.id)
+                .filter_by(email=form.email.data)
+                .scalar()
+            )
             if authority is not None:
                 return redirect("/login/authority")
             else:

@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 
 def test_user_has_been_deleted_should_be_true(client, db):
-    
+
     helpers.create_user(client)
     helpers.login_user(client)
 
@@ -23,20 +23,25 @@ def test_user_has_been_deleted_should_be_true(client, db):
 
     assert user.firstname == "deleted"
 
+
 def test_operator_has_been_deleted_should_be_true(client, db):
-    
+
     helpers.create_operator(client)
     helpers.login_operator(client)
 
     helpers.unsubscribe(client)
 
-    user = db.session.query(Operator).filter(Operator.email == "deleted@deleted.it").first()
+    user = (
+        db.session.query(Operator)
+        .filter(Operator.email == "deleted@deleted.it")
+        .first()
+    )
 
     assert user.firstname == "deleted"
 
 
 def test_marked_user_cannot_be_deleted_should_be_true(client, db):
-    
+
     ha = helpers.insert_health_authority(db)
     user = helpers.insert_user(db)
     ha.mark(user, duration=18)

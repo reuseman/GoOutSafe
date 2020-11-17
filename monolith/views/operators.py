@@ -12,7 +12,9 @@ def create_operator():
     if request.method == "POST":
 
         if form.validate_on_submit():
-            operator = db.session.query(Operator.id).filter_by(email=form.email.data).scalar()
+            operator = (
+                db.session.query(Operator.id).filter_by(email=form.email.data).scalar()
+            )
             if operator is not None:
                 return redirect("/login/operator")
             else:

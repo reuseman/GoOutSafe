@@ -6,6 +6,8 @@
 ### Local
     # Install Dependencies
     pip install -r requirements/dev.txt
+    # Deploy
+    flask deploy
 
     # Start Server mail
     python -m smtpd -n -c DebuggingServer localhost:8025
@@ -14,29 +16,12 @@
     # Start Celery
     celery -A gooutsafe.celery worker -l DEBUG -E -B
     
-    # Deploy
-    flask deploy
-
     # Run Flask
     export FLASK_APP="monolith:create_app('development')" 
     FLASK_ENV=development
     flask run
 
-### Generate mock data
-    flask shell
-    mock.everything()
-
-### Tests with coverage
-Inside GoOutSafe run (it will automatically use the configuration in pyproject.toml):
-
-    pytest
-
-If you want to see an interactive report run:
-
-    coverage html
-
-## Production (beta)
-### Docker
+### Docker Image
     docker build -t gooutsafe:latest . 
 
 To run with settings
@@ -49,10 +34,18 @@ To run without settings
 
     docker run --name gooutsafe -d -p 8000:5000 --rm gooutsafe:latest
 
-Go to
+### Docker-compose
 
-    http://127.0.0.1:5000
+    docker-compose build
+    docker-compose up
+## Tests with coverage
+Inside GoOutSafe run (it will automatically use the configuration in pyproject.toml):
 
+    pytest
+
+If you want to see an interactive report run:
+
+    coverage html
 
 ## Documentation
 ### User stories
