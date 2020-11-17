@@ -5,7 +5,7 @@ from monolith.models import Restaurant
 restaurants_map = Blueprint("restaurants_map", __name__)
 
 
-@restaurants_map.route("/restaurants_map")
+@restaurants_map.route("/restaurants/map")
 def show_map():
     restaurants = db.session.query(
         Restaurant.name, Restaurant.phone, Restaurant.lat, Restaurant.lon, Restaurant.id

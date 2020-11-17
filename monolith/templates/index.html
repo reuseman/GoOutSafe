@@ -18,17 +18,10 @@ Hi {{ current_user.firstname }}!
         </a>
     </div><br />
 </div>
-<!-- {% for restaurant in restaurants %}
-            <div>
-                <li>
-                    {{ restaurant.name }} -- Likes:{{ restaurant.likes }}
-                </li>
-            </div>
-        {% endfor %} -->
 
 {% elif current_user.is_authenticated and session['role'] == "operator" %}
 Hi {{ current_user.firstname }}!
-<div class="ui divider"></div>
+<div class="ui divider hidden"></div>
 
 <div class="row">
     <h2 class="ui dividing header">Restaurants</h2>
@@ -36,6 +29,10 @@ Hi {{ current_user.firstname }}!
         <a href="/restaurants" class="ui primary button">
             <i class="utensil spoon icon"></i>
             See restaurants list
+        </a>
+        <a href="/restaurants/map" class="ui primary button">
+            <i class="map icon"></i>
+            Map of our restaurants
         </a>
     </div><br />
 
@@ -50,13 +47,6 @@ Hi {{ current_user.firstname }}!
     {{ session["role"] }}
 </div>
 {% endif %}
-
-<div style="margin-top: 20px;" class="row">
-    <a href="/restaurants_map" class="ui primary button">
-        <i class="map icon"></i>
-        Map of our restaurants
-    </a>
-</div>
 
 <div style="margin-top: 30px;" class="row">
     <div class="ui four doubling stackable cards">
