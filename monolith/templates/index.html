@@ -62,21 +62,29 @@ Hi {{ current_user.firstname }}!
     <div class="ui four doubling stackable cards">
         {% for restaurant in restaurants %}
         <div class="ui link card" width="10%">
-            <div class="content">
-                <span class="ui avatar">
-                    <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }} ">
-                        {{ restaurant.name }}
-                    </a>
-                </span>
-                <div class="right floated meta">
-                    {{ restaurant.average_rating }}
-                    <i class="star outline icon"></i>
-                </div>
-            </div>
+            {% if restaurant.path is defined %}
+            <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
+                <img src="/static/uploads/{{ restaurant.id }}/{{ restaurant.path }}">
+            </a>
+            {% else %}
             <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
                 <img
                     src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
             </a>
+            {% endif %}
+            <div class="content">
+                <div class="description">
+                    <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }} ">
+                        {{ restaurant.name }}
+                    </a>
+                </div>
+            </div>
+            <div class="extra content">
+                <span>
+                    <i class="star icon"></i>
+                    {{ restaurant.average_rating }}
+                </span>
+            </div>
         </div>
         {% endfor %}
     </div>
