@@ -4,12 +4,19 @@
 {% block main %}
 <h1>{{ name }}</h1>
 
-<div class="ui segment fotorama" data-allowfullscreen="native" data-width="400" data-height="400">
+<div class="ui fotorama" data-allowfullscreen="native" data-width="500" data-height="400">
     {% for image in file_names%}
     <img style="left: 50%; transform: translateX(-50%, 0);" class="ui image" src="/static/uploads/{{id}}/{{image}}"
         loading="lazy">
     {% endfor%}
 </div>
+
+<h3 class="ui dividing header">
+    <i class="info icon"></i>
+    <div class="content">
+        Info
+    </div>
+</h3>
 
 <h3 class="ui header">
     <i class="star icon"></i>
