@@ -7,13 +7,14 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 # APP
-from monolith import create_app, celery
+from monolith import create_app, celery, db
+from flask_migrate import Migrate, upgrade
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
+migrate = Migrate(app, db)
 
 # Shell
 
-from monolith import db
 from monolith.models import (
     User,
     Review,
@@ -47,3 +48,13 @@ def make_shell_context():
         "HealthAuthority": HealthAuthority,
         "Booking": Booking,
     }
+
+
+@app.cli.command()
+def deploy():
+    """Run deployment tasks."""
+    # migrate database to latest revision
+    upgrade()
+
+    # Insert fake data
+    mock.everything()

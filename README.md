@@ -3,21 +3,21 @@
 # Getting started
 
 ## Development
-### Prerequisites
+### Local
+    # Install Dependencies
     pip install -r requirements/dev.txt
-    
 
-### Server mail
+    # Start Server mail
     python -m smtpd -n -c DebuggingServer localhost:8025
-
-### Redis
+    # Start Redis
     docker run --name redis -p 6379:6379 redis
-
-### Celery
+    # Start Celery
     celery -A gooutsafe.celery worker -l DEBUG -E -B
-
     
-### Running Flask
+    # Deploy
+    flask deploy
+
+    # Run Flask
     export FLASK_APP="monolith:create_app('development')" 
     FLASK_ENV=development
     flask run

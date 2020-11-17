@@ -19,6 +19,7 @@ RUN venv/bin/pip install -r requirements/docker.txt
 # Move code
 COPY monolith/ monolith/
 COPY gooutsafe.py config.py boot.sh ./
+COPY migrations/ migrations/
 
 # Permissions
 RUN chown -R gooutsafe:gooutsafe ./
