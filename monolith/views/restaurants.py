@@ -224,15 +224,14 @@ def book_table_form(restaurant_id):
                     + " people for this date and time"
                 )
             else:
-                global booking_number
-                if booking_number == -1:
-                    booking_number = db.session.query(
-                        func.max(Booking.booking_number)
-                    ).first()[0]
-                    if booking_number is None:
-                        booking_number = 1
-                    else:
-                        booking_number += 1
+                booking_number = db.session.query(
+                    func.max(Booking.booking_number)
+                ).first()[0]
+                print(booking_number)
+                if booking_number is None:
+                    booking_number = 1
+                else:
+                    booking_number += 1
 
                 confirmed_bookign = True if number_persons == 1 else False
                 db.session.add(
@@ -248,7 +247,6 @@ def book_table_form(restaurant_id):
                 db.session.commit()
 
                 old_booking_number = booking_number
-                booking_number += 1
 
                 if confirmed_bookign:
                     flash("Booking confirmed", category="success")
@@ -753,7 +751,7 @@ def operator_reservations_list(restaurant_id):
 
 
 @restaurants.route(
-    "/restaurants/<restaurant_id>/reservations/<booking_number>",
+    "/restaurants/<restaurant_id>/reservations/<booking_number2>",
     methods=["GET", "POST"],
 )
 @operator_required
@@ -778,11 +776,9 @@ def operator_checkin_reservation(restaurant_id, booking_number):
     if request.method == "POST":
         for user_id in request.form.getlist("people"):
             aux = (
-                db.session.query(Booking)
-                .filter(
+                db.session.query(Booking).filter(
                     Booking.user_id == user_id, Booking.booking_number == booking_number
-                )
-                .first()
+                ).first()
             )
             aux.checkin = True
             db.session.commit()

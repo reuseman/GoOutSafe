@@ -118,6 +118,7 @@ variables.sh
 celerybeat-schedule.db
 monolith/gooutsafe.db
 monolith/gooutsafe_test*.db
+monolith/gooutsafe_test*.db-journal
 
 scratch.py
 todo.txt

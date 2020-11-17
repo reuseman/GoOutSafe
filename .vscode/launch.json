@@ -1,6 +1,12 @@
 {
     "configurations": [
         {
+            "name": "Debug Tests",
+            "type": "python",
+            "request": "test",
+            "console": "integratedTerminal",
+        },
+        {
             "name": "Python: Flask",
             "type": "python",
             "request": "launch",

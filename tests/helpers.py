@@ -16,7 +16,8 @@ from tests.data import (
     booking1,
     booking2,
     checkin_people,
-    checkin_multiple_people
+    checkin_multiple_people,
+    checkin_multiple_people2,
 )
 from werkzeug.datastructures import MultiDict
 
@@ -138,7 +139,6 @@ menu_dup_food = MultiDict(
 
 
 table = dict(name="A10", seats=10, restaurant_id=1)
-
 
 # CREATION
 
@@ -362,6 +362,14 @@ def checkin_booking_multiple_user(client, reservation_id=1):
     return client.post(
         f"/restaurants/1/reservations/{reservation_id}",
         data=checkin_multiple_people,
+        follow_redirects=True,
+    )
+
+
+def checkin_booking_multiple_user2(client, reservation_id=1):
+    return client.post(
+        f"/restaurants/1/reservations/{reservation_id}",
+        data=checkin_multiple_people2,
         follow_redirects=True,
     )
 

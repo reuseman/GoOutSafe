@@ -24,12 +24,12 @@ user2 = dict(
 
 
 user3 = dict(
-    email="marioyellow@gmail.com",
-    firstname="mario",
+    email="giovanniyellow@gmail.com",
+    firstname="giovanni",
     lastname="yellow",
     password="5678",
     dateofbirth="1994-05-04",
-    fiscal_code="RSSMRA95T31J591K",
+    fiscal_code="RSSGVA95T31J591K",
     phone_number="+39334334683094",
 )
 
@@ -102,7 +102,7 @@ precautions = [
 ]
 
 table = dict(name="A10", seats=10, restaurant_id=1)
-
+table2 = dict(name="B5", seats=10, restaurant_id=1)
 
 booking1 = dict(
     number_persons=1,
@@ -162,17 +162,23 @@ booking_people_double_email = {
 }
 
 
-checkin_people = {
-    "people": '1'
-}
+checkin_people = {"people": "1"}
 
 
 checkin_multiple_people = MultiDict(
     [
-        ("people", '1'),
-        ("people", '2'),
-        ("people", '3'),
-        ("people", '4'),
+        ("people", "1"),
+        ("people", "2"),
+        ("people", "3"),
+        ("people", "4"),
+    ]
+)
 
+checkin_multiple_people2 = MultiDict(
+    [
+        ("people", "2"),
+        ("people", "3"),
+        ("people", "4"),
+        ("people", "5"),
     ]
 )
