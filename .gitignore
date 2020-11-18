@@ -120,6 +120,7 @@ celerybeat-schedule.db
 monolith/gooutsafe.db
 monolith/gooutsafe_test*.db
 monolith/gooutsafe_test*.db-journal
+flask_profiler.sql
 
 scratch.py
 todo.txt

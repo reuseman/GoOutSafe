@@ -8,6 +8,9 @@ from config import config, Config
 from celery import Celery
 from elasticsearch import Elasticsearch
 
+# Debug
+import flask_profiler
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
@@ -47,5 +50,8 @@ def create_app(config_name, updated_variables=None):
     db.create_all(app=app)
     login_manager.init_app(app)
     dropzone.init_app(app)
+
+    # Debug
+    flask_profiler.init_app(app)
 
     return app

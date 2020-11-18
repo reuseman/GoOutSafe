@@ -12,7 +12,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "top secret"
     WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or "top secret CSRF"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///gooutsafe.db"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI") or "sqlite:///gooutsafe.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAX_CONTENT_LENGTH = 1024 * 1024
@@ -45,6 +45,19 @@ class Config:
     ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL")
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+    FLASK_PROFILER_ADMIN = os.environ.get("FLASK_PROFILER_USERNAME") or "admin"
+    FLASK_PROFILER_PASSWORD = os.environ.get("FLASK_PROFILER_USERNAME") or "password"
+    FLASK_PROFILER = {
+        "enabled": True,
+        "storage": {"engine": "sqlite"},
+        "basicAuth": {
+            "enabled": True,
+            "username": FLASK_PROFILER_ADMIN,
+            "password": FLASK_PROFILER_PASSWORD,
+        },
+        "ignore": ["^/static/.*"],
+    }
 
     @staticmethod
     def init_app(app):
