@@ -42,6 +42,8 @@ class Config:
     )
     CELERY_TASKS = ["monolith.services.background.tasks"]
 
+    ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL")
+
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     @staticmethod

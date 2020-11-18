@@ -15,6 +15,8 @@
     docker run --name redis -p 6379:6379 redis
     # Start Celery
     celery -A gooutsafe.celery worker -l DEBUG -E -B
+    # Start Elasticsearch
+    docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     
     # Run Flask
     export FLASK_APP="monolith:create_app('development')" 
@@ -34,7 +36,11 @@ To run without settings
 
     docker run --name gooutsafe -d -p 8000:5000 --rm gooutsafe:latest
 
+#### If no mail is provided, run the following for a mock smtp
+    python -m smtpd -n -c DebuggingServer localhost:8025
+
 ### Docker-compose
+Create a `.env` file with the environment variables needed
 
     docker-compose build
     docker-compose up

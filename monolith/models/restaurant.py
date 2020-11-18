@@ -1,4 +1,5 @@
 from monolith import db
+from monolith.models.searchable_mixin import SearchableMixin
 from .table import Table
 import enum
 import datetime
@@ -19,8 +20,10 @@ class CuisineType(enum.Enum):
         return [(choice.name, choice.value) for choice in cls]
 
 
-class Restaurant(db.Model):
+class Restaurant(SearchableMixin, db.Model):
     __tablename__ = "restaurant"
+    __searchable__ = ["name", "phone", "average_rating"]
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     name = db.Column(db.Text(100))

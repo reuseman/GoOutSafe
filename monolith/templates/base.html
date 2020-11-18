@@ -33,27 +33,42 @@
                             src="{{ url_for('static', filename='assets/logo.png') }}" alt="Go Out Safe"></a></div>
             </div>
             <div class="row">
-                <div class="ui red compact menu center primary">
+                <div class="ui menu center primary">
                     <a href="/" class="item" title="Home Page">Home</a>
-                    {% if not (current_user.is_authenticated and current_user.is_active) %}
-                    <a href="/login/user" class="item">Login</a>
-                    {% else %}
-                    {% if session["role"] == "user" or "operator" %}
-                    <a href="/me" class="item">{{ session["name"] }}</a>
-                    {% else %}
-                    {{ session["name"] }}
-                    {% endif %}
-                    {% if session["role"] == 'user' %}
-                    <a href="/bookings" class="item">Booking</a>
-                    {% endif %}
-                    {% if session["role"] == 'authority' %}
-                    <a href="/marks/new" class="item">Mark<div class="ui red horizontal empty circular label"></div>
-                    </a>
-                    <a href="/trace" class="item">Trace<div class="ui red horizontal empty circular label"></div>
-                    </a>
-                    {% endif %}
-                    <a href="/logout" class="item">Logout</a>
-                    {% endif %}
+                    <form method="GET" action="{{ url_for('restaurants._restaurants') }}">
+                        <div class="item">
+                            <div class="ui inverted icon input">
+                                <i class="search icon"></i>
+                                {% if session.get('previous_search') %}
+                                <input id="search" name="q" type="prompt" placeholder="Search"
+                                    value="{{ session.get('previous_search') }}">
+                                {% else %}
+                                <input id="search" name="q" type="prompt" placeholder="Search">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                    <div class="right menu">
+                        {% if not (current_user.is_authenticated and current_user.is_active) %}
+                        <a href="/login/user" class="item">Login</a>
+                        {% else %}
+                        {% if session["role"] == "user" or "operator" %}
+                        <a href="/me" class="item">{{ session["name"] }}</a>
+                        {% else %}
+                        {{ session["name"] }}
+                        {% endif %}
+                        {% if session["role"] == 'user' %}
+                        <a href="/bookings" class="item">Booking</a>
+                        {% endif %}
+                        {% if session["role"] == 'authority' %}
+                        <a href="/marks/new" class="item">Mark<div class="ui red horizontal empty circular label"></div>
+                        </a>
+                        <a href="/trace" class="item">Trace<div class="ui red horizontal empty circular label"></div>
+                        </a>
+                        {% endif %}
+                        <a href="/logout" class="item">Logout</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

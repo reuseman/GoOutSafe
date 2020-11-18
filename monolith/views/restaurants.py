@@ -41,19 +41,32 @@ from pathlib import Path
 
 import os
 import imghdr
+import logging
 
 restaurants = Blueprint("restaurants", __name__)
 
-booking_number = -1
+
+logger = logging.getLogger("monolith")
+
 
 
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
-    allrestaurants = db.session.query(Restaurant)
     if current_user.is_authenticated:
         role = session["role"]
     else:
         role = ""
+    
+    session.pop("previous_search", "")
+
+    if request.args.get("q"):
+        query = request.args.get("q")
+        session["previous_search"] = query
+        results, total = Restaurant.search(query, 1, 20)
+        allrestaurants = results.all()
+        logger.info(f"Searching for {query}")
+    else:            
+        allrestaurants = db.session.query(Restaurant)
 
     return render_template(
         "restaurants.html",

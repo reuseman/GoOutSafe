@@ -27,6 +27,7 @@
 
 
 <div style="margin-top: 30px;" class="row">
+  {% if restaurants %}
   <div class="ui four doubling stackable cards">
     {% for restaurant in restaurants %}
     <div class="ui link card" width="10%">
@@ -48,5 +49,11 @@
     </div>
     {% endfor %}
   </div>
+  {% else %}
+  <h2 class="ui icon header center aligned disabled">
+    <i class="user secret icon"></i>
+    <div class="ui tiny header">Our secret agents could not find anything</div>
+  </h2>
+  {% endif %}
 </div>
 {% endblock %}

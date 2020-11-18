@@ -1,20 +1,3 @@
-# DOT ENV
-import os
-from dotenv import load_dotenv
-
-dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
-
-# APP
-from monolith import create_app, celery, db
-from flask_migrate import Migrate, upgrade
-
-app = create_app(os.getenv("FLASK_CONFIG") or "default")
-migrate = Migrate(app, db)
-
-# Shell
-
 from monolith.models import (
     User,
     Review,
@@ -30,7 +13,23 @@ from monolith.models import (
 from monolith.services.background import tasks
 from monolith.services import mock
 
+import os
+from dotenv import load_dotenv
 
+# DOT ENV
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+# APP
+from monolith import create_app, celery, db
+from flask_migrate import Migrate, upgrade
+
+app = create_app(os.getenv("FLASK_CONFIG") or "default")
+migrate = Migrate(app, db)
+Restaurant.force_index()
+
+# Shell
 @app.shell_context_processor
 def make_shell_context():
     return {

@@ -6,10 +6,22 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    depends_on:
+      - elastic-search
+      - redis
     ports:
       - 5000:5000
     env_file:
       - .env
+  elastic-search:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.10.0"
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
   redis:
     image: "redis:6.0.8-alpine"
     ports:

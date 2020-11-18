@@ -6,6 +6,7 @@ from flask_dropzone import Dropzone
 
 from config import config, Config
 from celery import Celery
+from elasticsearch import Elasticsearch
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -23,7 +24,6 @@ celery.autodiscover_tasks(["monolith.services.background.tasks"], force=True)
 def create_app(config_name, updated_variables=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    dropzone.init_app(app)
     if updated_variables:
         app.config.update(updated_variables)
 
@@ -38,10 +38,14 @@ def create_app(config_name, updated_variables=None):
         app.register_blueprint(bp)
         bp.app = app
 
-    login_manager.init_app(app)
+    es_url = app.config["ELASTICSEARCH_URL"]
+    app.elasticsearch = Elasticsearch([es_url]) if es_url else None
+    celery.conf.update(app.config)
+    mail.init_app(app)
+
     db.init_app(app)
     db.create_all(app=app)
-    mail.init_app(app)
-    celery.conf.update(app.config)
+    login_manager.init_app(app)
+    dropzone.init_app(app)
 
     return app
