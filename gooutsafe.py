@@ -17,7 +17,7 @@ import os
 from dotenv import load_dotenv
 
 # DOT ENV
-dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+dotenv_path = os.path.join(os.path.dirname(__file__), ".envdev")
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
