@@ -62,9 +62,10 @@ def compute_restaurants_rating_average():
     for restaurant in restaurants:
         reviews = restaurant.reviews
         average_rating = sum(review.rating for review in reviews)
-        average_rating /= len(reviews)
-
-        restaurant.average_rating = average_rating
+        num_reviews = len(reviews)
+        if num_reviews > 0:
+            average_rating /= len(reviews)
+            restaurant.average_rating = average_rating
 
     db.session.commit()
 
