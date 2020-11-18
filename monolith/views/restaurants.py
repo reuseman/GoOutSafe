@@ -48,11 +48,6 @@ logger = logging.getLogger("monolith")
 
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
-    if current_user.is_authenticated:
-        role = session["role"]
-    else:
-        role = ""
-    
     session.pop("previous_search", "")
 
     if request.args.get("q"):
@@ -68,7 +63,6 @@ def _restaurants(message=""):
         "restaurants.html",
         message=message,
         restaurants=allrestaurants,
-        role=role,
         base_url=request.base_url,
         operator_restaurants=False,
     )
