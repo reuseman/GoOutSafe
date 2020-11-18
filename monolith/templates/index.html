@@ -1,4 +1,35 @@
 {% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    function createMap(restaurants) {
+        //console.log(restaurants[0])
+        //console.log(restaurants[0]["lat"], restaurants[0]["lon"])
+        var map = L.map('map').setView([restaurants[0]["lat"], restaurants[0]["lon"]], 13);
+        //const restaurants_json = JSON.parse(restaurants)
+
+        // load a tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 17,
+                minZoom: 4
+            }).addTo(map);
+        restaurants.forEach(restaurant => {
+            var marker = L.marker([restaurant["lat"], restaurant["lon"]]);
+            let link = '<a href="' + {{ url_for("restaurants._restaurants")
+                | tojson
+        }} + '/' + restaurant[4] + '"> Restaurant Details </a>'
+    marker.bindPopup(link).openPopup();
+    marker.bindTooltip(restaurant["name"])
+    marker.addTo(map)
+
+        });
+    }
+</script>
+{% endblock%}
 {% block title %}Index{% endblock %}
 
 {% block main %}
@@ -81,5 +112,20 @@ Hi {{ current_user.firstname }}!
 </div>
 
 
+
+<div style="margin-top: 20px;" class="row">
+    <section>
+        <h2 class="ui dividing header">See all our restaurants at a glance!</h2>
+        <p>Below you can see a map of all the restaurants registered in our app! Use it to find the ones nearest to your
+            position!</p>
+    </section>
+
+    <section>
+        <div id="map" style="height: 400px;"></div>
+        <script>
+            createMap({{ restaurants_list | tojson }})
+        </script>
+    </section>
+</div>
 
 {% endblock %}

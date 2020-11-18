@@ -20,6 +20,15 @@ def index():
         if photos_paths:
             el["path"] = os.path.basename(photos_paths[0])
 
+    restaurants_list = db.session.query(
+        Restaurant.name, Restaurant.phone, Restaurant.lat, Restaurant.lon, Restaurant.id
+    ).all()
+
+    print(restaurants_list)
+
     return render_template(
-        "index.html", restaurants=restaurants, paths=images_path_dict
+        "index.html",
+        restaurants=restaurants,
+        restaurants_list=restaurants_list,
+        paths=images_path_dict,
     )
