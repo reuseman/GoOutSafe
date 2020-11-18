@@ -1,5 +1,5 @@
+from tests import data, helpers
 from tests.fixtures import app, client, db
-from tests import helpers
 from urllib.parse import urlparse
 
 
@@ -33,6 +33,27 @@ def test_user_should_create_review(client, db):
         b"It was a delicious dinner, but initially the service was not so excellent in the speed of serving the meals."
         in res.data
     )
+
+
+# def test_user_should_create_review2(client, db):
+#     helpers.insert_complete_restaurant(db)
+
+#     helpers.create_user(client)
+#     helpers.login_user(client)
+#     res = create_review(client, rating=4)
+#     helpers.logout(client)
+
+#     helpers.create_user(client, data=data.user3)
+#     helpers.login_user(client)
+#     res = create_review(client, rating=2)
+#     helpers.logout(client)
+
+#     from monolith.services.background.tasks import compute_restaurants_rating_average
+
+#     compute_restaurants_rating_average()
+
+#     assert res.status_code == 200
+#     assert b'<div class="content">3</div>' in res.data
 
 
 def test_user_should_create_review_if_already_did(client, db):
@@ -172,12 +193,15 @@ def test_anonymous_user_should_be_redirected_on_login_page_when_create_review(
 # Helpers methods
 
 
-def create_review(client, rating=5, redirect=True):
+def create_review(client, message=None, rating=5, redirect=True):
+    if not message:
+        message = "It was a delicious dinner, but initially the service was not so excellent in the speed of serving the meals."
+
     return client.post(
         "/restaurants/1",
         data=dict(
             rating=rating,
-            message="It was a delicious dinner, but initially the service was not so excellent in the speed of serving the meals.",
+            message=message,
         ),
         follow_redirects=redirect,
     )
