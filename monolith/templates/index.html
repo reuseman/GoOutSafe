@@ -54,12 +54,12 @@ Hi {{ current_user.firstname }}!
         <div class="ui link card" width="10%">
             {% if restaurant.path is defined %}
             <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
-                <img src="/static/uploads/{{ restaurant.id }}/{{ restaurant.path }}">
+                <img src="/static/uploads/{{ restaurant.id }}/{{ restaurant.path }}" style="height: 100px;">
             </a>
             {% else %}
             <a href="{{ url_for('restaurants._restaurants') }}/{{ restaurant.id }}" class="image">
-                <img
-                    src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg">
+                <img src="https://www.repstatic.it/content/nazionale/img/2018/10/21/222802069-6316bf93-aa5e-4058-8f22-6bfd49e04202.jpg"
+                    style="height: 100px;">
             </a>
             {% endif %}
             <div class="content">
