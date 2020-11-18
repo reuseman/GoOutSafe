@@ -64,11 +64,22 @@ def _restaurants(message=""):
     else:            
         allrestaurants = db.session.query(Restaurant)
 
+    restaurants = [res.__dict__ for res in allrestaurants]
+    images_path_dict = {}
+    for el in restaurants:
+        # print(el)
+        path = "./monolith/static/uploads/" + str(el["id"])
+        photos_paths = os.listdir(path)
+        # gets only the first one
+        if photos_paths:
+            el["path"] = os.path.basename(photos_paths[0])
+    
     return render_template(
         "restaurants.html",
         message=message,
-        restaurants=allrestaurants,
+        restaurants=restaurants,
         role=role,
+        paths=images_path_dict,
         base_url=request.base_url,
         operator_restaurants=False,
     )
