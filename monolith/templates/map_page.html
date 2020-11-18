@@ -5,7 +5,9 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
     function createMap(restaurants) {
-        var map = L.map('map').setView([restaurants[0][2], restaurants[0][3]], 13);
+        //console.log(restaurants[0])
+        //console.log(restaurants[0]["lat"], restaurants[0]["lon"])
+        var map = L.map('map').setView([restaurants[0]["lat"], restaurants[0]["lon"]], 13);
         //const restaurants_json = JSON.parse(restaurants)
 
         // load a tile layer
@@ -16,12 +18,12 @@
                 minZoom: 4
             }).addTo(map);
         restaurants.forEach(restaurant => {
-            var marker = L.marker([restaurant[2], restaurant[3]]);
+            var marker = L.marker([restaurant["lat"], restaurant["lon"]]);
             let link = '<a href="' + {{ url_for("restaurants._restaurants")
                 | tojson
         }} + '/' + restaurant[4] + '"> Restaurant Details </a>'
     marker.bindPopup(link).openPopup();
-    marker.bindTooltip(restaurant[0])
+    marker.bindTooltip(restaurant["name"])
     marker.addTo(map)
 
         });
@@ -40,7 +42,7 @@
 <section>
     <div id="map" style="height: 400px;"></div>
     <script>
-        createMap({{ restaurant_list | tojson}})
+        createMap({{ restaurant_list | tojson }})
     </script>
 </section>
 
