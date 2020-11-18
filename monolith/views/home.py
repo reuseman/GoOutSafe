@@ -24,8 +24,6 @@ def index():
         Restaurant.name, Restaurant.phone, Restaurant.lat, Restaurant.lon, Restaurant.id
     ).all()
 
-    print(restaurants_list)
-
     return render_template(
         "index.html",
         restaurants=restaurants,
