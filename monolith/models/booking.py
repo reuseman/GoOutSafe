@@ -1,6 +1,5 @@
 from monolith import db
 from sqlalchemy.orm import relationship
-from datetime import datetime
 
 
 class Booking(db.Model):

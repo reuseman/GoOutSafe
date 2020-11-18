@@ -1,8 +1,6 @@
 from flask.globals import session
-from sqlalchemy.sql.functions import user
-from monolith.models import precautions
 from flask.helpers import flash
-from flask import Blueprint, redirect, render_template, request, url_for, make_response, abort, send_from_directory, jsonify
+from flask import Blueprint, redirect, render_template, request, url_for, abort
 from monolith import db
 from monolith.models import (
     Restaurant,
@@ -21,12 +19,11 @@ from monolith.services.auth import (
     operator_required,
     user_required,
 )
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_required
 from monolith.services.forms import (
     CreateRestaurantForm,
     CreateTableForm,
     ReviewForm,
-    UserForm,
     CreateBookingDateHourForm,
     ConfirmBookingForm,
     ChooseReservationData,
@@ -37,7 +34,6 @@ from sqlalchemy import func
 from flask_login import current_user
 from monolith.services.background.tasks import send_email
 from werkzeug.utils import secure_filename
-from pathlib import Path
 
 import os
 import imghdr

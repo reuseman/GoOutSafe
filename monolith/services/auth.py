@@ -1,5 +1,4 @@
-import functools
-from flask import session, g, request, redirect, url_for
+from flask import session, redirect
 from flask_login import current_user
 from monolith.models import User, HealthAuthority, Operator
 from functools import wraps

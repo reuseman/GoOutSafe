@@ -1,15 +1,12 @@
-from flask import current_app
 from flask_mail import Message
-from os import environ
 from monolith import celery as app
 from monolith import mail, db
 from typing import List
 from config import Config
-from celery.schedules import crontab
-from monolith.models import User, Restaurant
+from monolith.models import Restaurant
 
 """
-    Just as a reference 
+    Just as a reference
     https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#project-layout
     https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html
 
@@ -32,27 +29,6 @@ def setup_periodic_tasks(sender, **kwargs):
         compute_restaurants_rating_average.s(),
         name="compute restaurants rating average",
     )
-
-    # # Calls test('world') every 30 seconds
-    # sender.add_periodic_task(30.0, test.s("world"), expires=10)
-
-    # Executes every Monday morning at 7:30 a.m.
-    # sender.add_periodic_task(
-    #     crontab(hour=7, minute=30, day_of_week=1),
-    #     test.s("Happy Mondays!"),
-    # )
-
-
-# @app.task
-# def test(arg):
-#     q = db.session.query(User).filter(User.id == 1).first()
-#     print(q.firstname)
-#     print(arg)
-
-
-# @app.task
-# def add(x, y):
-#     return x + y
 
 
 @app.task

@@ -8,3 +8,17 @@ from .mark import Mark
 from .user import User
 from .health_authority import HealthAuthority
 from .booking import Booking
+
+
+__all__ = [
+    "Review",
+    "Operator",
+    "Restaurant",
+    "RestaurantsPrecautions",
+    "Precautions",
+    "Table",
+    "Mark",
+    "User",
+    "HealthAuthority",
+    "Booking",
+]

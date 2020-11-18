@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, request, session, flash
-from flask_login import current_user, login_user, logout_user, login_required
+from flask import Blueprint, render_template, redirect, session, flash
+from flask_login import current_user, login_user, logout_user
 from datetime import date
 
 
@@ -72,7 +72,7 @@ def logout():
 @auth.route("/unsubscribe")
 def unsubscribe():
 
-    if current_user == None or not session.get("role"):
+    if current_user is None or not session.get("role"):
         return redirect("/login/user")
 
     if session["role"] == "user":

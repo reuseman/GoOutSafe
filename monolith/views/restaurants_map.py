@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_file, url_for
+from flask import Blueprint, render_template
 from monolith import db
 from monolith.models import Restaurant
 

@@ -2,8 +2,6 @@ from datetime import datetime
 from monolith import db
 from .abstract_user import AbstractUser
 from . import Mark, User
-from monolith.services.background import tasks
-from config import mail_body_covid_19_mark
 
 import logging
 

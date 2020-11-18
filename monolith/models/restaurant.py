@@ -77,7 +77,6 @@ class Restaurant(SearchableMixin, db.Model):
                     id_booked_tables.append(table.id)
                     break
 
-        free_tables = []
         for table in filtered_tables:
             if table.id not in id_booked_tables:
                 return table.id

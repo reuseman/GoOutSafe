@@ -1,16 +1,12 @@
-from wtforms.fields.core import StringField
-from monolith.services.auth import authority_required
-from sys import displayhook
 from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from wtforms import widgets, validators, SubmitField
 from monolith.models.precautions import Precautions
 from monolith.models.restaurant import CuisineType
-from monolith.models.menu import FoodCategory
 from flask_wtf import FlaskForm
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from monolith import db
 import wtforms as f
-from wtforms.validators import DataRequired, Length, NumberRange, Email, Required
+from wtforms.validators import DataRequired, Length, NumberRange, Email
 from datetime import date
 from wtforms.fields import FormField, FieldList
 

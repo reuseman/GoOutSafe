@@ -1,5 +1,4 @@
 from monolith import db
-from monolith.models.booking import Booking
 
 
 class Table(db.Model):
