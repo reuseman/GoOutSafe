@@ -1,5 +1,6 @@
 #!/bin/sh
 source venv/bin/activate
+export FLASK_APP="gooutsafe"
 
 while true; do
     flask deploy

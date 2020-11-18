@@ -64,10 +64,6 @@ def test_ha_should_trace_through_user_customer_same_time(client, db):
         follow_redirects=True,
     )
 
-    import pprint
-
-    pprint.pprint(res.data)
-
     assert res.status_code == 200
     assert b"Traced contacts" in res.data
     # for value in booking_people.values():
