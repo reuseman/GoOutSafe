@@ -830,7 +830,6 @@ def operator_checkin_reservation(restaurant_id, booking_number):
         "reservation.html",
         user_list=user_list_with_marks,
         confirmed_booking=confirmed_booking,
-        go_back="/restaurants/" + str(restaurant_id) + "/reservations",
         checkin=checkin_done,
     )
 
