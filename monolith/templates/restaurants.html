@@ -5,7 +5,7 @@
 <h1>Restaurant List</h1>
 <h5>{{message}}</h5>
 <div class="row">
-  {% if role == "operator" %}
+  {% if session.get('role') == "operator" %}
   {% if operator_restaurants == True%}
   <a href="/restaurants" class="ui primary button">
     See restaurants list

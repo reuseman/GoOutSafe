@@ -39,5 +39,11 @@
             ],
             "jinja": true
         },
+        {​​​​​​​​
+            "name": "Debug Tests",
+            "type": "python",
+            "request": "test",
+            "console": "integratedTerminal",
+        }​​​​​​​​,
     ]
 }

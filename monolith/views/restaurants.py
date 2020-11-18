@@ -48,11 +48,6 @@ logger = logging.getLogger("monolith")
 
 @restaurants.route("/restaurants")
 def _restaurants(message=""):
-    if current_user.is_authenticated:
-        role = session["role"]
-    else:
-        role = ""
-    
     session.pop("previous_search", "")
 
     if request.args.get("q"):
@@ -78,7 +73,6 @@ def _restaurants(message=""):
         "restaurants.html",
         message=message,
         restaurants=restaurants,
-        role=role,
         paths=images_path_dict,
         base_url=request.base_url,
         operator_restaurants=False,
@@ -836,7 +830,6 @@ def operator_checkin_reservation(restaurant_id, booking_number):
         "reservation.html",
         user_list=user_list_with_marks,
         confirmed_booking=confirmed_booking,
-        go_back="/restaurants/" + str(restaurant_id) + "/reservations",
         checkin=checkin_done,
     )
 
