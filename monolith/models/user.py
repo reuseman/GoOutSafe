@@ -12,7 +12,7 @@ class User(AbstractUser):
     avatar_id = db.Column(db.Unicode(128))
     fiscal_code = db.Column(db.Unicode(128))
     email = db.Column(db.Unicode(128))
-    phone_number = db.Column(db.Unicode(20))
+    phone_number = db.Column(db.Unicode(40))
     firstname = db.Column(db.Unicode(128), nullable=False)
     lastname = db.Column(db.Unicode(128))
     password_hash = db.Column(db.Unicode(128))

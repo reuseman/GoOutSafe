@@ -14,6 +14,10 @@ WORKDIR /home/gooutsafe
 # Install dependencies
 COPY requirements/ requirements/
 RUN python -m venv venv
+# Fix for cryptography package
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev python3-dev && \
+    venv/bin/pip install --no-cache-dir cryptography==3.2.1 && \
+    apk del gcc musl-dev libffi-dev openssl-dev python3-dev
 RUN venv/bin/pip install -r requirements/docker.txt 
 
 # Move code

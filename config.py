@@ -46,8 +46,8 @@ class Config:
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    FLASK_PROFILER_ADMIN = os.environ.get("FLASK_PROFILER_USERNAME") or "admin"
-    FLASK_PROFILER_PASSWORD = os.environ.get("FLASK_PROFILER_USERNAME") or "password"
+    FLASK_PROFILER_ADMIN = os.environ.get("FLASK_PROFILER_ADMIN") or "admin"
+    FLASK_PROFILER_PASSWORD = os.environ.get("FLASK_PROFILER_PASSWORD") or "password"
     FLASK_PROFILER = {
         "enabled": True,
         "storage": {"engine": "sqlite"},

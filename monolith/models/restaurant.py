@@ -31,7 +31,7 @@ class Restaurant(SearchableMixin, db.Model):
     lat = db.Column(db.Float)  # restaurant latitude
     lon = db.Column(db.Float)  # restaurant longitude
 
-    phone = db.Column(db.Integer)
+    phone = db.Column(db.Unicode(40))
     time_of_stay = db.Column(db.Integer)  # minutes
     cuisine_type = db.Column(db.Enum(CuisineType))
     opening_hours = db.Column(db.Integer)

@@ -20,7 +20,7 @@
     
     # Run 
     export FLASK_APP="gooutsafe"
-    FLASK_ENV=development
+    export FLASK_ENV=development
     flask run
 
 ### Docker Image
@@ -40,10 +40,10 @@ To run without settings
     python -m smtpd -n -c DebuggingServer localhost:8025
 
 ### Docker-compose
-Create a `.env` file with the environment variables needed
+Create a `.envdocker` file with the environment variables requested by docker-compose.yml
 
     docker-compose build
-    docker-compose up
+    docker-compose --env-file .env up
 ## Tests with coverage
 Inside GoOutSafe run (it will automatically use the configuration in pyproject.toml):
 

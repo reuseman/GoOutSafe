@@ -12,7 +12,7 @@ class Operator(AbstractUser):
     lastname = db.Column(db.Unicode(128))
     password_hash = db.Column(db.Unicode(128))
     dateofbirth = db.Column(db.DateTime)
-    phone_number = db.Column(db.Unicode(20))
+    phone_number = db.Column(db.Unicode(40))
     fiscal_code = db.Column(db.Unicode(128))
 
     def __init__(self, *args, **kw):

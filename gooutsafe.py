@@ -27,7 +27,6 @@ from flask_migrate import Migrate, upgrade
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
-Restaurant.force_index()
 
 # Shell
 @app.shell_context_processor
@@ -57,3 +56,4 @@ def deploy():
 
     # Insert fake data
     mock.everything()
+    Restaurant.force_index()
