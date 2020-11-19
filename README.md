@@ -40,7 +40,7 @@ To run without settings
     python -m smtpd -n -c DebuggingServer localhost:8025
 
 ### Docker-compose
-Create a `.envdocker` file with the environment variables requested by docker-compose.yml
+Create a `.env` file with the environment variables requested by docker-compose.yml
 
     docker-compose build
     docker-compose --env-file .env up
