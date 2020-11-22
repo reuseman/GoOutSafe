@@ -9,12 +9,6 @@ fileHandler.setFormatter(
 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "top secret"
-    WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or "top secret CSRF"
-
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI") or "sqlite:///gooutsafe.db"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
     MAX_CONTENT_LENGTH = 1024 * 1024
     UPLOAD_EXTENSIONS = [".jpg", ".png", ".gif"]
     UPLOAD_PATH = "uploads"
@@ -26,6 +20,15 @@ class Config:
     DROPZONE_UPLOAD_MULTIPLE = True
     DROPZONE_UPLOAD_ON_CLICK = True
 
+    # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
+    AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
+
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "top secret"
+    WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or "top secret CSRF"
+
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI") or "sqlite:///gooutsafe.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     MAIL_SERVER = os.environ.get("MAIL_SERVER") or "localhost"
     MAIL_PORT = os.environ.get("MAIL_PORT") or 8025
     MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS") or False
@@ -33,8 +36,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") or None
     MAIL_SENDER = os.environ.get("MAIL_SENDER") or "no-reply@gooutsafe.com"
 
-    # https://avatars.dicebear.com/api/avataaars/roma%20molesta.svg
-    AVATAR_PROVIDER = "https://avatars.dicebear.com/api/avataaars/{seed}.svg"
+    REDIS_URL = os.environ.get("REDIS_URL") or "redis://:password@localhost:6379/1"
 
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or "redis://redis:6379/0"
     CELERY_RESULT_BACKEND = (

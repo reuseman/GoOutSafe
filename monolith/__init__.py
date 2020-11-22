@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_dropzone import Dropzone
+from flask_redis import FlaskRedis
 
 from config import config, Config
 from celery import Celery
@@ -14,6 +15,7 @@ import flask_profiler
 db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
+redis_client = FlaskRedis()
 dropzone = Dropzone()
 
 celery = Celery(
@@ -41,13 +43,14 @@ def create_app(config_name, updated_variables=None):
         app.register_blueprint(bp)
         bp.app = app
 
+    celery.conf.update(app.config)
     es_url = app.config["ELASTICSEARCH_URL"]
     app.elasticsearch = Elasticsearch([es_url]) if es_url else None
-    celery.conf.update(app.config)
-    mail.init_app(app)
 
+    mail.init_app(app)
     db.init_app(app)
     db.create_all(app=app)
+    redis_client.init_app(app)
     login_manager.init_app(app)
     dropzone.init_app(app)
 
