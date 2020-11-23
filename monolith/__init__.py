@@ -9,6 +9,8 @@ from config import config, Config
 from celery import Celery
 from elasticsearch import Elasticsearch
 
+import pybreaker
+
 # Debug
 import flask_profiler
 
@@ -27,6 +29,7 @@ celery.autodiscover_tasks(["monolith.services.background.tasks"], force=True)
 
 
 def create_app(config_name, updated_variables=None):
+    # Config
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     if updated_variables:
@@ -37,12 +40,19 @@ def create_app(config_name, updated_variables=None):
     context = app.app_context()
     context.push()
 
+    # Blueprints
     from monolith.views import blueprints
+    from monolith.views.errors import handlers
 
+    app.url_map.strict_slashes = False
     for bp in blueprints:
         app.register_blueprint(bp)
         bp.app = app
 
+    for handler in handlers:
+        app.register_error_handler(handler[0], handler[1])
+
+    # Services
     celery.conf.update(app.config)
     es_url = app.config["ELASTICSEARCH_URL"]
     app.elasticsearch = Elasticsearch([es_url]) if es_url else None
